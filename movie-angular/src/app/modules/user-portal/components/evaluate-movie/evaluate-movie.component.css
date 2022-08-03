@@ -1,0 +1,41 @@
+ngb-rating::ng-deep>span {
+    color: yellow;
+    font-size: 200%;
+}
+
+.r-evaluate {
+    background-color: black;
+    padding: 50px;
+}
+
+.d-comment {
+    justify-content: center;
+}
+
+.h-d-comment {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cmt-rating {
+    padding-right: 70px;
+}
+
+.btn-comment {
+    margin: 0 0 0 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-comment {
+    padding: 10px 0 0 0;
+    cursor: pointer;
+}
+
+.btn-comment:hover>svg>g {
+    color: #eb315e;
+}
+
+.list-evaluate {
+    margin: 50px 0 0 0;
+}

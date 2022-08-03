@@ -1,0 +1,16 @@
+<div class="carousel-box">
+  <p-carousel
+    [value]="[1, 2]"
+    [numVisible]="5"
+    [numScroll]="1"
+    [showIndicators]="false"
+    [responsiveOptions]="responsiveOptions"
+  >
+    <ng-template pTemplate="header">
+      <h3 class="title-slide">Cast</h3>
+    </ng-template>
+    <ng-template let-car pTemplate="item">
+      <app-pre-cast></app-pre-cast>
+    </ng-template>
+  </p-carousel>
+</div>

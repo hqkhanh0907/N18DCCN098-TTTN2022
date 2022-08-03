@@ -1,0 +1,20 @@
+<div class="banner-slide" [style.--image]="image">
+  <div class="content">
+    <div class="additional-information-slide">
+      <span> {{ getQuality() }}</span>
+    </div>
+    <div class="price-movie" *ngIf="!checkMoviePrice()">
+      <span> {{ getPrice() }}</span>
+    </div>
+    <div class="title-slide-movie">
+      <h1 class="pointer-cursor" (click)="goToMovieDetail()">
+        {{ movie.name }}
+      </h1>
+    </div>
+    <div class="button-watch-movie">
+      <a class="theme-btn theme-btn none-underline"
+        ><i class="icofont icofont-play"></i
+      ></a>
+    </div>
+  </div>
+</div>

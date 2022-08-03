@@ -1,0 +1,55 @@
+<div class="container row">
+  <div class="col-sm-4 r-menu">
+    <div class="menu">
+      <div class="menu-item">
+        <h6>
+          <a
+            class="none-underline pointer-cursor text-default {{
+              getActive('profile')
+            }}"
+            (click)="goLink('profile')"
+          >
+            <i class="icofont icofont-ui-user"></i>Personal information</a
+          >
+        </h6>
+      </div>
+      <div class="menu-item">
+        <h6>
+          <a
+            class="none-underline pointer-cursor text-default {{
+              getActive('watching')
+            }}"
+            (click)="goLink('watching')"
+            ><i class="icofont icofont-ui-clock"></i>Watching</a
+          >
+        </h6>
+      </div>
+      <div class="menu-item">
+        <h6>
+          <a
+            class="none-underline pointer-cursor text-default {{
+              getActive('favourite')
+            }}"
+            (click)="goLink('favourite')"
+            ><i class="icofont icofont-heart"></i>Favourite</a
+          >
+        </h6>
+      </div>
+      <div class="menu-item">
+        <h6>
+          <a
+            class="none-underline pointer-cursor text-default {{
+              getActive('logout')
+            }}"
+            href="/mp/home"
+            (click)="logout()"
+            ><i class="icofont icofont-logout"></i>Log out</a
+          >
+        </h6>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8 content-page-acc">
+    <router-outlet></router-outlet>
+  </div>
+</div>

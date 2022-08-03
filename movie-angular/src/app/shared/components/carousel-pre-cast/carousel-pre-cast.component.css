@@ -1,0 +1,13 @@
+.title-slide {
+    cursor: pointer;
+    width: fit-content;
+    margin-left: 30px;
+}
+
+.carousel-box {
+    padding-top: 100px;
+}
+
+.carousel-box::ng-deep .p-carousel-prev-icon {
+    color: white;
+}

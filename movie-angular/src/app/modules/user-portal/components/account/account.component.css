@@ -1,0 +1,49 @@
+.container {
+    padding: 150px 0 50px;
+    display: flex;
+    margin: 0;
+    max-width: 100%;
+
+}
+
+.menu-item>h6>.active {
+    color: #eb315a;
+}
+
+.content-page-acc {
+    margin: 10px 0 0 0;
+    padding: 0;
+    max-height: 100%;
+    max-width: 100%
+}
+
+.r-menu {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    /* height: fit-content; */
+    margin: 10px 0 0 150px;
+    padding: 20px 0;
+    background-color: #181818;
+    border-radius: 10px;
+}
+
+.menu-item {
+    margin: 15px 30px;
+}
+
+.menu-item>h6>a {
+    color: #818181;
+}
+
+.menu-item>h6>a:hover {
+    color: #eb315a;
+}
+
+.menu-item>h6>a>i {
+    margin-right: 6px;
+    font-size: 20px;
+}

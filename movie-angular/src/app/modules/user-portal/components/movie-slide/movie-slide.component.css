@@ -1,0 +1,24 @@
+.carousel::ng-deep .flickity-button {
+    background-color: rgba(54, 54, 54, 0.753);
+    width: 40px;
+    height: 80px;
+}
+
+.carousel::ng-deep .flickity-button:hover {
+    background-color: rgb(105, 105, 105);
+}
+
+.carousel::ng-deep .flickity-button .flickity-button-icon {
+    color: white;
+    font-size: 20px;
+}
+
+.carousel::ng-deep .previous {
+    left: 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.carousel::ng-deep .next {
+    right: 0;
+    border-radius: 5px 0 0 5px;
+}

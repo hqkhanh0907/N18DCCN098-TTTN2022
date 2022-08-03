@@ -1,0 +1,107 @@
+/* Banner */
+.banner-slide {
+    background-image: var(--image);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: calc(1298px*9/16);
+    width: 1298px;
+    border-radius: 10px;
+    box-shadow: inset 0px -50px 300px 1px #1d1d1d;
+}
+
+.content {
+    position: relative;
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.additional-information-slide {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    opacity: 0.8;
+    background: linear-gradient(90deg, #ff3055, #fb685f);
+    height: 30px;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.additional-information-slide>span {
+    height: fit-content;
+    font-size: 20px;
+    color: #f1f1f1;
+    font-weight: bold;
+}
+
+.price-movie {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    background: linear-gradient(90deg, #003cff, #37a5ff);
+    opacity: 0.8;
+    height: 30px;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.price-movie>span {
+    height: fit-content;
+    font-size: 20px;
+    color: #f1f1f1;
+    font-weight: bold;
+}
+
+
+.title-slide-movie {
+    position: absolute;
+    bottom: 45px;
+    left: 25px;
+}
+
+.button-watch-movie {
+    position: absolute;
+    bottom: 45px;
+    right: 15px;
+}
+
+.flagPReadMore {
+    cursor: pointer;
+}
+
+.collapse-page {
+    transition: 1s;
+    text-align: justify;
+    width: 440px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.read-more {
+    transition: 1s;
+    text-align: justify;
+    width: 440px;
+    height: fit-content;
+}
+
+.text-hover-read-more {
+    cursor: pointer;
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.text-hover-read-more:hover {
+    color: red;
+}
+
+.box-paragraph {
+    color: #828282;
+}

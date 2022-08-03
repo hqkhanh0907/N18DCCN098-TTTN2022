@@ -1,0 +1,108 @@
+<div class="root-profile">
+  <div class="is-loading" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <div class="avatar-col">
+    <div class="pro-avatar">
+      <img
+        [src]="accImage.url"
+        onError="this.src='../../../../assets/img/avatar-default.png'"
+      />
+    </div>
+    <div class="full-name">
+      <h3>{{ accountInf.firstname }} {{ accountInf.lastname }}</h3>
+    </div>
+  </div>
+  <div>
+    <a class="btn-edit-profile none-underline" (click)="adjustInfo()"
+      ><i class="icofont icofont-pencil-alt-2" style="margin-right: 6px"></i
+      >Adjust information</a
+    >
+  </div>
+  <div class="grid-profile">
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-id"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>ID</h6></div>
+        <div class="grid-content">
+          <h6>{{ accountInf.id }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Account</h6></div>
+        <div class="grid-content">
+          <h6>{{ accountInf.username }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-email"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>E-mail</h6></div>
+        <div class="grid-content">
+          <h6 class="truncate">{{ accountInf.email }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-ui-calendar"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Birthday</h6></div>
+        <div class="grid-content">
+          <h6>{{ getFullDate() }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item" *ngIf="accountInf.addressDetails">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Address detail</h6></div>
+        <div class="grid-content">
+          <h6>{{ accountInf.addressDetails }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item" *ngIf="accountInf.wardId">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Ward/District/Province</h6></div>
+        <div class="grid-content">
+          <h6>{{ mapAddress }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item" *ngIf="accountInf.phoneNumber">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Phone's number</h6></div>
+        <div class="grid-content">
+          <h6>{{ accountInf.phoneNumber }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Gender</h6></div>
+        <div class="grid-content">
+          <h6>{{ getGender() }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="ico-pro"><i class="icofont icofont-ui-user"></i></div>
+      <div class="grid-item-item">
+        <div class="grid-title"><h6>Password</h6></div>
+        <div class="grid-content grid-pass">
+          <h6>********</h6>
+        </div>
+      </div>
+      <div class="ico-pro change-pass pointer-cursor">
+        <i class="icofont icofont-pencil-alt-2" (click)="changePass()"></i>
+      </div>
+    </div>
+  </div>
+</div>

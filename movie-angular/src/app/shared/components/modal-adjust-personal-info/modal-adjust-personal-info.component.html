@@ -1,0 +1,236 @@
+<div class="modal-changeInfo">
+  <div class="loading" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="update-avatar">
+      <label
+        class="avatar pointer-cursor"
+        [style.--image]="getImage()"
+        for="avatar"
+      >
+        <label for="avatar" class="pointer-cursor">
+          <i class="icofont icofont-camera"></i
+        ></label>
+        <input
+          hidden
+          type="file"
+          name="avatar"
+          accept="image/png, image/gif, image/jpeg, image/jpg"
+          id="avatar"
+          (change)="handleFileUpload($event.target)"
+        />
+      </label>
+    </div>
+    <form class="container" [formGroup]="adjustAccount">
+      <div class="form-group grid-item username pointer-default">
+        <label>Username</label
+        ><input
+          type="text"
+          class="form-control pointer-default"
+          readonly
+          formControlName="username"
+        />
+      </div>
+      <div class="account-body">
+        <div class="grid-item">
+          <label>Email<span style="color: red">*</span></label
+          ><input
+            type="text"
+            class="form-control"
+            placeholder="Enter your email"
+            formControlName="email"
+            [ngClass]="{
+              'is-invalid': submitted && (adjustAccount.get('email')?.errors?.['required'] || adjustAccount.get('email')?.errors?.['email'])}"
+          />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="adjustAccount.get('email')?.errors?.['required']"
+          >
+            Please enter email!
+          </div>
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="adjustAccount.get('email')?.errors?.['email']"
+          >
+            Enter the correct email format
+          </div>
+        </div>
+        <div class="grid-item">
+          <label>Phone number</label
+          ><input
+            type="text"
+            class="form-control"
+            formControlName="phoneNumber"
+            placeholder="Enter phone number"
+            [ngClass]="{
+              'is-invalid': submitted && adjustAccount.get('phoneNumber')?.errors?.['pattern']
+            }"
+          />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="adjustAccount.get('phoneNumber')?.errors?.['pattern']"
+          >
+            Enter the correct phone number format
+          </div>
+        </div>
+        <div class="grid-item">
+          <label>First name<span style="color: red">*</span></label
+          ><input
+            type="text"
+            class="form-control"
+            placeholder="Enter first name"
+            formControlName="firstname"
+            [ngClass]="{
+              'is-invalid': submitted && adjustAccount.get('firstname')?.errors?.['required']
+            }"
+          />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="adjustAccount.get('firstname')?.errors?.['required']"
+          >
+            Please enter firstname!
+          </div>
+        </div>
+        <div class="grid-item">
+          <label>Last name<span style="color: red">*</span></label
+          ><input
+            type="text"
+            class="form-control"
+            placeholder="Enter last name"
+            formControlName="lastname"
+            [ngClass]="{
+              'is-invalid': submitted && adjustAccount.get('lastname')?.errors?.['required']
+            }"
+          />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="adjustAccount.get('lastname')?.errors?.['required']"
+          >
+            Please enter lastname!
+          </div>
+        </div>
+        <div class="form-group grid-item">
+          <label>Gender<span style="color: red">*</span></label
+          ><select
+            class="form-control"
+            formControlName="gender"
+            [ngModel]="accountInf.gender"
+            [ngClass]="{
+              'is-invalid': submitted && adjustAccount.get('gender')?.errors?.['required']}"
+          >
+            <option *ngFor="let gender of genders" [value]="gender.id">
+              {{ gender.name }}
+            </option>
+          </select>
+          <div class="invalid-feedback form-error">Please choose gender!</div>
+        </div>
+        <div class="grid-item">
+          <label>Birthday<span style="color: red">*</span></label>
+          <div class="input-group">
+            <button class="btn" (click)="d2.toggle()" type="button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-calendar"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
+                />
+              </svg></button
+            ><input
+              class="form-control"
+              placeholder="dd-mm-yyyy"
+              name="d2"
+              formControlName="birthday"
+              ngbDatepicker
+              #d2="ngbDatepicker"
+              [ngClass]="{
+              'is-invalid': submitted && (adjustAccount.get('birthday')?.errors?.['required'] || adjustAccount.get('birthday')?.errors?.['pattern'])}"
+            />
+            <div
+              class="invalid-feedback form-error"
+              *ngIf="adjustAccount.get('birthday')?.errors?.['required']"
+            >
+              Please enter birthday!
+            </div>
+            <div
+              class="invalid-feedback form-error"
+              *ngIf="adjustAccount.get('birthday')?.errors?.['pattern']"
+            >
+              Enter the correct date format
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-item address">
+        <div class="p">
+          <label>Province</label
+          ><ng-select
+            [items]="provinces"
+            bindLabel="name"
+            bindValue="code"
+            formControlName="province"
+            [(ngModel)]="pId"
+            (clear)="clearOnProvince()"
+            (change)="showDList()"
+            placeholder="Choose..."
+          ></ng-select>
+        </div>
+        <div class="d">
+          <label>District</label
+          ><ng-select
+            [items]="inputDistrict"
+            bindLabel="name"
+            bindValue="code"
+            formControlName="district"
+            [(ngModel)]="dId"
+            (change)="showWList()"
+            (clear)="clearOnDistrict()"
+            placeholder="Choose..."
+          ></ng-select>
+        </div>
+        <div class="w">
+          <label>Ward</label
+          ><ng-select
+            [items]="inputWard"
+            bindLabel="name"
+            bindValue="code"
+            formControlName="ward"
+            [(ngModel)]="wId"
+            placeholder="Choose..."
+          ></ng-select>
+        </div>
+      </div>
+      <div class="grid-item">
+        <label>Address details</label
+        ><input
+          [readonly]="getWID()"
+          type="text"
+          class="form-control"
+          placeholder="Enter details address"
+          formControlName="addressDetails"
+        />
+        <div class="form-error text-warning" *ngIf="getWID()">
+          Select ward to enter details
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-update" (click)="nextProcess()">
+      Update
+    </button>
+  </div>
+</div>

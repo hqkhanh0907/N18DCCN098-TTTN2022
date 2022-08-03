@@ -1,0 +1,21 @@
+<section class="hero-area" id="home">
+  <div class="container">
+    <div class="hero-area-slider">
+      <div class="hero-area-slide">
+        <ngx-slick-carousel
+          class="carousel"
+          #slickModal="slick-carousel"
+          [config]="slideConfig"
+        >
+          <div ngxSlickItem *ngFor="let movie of movieList" class="slide">
+            <div>
+              <app-movie-detail-on-slide
+                [movie]="movie"
+              ></app-movie-detail-on-slide>
+            </div>
+          </div>
+        </ngx-slick-carousel>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,44 @@
+.comment {
+    display: flex;
+
+}
+
+.ava-cmt {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    border-radius: 50%;
+    background-color: rgb(101, 250, 101);
+    margin: 0 10px;
+}
+
+.h-evaluate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.h-evaluate>div>h6 {
+    margin: 0;
+}
+
+.time-evaluate {
+    padding-right: 80px;
+}
+
+.detail-comment {
+    margin: 0 0 30px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start
+}
+
+.detail-comment-item {
+    margin: 0 0 10px 0;
+}
+
+.cmt-paragraph>p {
+    color: #828282;
+    padding: 0 80px 0 0;
+    width: 100%;
+}

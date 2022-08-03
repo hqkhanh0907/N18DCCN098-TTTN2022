@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="header-area">
+    <div class="header-right">
+      <div class="logo">
+        <a id="none_underline" href="#"
+          ><img src="assets/img/logo.png" alt="logo"
+        /></a>
+      </div>
+      <form action="#">
+        <select style="background-color: black; margin-left: 5px">
+          <option value="Movies" style="color: white">Movies</option>
+          <option value="Movies" style="color: white">Cast</option>
+          <option value="Movies" style="color: white">Genre</option>
+        </select>
+        <input type="text" />
+        <button><i class="icofont icofont-search"></i></button>
+      </form>
+      <ul *ngIf="!accountInf">
+        <li><a class="none-underline pointer-cursor">Welcome Guest!</a></li>
+        <li>
+          <a class="none-underline pointer-cursor" (click)="goLogin()">Login</a>
+        </li>
+      </ul>
+      <div
+        class="ava-acc pointer-cursor"
+        *ngIf="accountInf"
+        (click)="goAccountProfile()"
+      >
+        <img
+          [src]="accImage.url"
+          onError="this.src='../../../../assets/img/avatar-default.png'"
+        />
+      </div>
+    </div>
+    <div class="menu-area">
+      <div class="responsive-menu"></div>
+      <nav class="mainmenu">
+        <ul class="primary-menu">
+          <li>
+            <a
+              class="{{ getActive('home') }} none-underline pointer-cursor"
+              href="/mp/home"
+              (click)="goLink()"
+              >Home
+            </a>
+          </li>
+          <li>
+            <a
+              class="{{ getActive('movies') }} none-underline pointer-cursor"
+              href="/mp/movies"
+              (click)="goLink()"
+              >Movies
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

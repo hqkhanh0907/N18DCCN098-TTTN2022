@@ -1,0 +1,26 @@
+.portfolio-content>h6 {
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.portfolio-content>h6:hover {
+    transition: 0.8s;
+    color: #eb315a;
+}
+
+.icon-vip {
+    width: 30px;
+    height: 15px;
+}
+
+.icon-on-top-box {
+    position: absolute;
+    top: 0;
+    left: 5px;
+    color: yellow;
+    cursor: default;
+}
+
+ngb-rating::ng-deep>span {
+    color: yellow;
+}

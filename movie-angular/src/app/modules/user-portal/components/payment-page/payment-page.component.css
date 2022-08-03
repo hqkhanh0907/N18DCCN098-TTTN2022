@@ -1,0 +1,41 @@
+.root-payment {
+    width: 100%;
+}
+
+.container {
+    margin: 150px 0 0 0;
+    padding: 0 50px;
+    max-width: 100%;
+}
+
+.rows-content-infor-payment {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.title-info-payment {
+    margin: 0 0 15px 0;
+}
+
+.billing-payment {}
+
+.amount-pay {
+    border-top: 1px solid #cecece;
+    margin: 15px 0 0 0;
+    padding: 5px 0 0 0;
+}
+
+.amount-color {
+    color: #eb135b;
+}
+
+.box-background {
+    background-color: #111;
+    border-radius: 10px;
+    width: 100%;
+    height: max-content;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.promotion {}

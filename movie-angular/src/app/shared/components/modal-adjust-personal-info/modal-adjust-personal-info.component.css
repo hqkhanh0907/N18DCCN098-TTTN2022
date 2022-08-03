@@ -1,0 +1,149 @@
+* {
+    border: none;
+}
+
+.modal-changeInfo {
+    background-color: #181818;
+    width: 700px;
+}
+
+.modal-header {
+    background-color: #202020;
+    display: flex;
+    height: 80px;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.modal-header>* {
+    background-color: #202020;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+}
+
+.btn-close {
+    background-color: #cecece !important;
+    border-radius: 50%;
+    font-size: 6px;
+    margin-left: 0;
+}
+
+.form-group {
+    margin: 20px 0;
+}
+
+.form-error {
+    font-size: 12px;
+    color: red;
+}
+
+input[type="text"] {
+    background-color: #fff;
+}
+
+.btn-update {
+    background-color: #eb315e;
+    color: #fff;
+}
+
+.update-avatar {
+    position: relative;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar {
+    background-image: var(--image);
+    /* background-image: url("https://anhdephd.vn/wp-content/uploads/2022/03/anh-cute-avatar-tra-sua.jpg"); */
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    width: 100px;
+    height: 100%;
+    top: -60px;
+    /* background-color: aquamarine; */
+    border-radius: 50%;
+}
+
+.icofont {
+    position: relative;
+    background-color: #181818;
+    border-radius: 50%;
+    border: #fff solid 2px;
+    padding: 3px;
+    bottom: -10px;
+    color: #fff;
+    font-size: 25px;
+}
+
+.username input {
+    background-color: #cecece;
+}
+
+.container {
+    margin: -30px 0 0 0;
+}
+
+.account-body {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 100%;
+}
+
+.grid-item {
+    padding: 10px 10px;
+    margin: 0;
+}
+
+.grid-item>.input-group>button {
+    background-color: #fff;
+    color: #111;
+    border-right: 1px solid;
+}
+
+.address {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+ng-select::ng-deep .ng-input>input {
+    color: #111;
+}
+
+.p {
+    margin-right: 10px;
+}
+
+.d {
+    margin-right: 5px;
+}
+
+.w {
+    margin-left: 5px;
+}
+
+ng-select::ng-deep::placeholder {
+    color: orange;
+    opacity: 1;
+}
+
+.loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #181818;
+    opacity: 0.9;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
