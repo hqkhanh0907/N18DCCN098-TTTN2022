@@ -13,8 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class MovieEvaluateKey implements Serializable {
     @Column(name = "account_id")
-    int userId;
+    Integer userId;
 
     @Column(name = "movie_id")
-    int movieId;
+    Integer movieId;
 }

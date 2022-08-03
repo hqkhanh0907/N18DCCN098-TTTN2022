@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.BillingInformationDto;
 import com.example.demo.dto.MovieEvaluateDto;
 import com.example.demo.model.Movie;
 import com.example.demo.service.MovieDetailService;
@@ -34,12 +35,23 @@ public class MovieDetailController {
     public ResponseEntity<?> getMovieDetailById(@PathVariable int id) {
         return new ResponseEntity<>(movieDetailService.getMovieById(id), HttpStatus.OK);
     }
+    @GetMapping("/checkBillByAccId/{accId}/{movieId}")
+    public ResponseEntity<?> checkBillingByAccId(@PathVariable("accId") int accId,@PathVariable("movieId") int movieId) {
+        return new ResponseEntity<>(movieDetailService.checkBillingByAccId(accId, movieId), HttpStatus.OK);
+    }
 
     @GetMapping("/getMovieDetailAll")
     public ResponseEntity<?> getMovieDetailAll() {
         return new ResponseEntity<>(movieDetailService.getAllMovie(), HttpStatus.OK);
     }
-
+    @PostMapping("/addInfoBill")
+    public ResponseEntity<?> addInfoBill(@RequestBody BillingInformationDto billingInformation) {
+        return new ResponseEntity<>(movieDetailService.addInfoBill(billingInformation), HttpStatus.OK);
+    }
+    @GetMapping("/getPromo/{promo_code}")
+    public ResponseEntity<?> getPromo(@PathVariable("promo_code") String promotionCode) {
+        return new ResponseEntity<>(movieDetailService.getPromotion(promotionCode),HttpStatus.OK);
+    }
     @GetMapping("/getMovieRates")
     public ResponseEntity<?> getMovierates() throws Exception {
         return new ResponseEntity<>(movieDetailService.getListMovieRate(), HttpStatus.OK);

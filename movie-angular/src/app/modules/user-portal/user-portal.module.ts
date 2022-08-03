@@ -26,6 +26,8 @@ import { FavouriteComponent } from './components/favourite/favourite.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PaymentPageComponent } from './components/payment-page/payment-page.component';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { ModalPaymentComponent } from './components/modal-payment/modal-payment.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { PaymentPageComponent } from './components/payment-page/payment-page.com
     WatchingComponent,
     FavouriteComponent,
     PaymentPageComponent,
+    ModalPaymentComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +60,7 @@ import { PaymentPageComponent } from './components/payment-page/payment-page.com
     SlickCarouselModule,
     NgSelectModule,
     ProgressSpinnerModule,
+    NgxPayPalModule,
   ],
   bootstrap: [AccountProfileComponent],
 })

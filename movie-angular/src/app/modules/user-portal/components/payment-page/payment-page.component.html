@@ -1,17 +1,50 @@
 <div class="root-payment">
   <div class="container">
-    <div><h3>Pay</h3></div>
+    <div class="mb-5"><h3>Pay</h3></div>
     <div class="pay-page row">
-      <div class="left-payment col-sm-7">
-        <div class="details-movie-pay">
-          <div><h5>Title Movie</h5></div>
+      <div class="left-payment col-sm-6">
+        <div class="details-movie-pay box-background">
+          <div class="title-info-payment">
+            <h5>{{ movie.name }}</h5>
+          </div>
           <div><span>Watch forever</span></div>
         </div>
-        <div class="paypal">
-          <div #paypal></div>
+        <div class="promotion box-background">
+          <div class="title-info-payment"><h5>Enter promo code</h5></div>
+          <div class="input-promo">
+            <div class="mt-4 mb-2">
+              <input class="rounded" type="text" [formControl]="promoCode" />
+            </div>
+            <div class="gr-btn-apply d-flex justify-content-end">
+              <button
+                class="btn btn-info text-white"
+                (click)="applyPromoCode()"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+          <div *ngIf="promo !== undefined && !checkPromo">
+            <h6 class="form-error">
+              Promo code is incorrect or does not exist. Please re-enter!
+            </h6>
+          </div>
+          <div *ngIf="promo !== undefined && checkPromo">
+            <h6 class="form-valid">Promo code correct</h6>
+          </div>
+        </div>
+        <div class="paypal box-background">
+          <div class="title-info-payment"><h4>Payment method</h4></div>
+          <div>
+            <img
+              class="w-25 h-25 img-method-payment"
+              [src]="logoPaypal"
+              alt="Paypal"
+            />
+          </div>
         </div>
       </div>
-      <div class="right-payment col-sm-5">
+      <div class="right-payment col-sm-6">
         <div class="billing-payment box-background">
           <div class="title-info-payment">
             <h4>Billing Information</h4>
@@ -19,39 +52,49 @@
           <div class="content-info-payment">
             <div class="rows-content-infor-payment">
               <div><span>Account</span></div>
-              <div><h6>khanh</h6></div>
+              <div class="d-flex justify-content-end">
+                <h6>{{ accountInf.username }}</h6>
+              </div>
               <div><span>Service</span></div>
-              <div><h6>khanh</h6></div>
+              <div class="d-flex justify-content-end">
+                <h6>Service Package Movie Point</h6>
+              </div>
               <div><span>Purchase service pack</span></div>
-              <div><h6>khanh</h6></div>
+              <div class="d-flex justify-content-end">
+                <h6>{{ movie.name }}</h6>
+              </div>
               <div><span>Package price</span></div>
-              <div><h6>khanh</h6></div>
-              <div><span>Service pack type</span></div>
-              <div><h6>khanh</h6></div>
+              <div class="d-flex justify-content-end">
+                <h6>{{ movie.moviePrice.toFixed(2) }}$</h6>
+              </div>
             </div>
             <div class="rows-content-infor-payment amount-pay">
+              <div *ngIf="promo">
+                <span>Promo -{{ promo.percent_discount }}%</span>
+              </div>
+              <div class="d-flex justify-content-end" *ngIf="promo">
+                <h6>- {{ getDiscountPromo() }}$</h6>
+              </div>
               <div><span>Amount to be paid</span></div>
-              <div><h6 class="amount-color">20$</h6></div>
+              <div class="d-flex justify-content-end">
+                <h6 class="amount-color">{{ getAmount() }}$</h6>
+              </div>
+            </div>
+            <div class="payment-policy mt-3 d-flex justify-content-center">
+              <p>
+                By accepting payment, you agree to Movie Point's Terms of
+                Service
+              </p>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button
+                class="btn btn-pay text-white px-5"
+                (click)="goPaypalModal()"
+              >
+                Pay
+              </button>
             </div>
           </div>
-        </div>
-        <div class="promotion box-background">
-          <div class="title-info-payment"><h5>Enter promo code</h5></div>
-          <div class="input-promo">
-            <div>
-              <input type="text" />
-              <button class="btn btn-info">Apply</button>
-            </div>
-          </div>
-          <div class="payment-policy">
-            <p>
-              By accepting payment, you agree to FPT Play's Terms of Service
-              use, and authorize FPT Play to automatically renew upon
-              expiration. You can cancel your renewal at any time. See details
-              here
-            </p>
-          </div>
-          <div><button>Pay</button></div>
         </div>
       </div>
     </div>

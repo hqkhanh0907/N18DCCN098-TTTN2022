@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.BillingInformationDto;
 import com.example.demo.dto.CastDto;
 import com.example.demo.dto.GenreDto;
 import com.example.demo.dto.MovieDto;
 import com.example.demo.dto.MovieEvaluateDto;
 import com.example.demo.dto.MovieRate;
+import com.example.demo.dto.PromotionDto;
 import com.example.demo.model.Movie;
 
 import java.util.List;
@@ -41,5 +43,11 @@ public interface MovieDetailService {
 
     List<MovieEvaluateDto> loadEvaluateInAcc(int accId);
 
-    MovieEvaluateDto saveEvaluate(MovieEvaluateDto movieEvaluateDTO);
+    Movie saveEvaluate(MovieEvaluateDto movieEvaluateDTO);
+
+    Boolean checkBillingByAccId(int accId, int movieId);
+
+    Boolean addInfoBill(BillingInformationDto billingInformationDto);
+
+    PromotionDto getPromotion(String promotionCode);
 }

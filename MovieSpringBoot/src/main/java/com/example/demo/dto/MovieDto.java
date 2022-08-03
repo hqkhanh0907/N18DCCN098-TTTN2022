@@ -36,10 +36,10 @@ public class MovieDto implements Serializable {
     @PastOrPresent(message = "Release time is not greater than present")
     private Date releaseDate;
     private Float movieDuration;
-    private int viewNumber;
+    private Integer viewNumber;
     @NotNull
-    private String translationStatus;
+    private Integer translationStatus;
     @NotNull
-    private String countryCode;
+    private Integer countryCode;
     private Float moviePrice;
 }

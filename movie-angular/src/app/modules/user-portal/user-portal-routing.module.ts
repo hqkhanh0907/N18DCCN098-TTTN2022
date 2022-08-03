@@ -59,7 +59,7 @@ const routes: Routes = [
         path: 'service',
         children: [
           {
-            path: 'payment',
+            path: 'payment/:slug',
             component: PaymentPageComponent,
           },
         ],

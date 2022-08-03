@@ -17,8 +17,8 @@ import java.io.Serializable;
 public class DirectorOfMovieKey implements Serializable {
 
     @Column(name = "dricetor_id")
-    int directorId;
+    Integer directorId;
 
     @Column(name = "movie_id")
-    int movieId;
+    Integer movieId;
 }

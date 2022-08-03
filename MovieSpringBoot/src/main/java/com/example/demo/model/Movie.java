@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Data
 @ToString
 @Entity
 @Table(name = "movie")
@@ -83,11 +85,11 @@ public class Movie {
 
     @NotNull
     @Column(name = "translation_status")
-    private String translationStatus;
+    private Integer translationStatus;
 
     @NotNull
     @Column(name = "country_code")
-    private String countryCode;
+    private Integer countryCode;
 
     @Column(name = "movie_price")
     private Float moviePrice;
@@ -100,21 +102,19 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteMovie> favoriteMovies = new ArrayList<>();
 
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "movie", orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GenreOfMovie> genreOfMovies = new ArrayList<>();
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountHistory> accountHistories = new ArrayList<>();
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieEvaluate> movieEvaluates = new ArrayList<>();
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "movie", orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CastOfMovie> castOfMovies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BillingInformation> billingInformations = new ArrayList<>();
 
 }

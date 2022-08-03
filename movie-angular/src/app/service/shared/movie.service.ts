@@ -71,6 +71,12 @@ export class MovieService {
       this.httpOptions
     );
   }
+  public addInfoBill(billInfo: any): Observable<any> {
+    return this.httpClient.post<any>(
+      'http://localhost:8080/api/movieDetail/addInfoBill',
+      JSON.stringify(billInfo)
+    );
+  }
   public getMovieBySlug(slug: any): Observable<any> {
     let formData: FormData = new FormData();
     formData.append('slug', slug);
@@ -79,6 +85,7 @@ export class MovieService {
       formData
     );
   }
+
   public getMovieById(id: number): Observable<any> {
     this.headers = sessionStorage.getItem('token');
     this.httpOptions = {
@@ -88,6 +95,18 @@ export class MovieService {
     };
     return this.httpClient.get<any>(
       'http://localhost:8080/api/movieDetail/getMovieDetail/' + id,
+      this.httpOptions
+    );
+  }
+  public getPromoCode(code: any): Observable<any> {
+    this.headers = sessionStorage.getItem('token');
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set('Content-Type', 'application/json'),
+    };
+    return this.httpClient.get<any>(
+      'http://localhost:8080/api/movieDetail/getPromo/' + code,
       this.httpOptions
     );
   }

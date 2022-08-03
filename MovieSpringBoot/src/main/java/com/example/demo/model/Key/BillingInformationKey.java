@@ -9,16 +9,16 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Embeddable
 @Getter
 @Setter
-@Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class BillingInformationKey implements Serializable {
-    @Column(name = "account_id")
-    private String account_id;
+    @Column(name = "account_id", nullable = false)
+    Integer accountId;
 
-    @Column(name = "movie_id")
-    private String movie_id;
+    @Column(name = "movie_id", nullable = false)
+    Integer movieId;
 
 }

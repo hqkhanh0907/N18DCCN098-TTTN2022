@@ -35,4 +35,10 @@ export enum UTIL {
   HD = '720',
   QUALITY_HD = 'HD',
   WARNING_LOGIN = 'You must login!',
+  CLIENT_ID = 'AQP6J75eQrBS7wZS_8xSKNUqgHxHHD1K0kqHLPfEKPYjMHbQHsGANjrQxt76EC5hDlYowvpmlOAEv-EN',
+  LOGO_PAYPAL = 'https://wallpaperaccess.com/full/660396.png',
+  DEFAULT_PROMO = 1,
+  NOT_PAY = 0,
+  PAYED = 1,
+  COMPLETE_PAY_STATUS = 'COMPLETED',
 }

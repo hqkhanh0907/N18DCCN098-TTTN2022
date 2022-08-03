@@ -1,10 +1,5 @@
 import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Route,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginServiceService } from 'src/app/service/shared/login-service.service';
 import { MovieService } from 'src/app/service/shared/movie.service';
 import { UTIL } from 'src/app/shared/util/util';
@@ -26,7 +21,6 @@ export class MovieDetailsComponent implements OnInit, DoCheck {
   releaseDate: Date = new Date();
   evaluate = { rate: 0.0, votes: 0 };
   public time = 0;
-
   constructor(
     private movieService: MovieService,
     private activeRouter: ActivatedRoute,
@@ -122,7 +116,9 @@ export class MovieDetailsComponent implements OnInit, DoCheck {
       return false;
     }
   }
-  goPay() {}
+  goPay() {
+    this.router.navigate(['/mp/service/payment/' + this.slug]);
+  }
   goSignUp() {
     this.router.navigate(['/mp/signup']);
   }

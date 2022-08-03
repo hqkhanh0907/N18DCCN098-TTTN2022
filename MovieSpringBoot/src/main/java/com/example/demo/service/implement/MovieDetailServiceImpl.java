@@ -1,26 +1,33 @@
 package com.example.demo.service.implement;
 
+import com.example.demo.dto.BillingInformationDto;
 import com.example.demo.dto.CastDto;
 import com.example.demo.dto.GenreDto;
 import com.example.demo.dto.MovieDto;
 import com.example.demo.dto.MovieEvaluateDto;
 import com.example.demo.dto.MovieRate;
+import com.example.demo.dto.PromotionDto;
 import com.example.demo.dto.map.CastMapper;
 import com.example.demo.dto.map.GenreMapper;
 import com.example.demo.dto.map.MovieEvaluateMapper;
 import com.example.demo.dto.map.MovieMapper;
+import com.example.demo.dto.map.PromotionMapper;
 import com.example.demo.model.Account;
+import com.example.demo.model.BillingInformation;
 import com.example.demo.model.Cast;
 import com.example.demo.model.CastOfMovie;
 import com.example.demo.model.Director;
 import com.example.demo.model.Genre;
+import com.example.demo.model.Key.BillingInformationKey;
 import com.example.demo.model.Movie;
 import com.example.demo.model.MovieEvaluate;
+import com.example.demo.model.Promotion;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.MovieCastRepository;
 import com.example.demo.repository.MovieDetailRepository;
 import com.example.demo.repository.MovieDirectorRepository;
 import com.example.demo.repository.MovieGenreRepository;
+import com.example.demo.repository.PromotionRepository;
 import com.example.demo.service.CastOfMovieService;
 import com.example.demo.service.FKDirectorService;
 import com.example.demo.service.FKGenreService;
@@ -32,6 +39,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +58,8 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     private final MovieGenreRepository movieGenreRepository;
     private final MovieDirectorRepository movieDirectorRepository;
     private final AccountRepository accountRepository;
+    private final PromotionMapper promotionMapper;
+    private final PromotionRepository promotionRepository;
 
     @Override
     public List<MovieDto> getAllMovie() {
@@ -290,26 +300,76 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public MovieEvaluateDto saveEvaluate(MovieEvaluateDto movieEvaluateDTO) {
-        Movie movie = movieDetailRepository.getById(movieEvaluateDTO.getId().getMovieId());
-        MovieEvaluate movieEvaluate = movieEvaluateMapper.movieEvaluateDtoToMovieEvaluate(movieEvaluateDTO);
-        List<MovieEvaluate> movieEvaluates = new ArrayList<>();
-        if (movie.getMovieEvaluates() != null) {
-            movieEvaluates = movie.getMovieEvaluates();
-            for (MovieEvaluate movieEvaluateCheck : movieEvaluates) {
-                if ((movieEvaluateCheck.getId().getUserId() == movieEvaluate.getId().getUserId()) &&
-                        (movieEvaluateCheck.getId().getMovieId() == movieEvaluate.getId().getMovieId())) {
-                    movieEvaluateService.editEvaluate(movieEvaluate);
-                    return movieEvaluateDTO;
+    public Movie saveEvaluate(MovieEvaluateDto movieEvaluateDTO) {
+        Movie movie = movieDetailRepository.findById(movieEvaluateDTO.getId().getMovieId()).orElse(null);
+        System.out.println("\n\n\n\n" + movie + "\n\n\n\n\n");
+        try {
+            MovieEvaluate movieEvaluate = movieEvaluateMapper.movieEvaluateDtoToMovieEvaluate(movieEvaluateDTO);
+            movieEvaluate.setMovie(movie);
+            movieEvaluate.setAccount(accountRepository.getById(movieEvaluateDTO.getId().getUserId()));
+            List<MovieEvaluate> movieEvaluates = new ArrayList<>();
+            if (movie.getMovieEvaluates() != null) {
+                movieEvaluates = movie.getMovieEvaluates();
+                for (MovieEvaluate movieEvaluateCheck : movieEvaluates) {
+                    if ((movieEvaluateCheck.getId().getUserId() == movieEvaluate.getId().getUserId()) &&
+                            (movieEvaluateCheck.getId().getMovieId() == movieEvaluate.getId().getMovieId())) {
+                        movieEvaluateService.editEvaluate(movieEvaluate);
+                        return movie;
+                    }
+                }
+                movieEvaluates.add(movieEvaluate);
+            } else {
+                movieEvaluates.add(movieEvaluate);
+            }
+            movie.setMovieEvaluates(movieEvaluates);
+            movieDetailRepository.save(movie);
+        } catch (Exception e) {
+            System.out.println("\n\n\n\n" + e + "\n\n\n\n\n");
+            throw new RuntimeException(e);
+        }
+        return movie;
+    }
+
+    @Override
+    public Boolean checkBillingByAccId(int accId, int movieId) {
+        Movie movie = movieDetailRepository.getById(movieId);
+        List<BillingInformation> billingInformations = movie.getBillingInformations();
+        if (Objects.isNull(billingInformations) || billingInformations.isEmpty()) {
+            return false;
+        } else {
+            for (BillingInformation billingInformation : billingInformations) {
+                if (billingInformation.getAccount().getId().equals(accId)) {
+                    return true;
                 }
             }
-            movieEvaluates.add(movieEvaluate);
-        } else {
-            movieEvaluates.add(movieEvaluate);
         }
-        movie.setMovieEvaluates(movieEvaluates);
+        return false;
+    }
+
+    @Override
+    public Boolean addInfoBill(BillingInformationDto billingInformationDto) {
+        Movie movie = movieDetailRepository.findById(billingInformationDto.getBillingInformationKey().getMovieId()).orElse(null);
+        Promotion promotion = promotionRepository.findById(billingInformationDto.getPromotion().getId()).orElse(null);
+        List<BillingInformation> billingInformations = movie.getBillingInformations();
+        BillingInformation billingInformation = new BillingInformation();
+        Integer accountId = billingInformationDto.getBillingInformationKey().getAccountId();
+        Integer movieId = billingInformationDto.getBillingInformationKey().getMovieId();
+        BillingInformationKey billingInformationKey = new BillingInformationKey(accountId, movieId);
+        billingInformation.setBillingInformationKey(billingInformationKey);
+        billingInformation.setAccount(accountRepository.getById(billingInformationDto.getBillingInformationKey().getAccountId()));
+        billingInformation.setMovie(movie);
+        billingInformation.setPromotion(promotion);
+        billingInformation.setStatus(billingInformationDto.getStatus());
+        billingInformations.add(billingInformation);
+        movie.setBillingInformations(billingInformations);
         movieDetailRepository.save(movie);
-        return movieEvaluateDTO;
+        return true;
+    }
+
+    @Override
+    public PromotionDto getPromotion(String promotionCode) {
+        PromotionDto promotionDto = promotionMapper.promotionToPromotionDto(promotionRepository.findPromotionByCode_name(promotionCode));
+        return promotionDto;
     }
 
     public boolean checkExitNameEditMovie(String title, int id) {
