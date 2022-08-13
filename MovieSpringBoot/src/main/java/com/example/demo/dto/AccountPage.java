@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountPage {
     private List<AccountDto> AccountDtoS;
-    private int pageNo;
-    private int pageSize;
+    private Integer pageNo;
+    private Integer pageSize;
     private long totalElements;
-    private int totalPages;
+    private Integer totalPages;
     private boolean first;
     private boolean last;
 }

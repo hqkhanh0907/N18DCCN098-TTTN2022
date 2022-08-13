@@ -31,6 +31,7 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
   @Input() inputDistrict: any;
   @Input() inputWard: any;
   @Input() wardId: any;
+  maxDate: any;
   pId = null;
   dId = null;
   wId = null;
@@ -54,10 +55,11 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private accService: AccountService,
     private imageService: ImageService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.isLoading = true;
+    this.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() };
     this.adjustAccount = new FormGroup({
       province: new FormControl(null),
       district: new FormControl(null),
@@ -83,7 +85,9 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
       ]),
       addressDetails: new FormControl(this.accountInf.addressDetails),
     });
-    await this.getAvatar();
+    if (this.accountInf.avatar) {
+      await this.getAvatar();
+    }
     if (this.accountInf.wardId !== null) {
       this.wId = this.wardId;
       await this.getAddress();
@@ -125,7 +129,6 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
   getWId(): number {
     return Number(this.wId);
   }
-  updateAvatar() {}
   showDList() {
     this.inputDistrict = [];
     this.inputWard = [];
@@ -173,11 +176,7 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
       this.accountInf.phoneNumber = this.adjustAccount.value.phoneNumber;
       this.accountInf.gender = this.adjustAccount.value.gender;
       this.accountInf.wardId = this.adjustAccount.value.ward;
-      this.accountInf.birthday = UtilClass.stringToDate(
-        this.adjustAccount.value.birthday,
-        UTIL.DATE,
-        UTIL.DELIMITER
-      );
+      this.accountInf.birthday = new Date(this.adjustAccount.value.birthday).getTime();
       this.accountInf.addressDetails = this.adjustAccount.value.addressDetails;
       this.accService
         .updateAccount(this.accountInf)
@@ -186,7 +185,7 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
           if (data.statusCode !== undefined) {
             UtilClass.showMessageAlert(UTIL.ICON_ERROR, data.message);
           } else {
-            this.activeModal.close();
+            this.activeModal.close(this.accountInf);
             UtilClass.showMessageAlert(
               UTIL.ICON_SUCCESS,
               UTIL.ALERT_MESSAGE_SUCCESS_DETAIL_ACCOUNT

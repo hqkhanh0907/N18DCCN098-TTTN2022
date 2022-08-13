@@ -1,0 +1,59 @@
+<h3>Choose Movie's Cast</h3>
+<mat-divider></mat-divider>
+<mat-dialog-content class="root-content">
+  <div class="search-list">
+    <mat-form-field style="width: auto" appearance="outline">
+      <input matInput placeholder="Search actor" [(ngModel)]="searchText" autofocus>
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="root-page">
+    <div *ngIf="castList.length > 0" class="one-page-cast">
+      <div>
+        <h5><strong>List of actors</strong></h5>
+      </div>
+      <div>
+        <mat-selection-list class="list-cast" [formControl]="movieCast">
+          <mat-list-option (click)="bindingData(cast)" *ngFor="let cast of castList | castFilter: searchText"
+                           [value]="cast.id">
+            <app-cast [cast]="cast.id"></app-cast>
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </div>
+    <div class="root-choose-list">
+      <div>
+        <h4><strong>List of selected actors</strong></h4>
+      </div>
+      <div class="choose-list" *ngIf="castChooses.length > 0">
+        <div *ngFor="let castChoose of castChooses">
+          <div class="cast-chosen-root">
+            <button style="width: fit-content; height: fit-content" mat-button (click)="removeCastChoosed(castChoose.castDetail)">
+              <mat-icon style="color: red">remove_circle_outline</mat-icon>
+            </button>
+            <div class="cast-chosen">
+              <app-cast [cast]="castChoose.castDetail.id"></app-cast>
+              <label style="font-size: 11px">in the role</label>
+              <input class="text-dark" type="character" style="width: 100px" placeholder="Character" [(ngModel)]="castChoose.character"
+                     required>
+              <mat-error *ngIf="castChoose.character === '' && sendCast" class="required-character">Please
+                <strong>fill</strong> the field
+              </mat-error>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="group-button">
+    <button class="button-cast" mat-raised-button (click)="onNoClick()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button type="submit" (click)="sendListCast()" class="button-genre save-movie-btn"
+            mat-raised-button>
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</mat-dialog-actions>

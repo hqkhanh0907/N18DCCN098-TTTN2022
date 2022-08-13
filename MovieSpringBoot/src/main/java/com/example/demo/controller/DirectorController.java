@@ -31,7 +31,7 @@ public class DirectorController {
     //get page directors
 
     @GetMapping("/page")
-    public DirectorPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+    public DirectorPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
         return movieDirectorService.getAllDirectorPage(pageNo, pageSize, sortBy, sortDir);
     }
 
@@ -49,7 +49,8 @@ public class DirectorController {
 
     //Delete a director
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> deleteDirector(@PathVariable int id) {
+    public ResponseEntity<?> deleteDirector(@PathVariable Integer id) {
         return new ResponseEntity<>(movieDirectorService.deleteMovieDirectorById(id), HttpStatus.OK);
     }
+
 }

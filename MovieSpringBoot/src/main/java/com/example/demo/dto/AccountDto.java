@@ -16,7 +16,6 @@ public class AccountDto implements Serializable {
     private Integer id;
     @NotNull
     private String username;
-    @NotNull
     private String password;
     @NotNull
     private Boolean enable;
@@ -27,9 +26,8 @@ public class AccountDto implements Serializable {
     private String lastname;
     @NotNull
     private String firstname;
-    @NotNull
     private Date birthday;
-    private String wardId;
+    private Integer wardId;
     private String addressDetails;
     private String phoneNumber;
     @NotNull

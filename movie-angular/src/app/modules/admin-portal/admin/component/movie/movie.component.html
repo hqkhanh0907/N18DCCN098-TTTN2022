@@ -1,0 +1,38 @@
+<div>
+  <div class="head-movie">
+    <div class="add-movie">
+      <button class="add-movie-btn" mat-raised-button (click)="onCreate()">
+        <mat-icon>playlist_add</mat-icon>
+      </button>
+    </div>
+    <div class="title-list-movie">
+      <h1>movie list</h1>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <div class="search-root">
+      <mat-form-field appearance="outline" class="search-group">
+        <input placeholder="Search movie here..." matInput type="search" [(ngModel)]="searchMovie" />
+        <button *ngIf="searchMovie !== ''" matSuffix mat-icon-button aria-label="Clear" (click)="searchMovie=''">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon *ngIf="searchMovie === ''" matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="list-movie">
+      <div class="pagination-movie">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <div class="flex-wrap-movielist">
+        <div *ngFor="let movie of movies | movieFilter: searchMovie | paginate: { itemsPerPage: 32, currentPage: p }">
+          <app-movie-child [movie]="movie" class="test" (deleteMovieEvent)="updateAfterDelete($event)" (editMovieEvent)="updateAfterEdit($event)">
+          </app-movie-child>
+        </div>
+      </div>
+      <div class="pagination-movie">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>

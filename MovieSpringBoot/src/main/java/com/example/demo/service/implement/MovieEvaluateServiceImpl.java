@@ -20,7 +20,7 @@ public class MovieEvaluateServiceImpl implements MovieEvaluateService {
     }
 
     @Override
-    public void deleteMovieEvaluateByMovieId(int movieId) {
+    public void deleteMovieEvaluateByMovieId(Integer movieId) {
         List<MovieEvaluate> movieEvaluates = movieEvaluateRepository.findAll();
         movieEvaluates.forEach(movieEvaluate -> {
             if (movieEvaluate.getId().getMovieId() == movieId) {
@@ -30,7 +30,7 @@ public class MovieEvaluateServiceImpl implements MovieEvaluateService {
     }
 
     @Override
-    public void deleteMovieEvaluateByUserId(int userId) {
+    public void deleteMovieEvaluateByUserId(Integer userId) {
         List<MovieEvaluate> movieEvaluates = movieEvaluateRepository.findAll();
         movieEvaluates.forEach(movieEvaluate -> {
             if (movieEvaluate.getId().getUserId() == userId) {

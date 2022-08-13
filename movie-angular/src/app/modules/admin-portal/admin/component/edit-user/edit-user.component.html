@@ -1,0 +1,159 @@
+<h1>Detail User</h1>
+<mat-dialog-content class="row root-add-new-user">
+
+  <div>
+    <!-- Account details card-->
+    <form
+      class="card mb-4"
+      [formGroup]="updateAccountForm"
+    >
+      <div class="card-body">
+        <!-- Form Group (username)-->
+        <div class="form-group mb-3">
+          <label
+            class="small mb-1 text-label"
+            for="inputUsername"
+          >Username</label>
+          <input
+            class="form-control"
+            id="inputUsername"
+            type="text"
+            [disabled]="true"
+            placeholder="Enter username"
+            formControlName="userName"
+            [ngClass]="{'is-invalid':submitted && updateAccountForm.get('userName')?.errors?.['required']}"
+          >
+          <div class="invalid-feedback form-error text-danger">Username is require</div>
+        </div>
+        <!-- Form Row-->
+        <div class="row gx-3 mb-3">
+          <!-- Form Group (first name)-->
+          <div class="form-group col-md-6">
+            <label class="small mb-1  text-label">First name</label>
+            <input
+              class="form-control"
+              formControlName="firstName"
+              [ngClass]="{'is-invalid':submitted && updateAccountForm.get('firstName')?.errors?.['required']}"
+              type="text"
+              placeholder="Enter first name"
+            >
+            <div class="invalid-feedback form-error text-danger">Firstname is require</div>
+          </div>
+          <!-- Form Group (last name)-->
+          <div class="form-group col-md-6">
+            <label class="small mb-1 text-label">Last name</label>
+            <input
+              class="form-control"
+              formControlName="lastName"
+              [ngClass]="{'is-invalid':submitted && updateAccountForm.get('lastName')?.errors?.['required']}"
+              type="text"
+              placeholder="Enter last name"
+            >
+            <div class="invalid-feedback form-error text-danger">Lastname is require</div>
+
+
+          </div>
+        </div>
+
+        <!-- Form Group (email address)-->
+        <div
+          class="form-group mb-3"
+        >
+          <label class="small mb-1 text-label">Email address</label>
+          <input
+            class="form-control"
+            formControlName="email"
+            [ngClass]="{'is-invalid':submitted && (updateAccountForm.get('email')?.errors?.['required'] || updateAccountForm.get('email')?.errors?.['email'])}"
+            type="text"
+            placeholder="Enter email"
+          >
+          <div
+            *ngIf="updateAccountForm.get('email')?.errors?.['email']"
+            class="invalid-feedback form-error text-danger"
+          >Your email is not in the correct format
+          </div>
+          <div
+            *ngIf="updateAccountForm.get('email')?.errors?.['required']"
+            class="invalid-feedback form-error text-danger"
+          >Your email is required
+          </div>
+        </div>
+        <!-- Form Group (gender group)-->
+        <div
+          class="form-group mb-3"
+        >
+          <label class="small mb-1 text-label">Gender</label>
+          <ng-select
+            [items]="genders"
+            [closeOnSelect]="true"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select gender"
+            [(ngModel)]="genderSelect"
+            formControlName="gender"
+            [ngClass]="{
+              'is-invalid': submitted && updateAccountForm.get('gender')?.errors?.['required']}"
+          >
+          </ng-select>
+          <div class="invalid-feedback form-error text-danger">Must choose one!</div>
+        </div>
+        <!-- Form Group (User Role)-->
+        <div
+          class="form-group mb-3"
+        >
+          <label class="small mb-1 text-label">User role</label>
+          <ng-select
+            [items]="roles"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [hideSelected]="true"
+            bindLabel="name"
+            placeholder="Select role"
+            formControlName="roles"
+            [(ngModel)]="roleSelect"
+            [ngClass]="{'is-invalid':submitted && updateAccountForm.get('roles')?.errors?.['required']}"
+          >
+          </ng-select>
+          <div class="invalid-feedback form-error text-danger">Must choose one!</div>
+        </div>
+        <!-- Form Group (Status)-->
+        <div
+          class="form-group mb-3"
+        >
+          <label class="small mb-1 text-label">Status</label>
+          <ng-select
+            [items]="status"
+            [closeOnSelect]="true"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select status"
+            [(ngModel)]="statusSelect"
+            formControlName="status"
+            [ngClass]="{'is-invalid':submitted &&  updateAccountForm.get('status')?.errors?.['required']}"
+          >
+          </ng-select>
+          <div class="invalid-feedback form-error text-danger">Must choose one!</div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="group-button">
+    <button
+      class="text-danger"
+      mat-raised-button
+      (click)="onNoClick()"
+    >
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button
+      (click)="saveUser()"
+      class="text-success"
+      mat-raised-button
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</mat-dialog-actions>

@@ -10,6 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieEvaluateKeyDto implements Serializable {
-    private int userId;
-    private int movieId;
+    private Integer userId;
+    private Integer movieId;
 }

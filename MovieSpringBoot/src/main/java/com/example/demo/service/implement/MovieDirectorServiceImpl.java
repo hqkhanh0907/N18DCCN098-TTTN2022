@@ -31,12 +31,12 @@ public class MovieDirectorServiceImpl implements MovieDirectorService {
     }
 
     @Override
-    public DirectorDto getMovieDirectorById(int id) {
+    public DirectorDto getMovieDirectorById(Integer id) {
         return directorMapper.directorToDirectorDto(movieDirectorRepository.getById(id));
     }
 
     @Override
-    public String deleteMovieDirectorById(int id) {
+    public String deleteMovieDirectorById(Integer id) {
         Director director = movieDirectorRepository.findById(id).orElse(null);
         if (director == null) {
             throw new RuntimeException("Director not found");
@@ -79,7 +79,7 @@ public class MovieDirectorServiceImpl implements MovieDirectorService {
     }
 
     @Override
-    public DirectorPage getAllDirectorPage(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public DirectorPage getAllDirectorPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir) {
 
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 

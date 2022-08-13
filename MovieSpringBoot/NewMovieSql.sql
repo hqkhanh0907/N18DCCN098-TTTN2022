@@ -1,18 +1,14 @@
 
-CREATE TABLE `country` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `movie` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `poster` varchar(500) NOT NULL,
+  `slug` varchar(500) NOT NULL,
   `image_showing` varchar(500) NOT NULL,
   `description` varchar(10000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `quality`  varchar(30) NOT NULL,
-  `movie_status` tinyint NOT NULL,
+  `movie_status` int NOT NULL,
   /*
   Have 3 status:
   - premiere soon (0)
@@ -27,7 +23,7 @@ CREATE TABLE `movie` (
   - Time is in seconds
   */
   `view_num` int DEFAULT NULL,
-  `country_id` int NOT NULL,
+  `country_code` int NOT NULL,
   `translation_status` int NOT NULL,
   /*
   Have  :
@@ -37,24 +33,20 @@ CREATE TABLE `movie` (
   - vietsub (3)
   */
   `movie_price` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_country` (`country_id`),
-  CONSTRAINT `FK_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON UPDATE CASCADE  
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `account` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` char(30) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `enabled` tinyint DEFAULT '0',
+  `enabled` boolean DEFAULT '0',
   `email` varchar(255) NOT NULL,
   `avatar` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `firstname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `birthday` date NOT NULL,
-  `provinces` int DEFAULT NULL,
-  `districts` int DEFAULT NULL,
-  `ward` int DEFAULT NULL,
+  `ward_id` int DEFAULT NULL,
   `details_address` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `phone_number` char(13) DEFAULT NULL,
   `gender` tinyint NOT NULL,
@@ -138,17 +130,17 @@ CREATE TABLE `genre_of_movie` (
 --
 
 CREATE TABLE `movie_evaluate` (
-  `id_user` int NOT NULL,
-  `id_movie` int NOT NULL,
+  `account_id` int NOT NULL,
+  `movie_id` int NOT NULL,
   `evaluate_Time` date NOT NULL,
   `evaluate_content` varchar(4000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `evaluate_rate` int NOT NULL,
   `evalute_status` int NOT NULL,
-  PRIMARY KEY (`id_user`,`id_movie`),
-  KEY `FK_move_evaluate_movieDetail` (`id_movie`),
-  KEY `FK_move_evaluate_account` (`id_user`),
-  CONSTRAINT `FK_move_evaluate_account` FOREIGN KEY (`id_user`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_move_evaluate_movieDetail` FOREIGN KEY (`id_movie`) REFERENCES `movie` (`id`) ON UPDATE CASCADE
+  PRIMARY KEY (`account_id`,`movie_id`),
+  KEY `FK_move_evaluate_movieDetail` (`movie_id`),
+  KEY `FK_move_evaluate_account` (`account_id`),
+  CONSTRAINT `FK_move_evaluate_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_move_evaluate_movieDetail` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON UPDATE CASCADE
 );
 
 
@@ -157,21 +149,21 @@ CREATE TABLE `promotion` (
   `id` int NOT NULL AUTO_INCREMENT,
   `code_name` varchar(20) NOT NULL,
   `description` varchar(10000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `acc_id` int NOT NULL,
+  `account_id` int NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `percent_discount` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_code_name` (`code_name`),
-  KEY `FK_acc_create` (`acc_id`),
-  CONSTRAINT `FK_acc_create` FOREIGN KEY (`acc_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE
+  KEY `FK_acc_create` (`account_id`),
+  CONSTRAINT `FK_acc_create` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE
 );
 --
 -- Table structure for table `cast`
 --
 
 CREATE TABLE `billing_information` (
-	`acc_id` int NOT NULL,
+	`account_id` int NOT NULL,
     `movie_id` int NOT NULL,
     `promotion_id` int,
     `status` int NOT NULL,
@@ -181,9 +173,9 @@ CREATE TABLE `billing_information` (
 		- success (1)
         - pedding (2)
     */    
-  PRIMARY KEY (`acc_id`, `movie_id`),
-  KEY `FK_acc_id_billing` (`acc_id`),
-  CONSTRAINT `FK_acc_id_billing` FOREIGN KEY (`acc_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
+  PRIMARY KEY (`account_id`, `movie_id`),
+  KEY `FK_account_id_billing` (`account_id`),
+  CONSTRAINT `FK_account_id_billing` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
   KEY `FK_movie_id_billing` (`movie_id`),
   CONSTRAINT `FK_movie_id_billing` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON UPDATE CASCADE,
   KEY `FK_promotion_id_billing` (`promotion_id`),
@@ -191,35 +183,34 @@ CREATE TABLE `billing_information` (
 );
 
 CREATE TABLE `group_of_roles` (
-  `id_role` int NOT NULL,
-  `id_acc` int NOT NULL,
-  PRIMARY KEY (`id_role`,`id_acc`),
-  KEY `FK_group_of_roles_account` (`id_acc`),
-  KEY `FK_group_of_roles_account_role` (`id_role`),
-  CONSTRAINT `FK_group_of_roles_account_role` FOREIGN KEY (`id_role`) REFERENCES `account_role` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_group_of_roles_account` FOREIGN KEY (`id_acc`) REFERENCES `account` (`id`) ON UPDATE CASCADE
+  `role_id` int NOT NULL,
+  `account_id` int NOT NULL,
+  PRIMARY KEY (`role_id`,`account_id`),
+  KEY `FK_group_of_roles_account` (`account_id`),
+  KEY `FK_group_of_roles_account_role` (`role_id`),
+  CONSTRAINT `FK_group_of_roles_account_role` FOREIGN KEY (`role_id`) REFERENCES `account_role` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_group_of_roles_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE
 );
 CREATE TABLE `account_history` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_user` int NOT NULL,
-  `id_movie` int DEFAULT NULL,
+  `account_id` int NOT NULL,
+  `movie_id` int NOT NULL,
   `time_watched` float NOT NULL,
-  `history_date` date NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_account_history_account` (`id_user`),
-  KEY `FK_account_history_movieDetail` (`id_movie`),
-  CONSTRAINT `FK_account_history_account` FOREIGN KEY (`id_user`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_account_history_movieDetail` FOREIGN KEY (`id_movie`) REFERENCES `movie` (`id`)
+  `date` date NOT NULL,
+  PRIMARY KEY (`account_id`,`movie_id`),
+  KEY `FK_account_history_account` (`account_id`),
+  KEY `FK_account_history_movieDetail` (`movie_id`),
+  CONSTRAINT `FK_account_history_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_account_history_movieDetail` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON UPDATE CASCADE
 );
 CREATE TABLE `favorite_movie` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_user` int NOT NULL,
-  `id_movie` int DEFAULT NULL,
+  `account_id` int NOT NULL,
+  `movie_id` int DEFAULT NULL,
   `favorite_date` date NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_favorite_movie_account` (`id_user`),
-  KEY `FK_favorite_movie_movieDetail` (`id_movie`),
-  CONSTRAINT `FK_favorite_movie_account` FOREIGN KEY (`id_user`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_favorite_movie_movieDetail` FOREIGN KEY (`id_movie`) REFERENCES `movie` (`id`)
+  KEY `FK_favorite_movie_account` (`account_id`),
+  KEY `FK_favorite_movie_movieDetail` (`movie_id`),
+  CONSTRAINT `FK_favorite_movie_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_favorite_movie_movieDetail` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`)
 )
 

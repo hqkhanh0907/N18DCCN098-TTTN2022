@@ -16,9 +16,9 @@ public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "account_id")
     @EqualsAndHashCode.Exclude
     private Account account = new Account();
@@ -29,6 +29,4 @@ public class VerificationToken {
     @Column(name = "token_content")
     @NotBlank(message = "Token content cannot be empty")
     private String tokenContent;
-
-
 }

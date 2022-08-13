@@ -1,10 +1,7 @@
 package com.example.demo.model;
 
 import com.example.demo.model.Key.BillingInformationKey;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,18 +23,21 @@ public class BillingInformation {
     private BillingInformationKey billingInformationKey = new BillingInformationKey();
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.ALL})
     @MapsId("movieId")
     @JoinColumn(name = "movie_id")
+    @EqualsAndHashCode.Exclude
     private Movie movie;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.ALL})
     @MapsId("accountId")
     @JoinColumn(name = "account_id")
+    @EqualsAndHashCode.Exclude
     private Account account;
 
-    @ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "promotion_id")
+    @EqualsAndHashCode.Exclude
     private Promotion promotion;
 
     @Column(name = "status")

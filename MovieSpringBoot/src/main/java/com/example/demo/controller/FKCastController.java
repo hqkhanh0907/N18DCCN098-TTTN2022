@@ -22,13 +22,13 @@ public class FKCastController {
 
     // get all movie on a cast
     @GetMapping("/movie/{castId}")
-    public ResponseEntity<?> getAllMovieOnACast(@PathVariable int castId) {
+    public ResponseEntity<?> getAllMovieOnACast(@PathVariable Integer castId) {
         return new ResponseEntity<>(castOfMovieService.getMovieDetailByCastId(castId), HttpStatus.OK);
     }
 
     // get all movie on a cast
     @GetMapping("/cast/{movieId}")
-    public ResponseEntity<?> getAllCastOnAMovie(@PathVariable int movieId) {
+    public ResponseEntity<?> getAllCastOnAMovie(@PathVariable Integer movieId) {
         return new ResponseEntity<>(castOfMovieService.getCastByMovieId(movieId), HttpStatus.OK);
     }
 

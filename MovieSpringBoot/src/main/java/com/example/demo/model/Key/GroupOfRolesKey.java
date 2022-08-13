@@ -31,9 +31,4 @@ public class GroupOfRolesKey implements Serializable {
         return accountId != null && Objects.equals(accountId, that.accountId)
                 && roleId != null && Objects.equals(roleId, that.roleId);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(accountId, roleId);
-    }
 }

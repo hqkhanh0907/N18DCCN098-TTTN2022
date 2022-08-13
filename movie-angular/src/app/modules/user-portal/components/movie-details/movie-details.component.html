@@ -1,17 +1,24 @@
 <div class="movie-detail">
+  <div
+    *ngIf="!isLoading"
+    class="is-loading"
+  >
+    <p-progressSpinner></p-progressSpinner>
+  </div>
   <div class="container">
     <div class="watch-movie">
-      <div class="check-login" *ngIf="!loginService.isUserLoggedIn()">
+      <div
+        class="check-login"
+        *ngIf="!showVideo() && !loginService.isUserLoggedIn()"
+      >
         <div class="show-login">
           <div class="header-notify">
             <h3>Notify</h3>
           </div>
           <div class="body-notify">
             <div class="body-title-notify">
-              <span
-                >Please login or register an account to see more of this
-                content!</span
-              >
+              <span>Please login or register an account to see more of this
+                content!</span>
             </div>
             <div class="body-btn-notify">
               <div>
@@ -36,17 +43,22 @@
       </div>
       <div
         class="show-price"
-        *ngIf="loginService.isUserLoggedIn() && !checkMoviePrice()"
+        *ngIf="loginService.isUserLoggedIn() && checkMoviePrice()"
       >
         <div class="d-price">
-          <div><h4 class="header-notify">Notify</h4></div>
+          <div>
+            <h4 class="header-notify">Notify</h4>
+          </div>
           <div class="body-notify">
             <div class="body-title-notify">
               <span>To watch this content you need to pay for it!</span>
             </div>
             <div class="body-btn-notify">
               <div>
-                <button class="btn-fl btn-pay-now text-white" (click)="goPay()">
+                <button
+                  class="btn-fl btn-pay-now text-white"
+                  (click)="goPay()"
+                >
                   Pay now
                 </button>
               </div>
@@ -55,111 +67,133 @@
         </div>
       </div>
       <video
+        id="player-movie"
         *ngIf="showVideo()"
-        [src]="movie.linkMovie"
-        [autoplay]="true"
+        [src]="uriMovie"
+        [poster]="movie.poster"
         controls
+        #video
         (timeupdate)="onTimeUpdate($event)"
       ></video>
     </div>
     <div class="row details">
-      <div class="col-sm-3 detail-item">
-        <img class="show-img-movie" [src]="movie.image_showing" />
-      </div>
-      <div class="col-sm-6 detail-item">
-        <h4>{{ movie.name }}</h4>
-        <div class="rate">
-          <div>
-            <ngb-rating
-              [rate]="evaluate.rate"
-              [max]="5"
-              [readonly]="true"
-            ></ngb-rating>
-          </div>
-          <div class="number-rate">
-            <span>{{ evaluate.votes }} vote</span>
-          </div>
+      <div class="col-sm-3 row item-left">
+        <div class="col-sm-3 detail-item">
+          <img
+            class="show-img-movie"
+            [src]="movie.image_showing"
+          />
         </div>
-        <div class="pay-movie">
-          <button
-            class="btn-fl btn-pay-now"
-            *ngIf="!checkMoviePrice()"
-            (click)="goPay()"
-          >
-            <i class="icofont icofont-wallet"></i> Pay now
-          </button>
-        </div>
-        <div class="group-btn-movie">
-          <button
-            *ngIf="!flagFollow"
-            type="button"
-            class="btn-fl btn-unfl"
-            (click)="changeFlagFollow()"
-          >
-            <i class="icofont icofont-heart-alt"></i> Follow
-          </button>
-          <button
-            class="btn-fl btn-infl"
-            *ngIf="flagFollow"
-            (click)="changeFlagFollow()"
-          >
-            <i class="icofont icofont-heart-alt"></i> Followed
-          </button>
-        </div>
-        <div class="paragraph">
-          <h5>Content</h5>
-          <div>
-            <p #paragraph class="content-paragraph" [style.--height]="height">
-              {{ movie.description }}
-            </p>
+        <div class="col-sm-9 detail-item">
+          <h4>{{ movie.name }}</h4>
+          <div class="rate">
+            <div>
+              <ngb-rating
+                [rate]="evaluate.rate"
+                [max]="5"
+                [readonly]="true"
+              ></ngb-rating>
+            </div>
+            <div class="number-rate">
+              <span>{{ evaluate.votes }} vote</span>
+            </div>
           </div>
           <div
-            *ngIf="checkOverflow(paragraph) && !flagContentHeight"
-            class="pointer-cursor hover-collapse"
+            *ngIf="movie.moviePrice !== 0 && !checkPay"
+            class="pay-movie"
           >
-            <span (click)="changeFlag()"
-              >See more <i class="icofont icofont-thin-down"></i
-            ></span>
+            <button
+              class="btn-fl btn-pay-now"
+              (click)="goPay()"
+            >
+              <i class="icofont icofont-wallet"></i> Pay now
+            </button>
           </div>
-          <div
-            *ngIf="!checkOverflow(paragraph) && flagContentHeight"
-            class="pointer-cursor hover-collapse"
-          >
-            <span (click)="changeFlag()"
-              >Collapse <i class="icofont icofont-thin-up"></i
-            ></span>
+          <div class="group-btn-movie">
+            <button
+              *ngIf="!flagFollow"
+              type="button"
+              class="btn-fl btn-unfl"
+              (click)="changeFlagFollow()"
+            >
+              <i class="icofont icofont-heart-alt"></i> Follow
+            </button>
+            <button
+              class="btn-fl btn-infl"
+              *ngIf="flagFollow"
+              (click)="changeFlagFollow()"
+            >
+              <i class="icofont icofont-heart-alt"></i> Followed
+            </button>
+          </div>
+          <div class="paragraph">
+            <h5>Content</h5>
+            <div>
+              <p
+                #paragraph
+                class="content-paragraph"
+                [style.--height]="height"
+              >
+                {{ movie.description }}
+              </p>
+            </div>
+            <div
+              *ngIf="checkOverflow(paragraph) && !flagContentHeight"
+              class="pointer-cursor hover-collapse"
+            >
+              <span (click)="changeFlag()">See more <i class="icofont icofont-thin-down"></i></span>
+            </div>
+            <div
+              *ngIf="!checkOverflow(paragraph) && flagContentHeight"
+              class="pointer-cursor hover-collapse"
+            >
+              <span (click)="changeFlag()">Collapse <i class="icofont icofont-thin-up"></i></span>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-sm-3 detail-item">
         <div class="intro-right">
-          <div class="item-h-right"><h6>Time</h6></div>
+          <div class="item-h-right">
+            <h6>Time</h6>
+          </div>
           <div class="intro-item">
             <span>{{ movie.movieDuration }} minutes</span>
           </div>
-          <div class="item-h-right"><h6>Rate</h6></div>
-          <div class="intro-item"><span>13+</span></div>
-          <div class="item-h-right"><h6>Director</h6></div>
-          <div class="intro-item"><span>Jon Watts</span></div>
-          <div class="item-h-right"><h6>Cast</h6></div>
-          <div class="intro-item">
+          <!-- <div class="item-h-right">
+            <h6>Rate</h6>
+          </div>
+          <div class="intro-item"><span>13+</span></div> -->
+          <div *ngIf="checkDirectors()" class="item-h-right">
+            <h6>Director</h6>
+          </div>
+          <div *ngIf="checkDirectors()" class="intro-item"><span></span></div>
+          <div *ngIf="checkCasts()" class="item-h-right">
+            <h6>Cast</h6>
+          </div>
+          <div *ngIf="checkCasts()" class="intro-item">
             <p>
               Tobey Maguire, Andrew Garfield, Tom Holland, Benedict Cumberbatch,
               Zendaya, Willem Dafoe, Alfred Molina, Jamie Foxx, Marisa Tomei
             </p>
           </div>
-          <div class="item-h-right"><h6>Country</h6></div>
+          <div class="item-h-right">
+            <h6>Country</h6>
+          </div>
           <div class="intro-item">
             <span>{{ countryName }}</span>
           </div>
-          <div class="item-h-right"><h6>Genre</h6></div>
+          <div class="item-h-right">
+            <h6>Genre</h6>
+          </div>
           <div class="intro-item">
-            <span *ngFor="let item of genreOfMovie; let i = index"
-              >{{ item.name
+            <span *ngFor="let item of genreOfMovie; let i = index">{{ item.name
               }}<span *ngIf="i < genreOfMovie.length - 1">, </span>
             </span>
           </div>
-          <div class="item-h-right"><h6>Release</h6></div>
+          <div class="item-h-right">
+            <h6>Release</h6>
+          </div>
           <div class="intro-item">
             <span>{{ releaseDate.getFullYear() }}</span>
           </div>

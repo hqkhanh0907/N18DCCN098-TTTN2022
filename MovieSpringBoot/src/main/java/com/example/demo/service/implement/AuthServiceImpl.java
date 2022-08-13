@@ -1,11 +1,13 @@
 package com.example.demo.service.implement;
 
 import com.example.demo.dto.AuthenticationResponse;
+import com.example.demo.dto.GroupOfRolesKeyDto;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.exception.MailException;
 import com.example.demo.exception.UsernameExitException;
 import com.example.demo.model.Account;
+import com.example.demo.model.AccountRole;
 import com.example.demo.model.VerificationToken;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.AccountRoleRepository;
@@ -57,10 +59,10 @@ public class AuthServiceImpl implements AuthService {
             user.setBirthday(registerRequest.getBirthday());
             user.setGender(registerRequest.isGender());
             accountRepository.save(user);
-
-            roleForAccountService.addRoleForAccount(
-                    accountRepository.findMovieAccountByUsername(registerRequest.getUsername()),
-                    accountRoleRepository.getById(AppConstants.DEFAULT_ROLE_KEY_USER));
+            Account account = accountRepository.findMovieAccountByUsername(registerRequest.getUsername());
+            AccountRole accountRole = accountRoleRepository.getById(AppConstants.DEFAULT_ROLE_KEY_USER);
+            GroupOfRolesKeyDto groupOfRolesKeyDto = new GroupOfRolesKeyDto(account.getId(), accountRole.getId());
+            roleForAccountService.addRoleForAccount(groupOfRolesKeyDto);
             String token = generateVerificationToken(user);
             sendMailService.signup(user, token);
             return user;

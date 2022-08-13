@@ -11,4 +11,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class GroupOfRolesDto implements Serializable {
     private GroupOfRolesKeyDto id = new GroupOfRolesKeyDto();
+    private AccountRoleDto accountRole = new AccountRoleDto();
 }

@@ -8,9 +8,9 @@ public interface MovieEvaluateService {
 
     List<MovieEvaluate> getMovieEvaluates();
 
-    void deleteMovieEvaluateByMovieId(int movieId);
+    void deleteMovieEvaluateByMovieId(Integer movieId);
 
-    void deleteMovieEvaluateByUserId(int userId);
+    void deleteMovieEvaluateByUserId(Integer userId);
 
     void editEvaluate(MovieEvaluate movieEvaluate);
 }

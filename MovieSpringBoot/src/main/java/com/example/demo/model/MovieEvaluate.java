@@ -1,20 +1,9 @@
 package com.example.demo.model;
 
 import com.example.demo.model.Key.MovieEvaluateKey;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
@@ -28,14 +17,14 @@ public class MovieEvaluate {
     @EmbeddedId
     private MovieEvaluateKey id = new MovieEvaluateKey();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @MapsId("userId")
     @JoinColumn(name = "account_id")
     @EqualsAndHashCode.Exclude
     private Account account = new Account();
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @MapsId("movieId")
     @JoinColumn(name = "movie_id")
     @EqualsAndHashCode.Exclude

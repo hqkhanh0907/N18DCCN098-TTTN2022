@@ -17,14 +17,14 @@ public class FKDirectorController {
 
     //get all movie on a director
     @GetMapping("/movie/{directorId}")
-    public ResponseEntity<?> getMovieOnDirector(@PathVariable int directorId){
+    public ResponseEntity<?> getMovieOnDirector(@PathVariable Integer directorId){
         return new ResponseEntity<>(fkDirectorService.getMovieDetailByDirectorId(directorId), HttpStatus.OK);
     }
 
 
     //get all director on a movie
     @GetMapping("/director/{movieId}")
-    public ResponseEntity<?> getDirectorOnMovie(@PathVariable int movieId){
+    public ResponseEntity<?> getDirectorOnMovie(@PathVariable Integer movieId){
         return new ResponseEntity<>(fkDirectorService.getDirectorByMovieId(movieId), HttpStatus.OK);
     }
 }

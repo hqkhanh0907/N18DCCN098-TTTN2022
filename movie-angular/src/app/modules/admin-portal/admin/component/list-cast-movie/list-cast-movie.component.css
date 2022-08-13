@@ -1,0 +1,68 @@
+.root-page {
+  display: flex
+}
+
+mat-selection-list::ng-deep .mat-list-item {
+  height: 100%;
+}
+
+.root-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.one-page-cast {
+  background-color: white;
+  border: 1px inherit;
+  border-radius: 5px;
+  padding: 10px;
+  height: fit-content;
+  margin: 0;
+}
+.choose-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+  padding: 5px;
+  height: fit-content;
+  background-color: white;
+}
+.root-choose-list {
+  display: block;
+  border-radius: 5px;
+  margin-left: 10px;
+  background-color: white;
+  height: fit-content;
+  width: 465px;
+  margin-left: 10px;
+  padding: 10px;
+}
+.cast-chosen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.cast-chosen-root {
+  margin: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 2px solid;
+}
+
+input[type="character"]::placeholder {
+  text-align: center;
+  font-size: 14px;
+}
+
+.required-character {
+  font-size: 8px;
+  align-content: center;
+  align-items: center;
+}
+

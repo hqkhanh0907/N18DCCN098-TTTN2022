@@ -8,10 +8,13 @@ import com.example.demo.dto.map.GenreOfMovieMapper;
 import com.example.demo.dto.map.MovieMapper;
 import com.example.demo.model.GenreOfMovie;
 import com.example.demo.repository.FKGenreRepository;
+import com.example.demo.repository.MovieDetailRepository;
+import com.example.demo.repository.MovieGenreRepository;
 import com.example.demo.service.FKGenreService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,17 @@ public class FKGenreServiceImpl implements FKGenreService {
     private final MovieMapper movieDetailMap;
     private final GenreMapper movieGenreMap;
     private final GenreOfMovieMapper genreOfMovieMapper;
+    private final MovieGenreRepository movieGenreRepository;
+    private final MovieDetailRepository movieDetailRepository;
+
+    @Override
+    public void saveGenreOfMovie(GenreOfMovie genreOfMovie) {
+        try {
+            fkGenreRepository.saveGenre(genreOfMovie.getId().getMovieId(), genreOfMovie.getId().getGenreId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public List<GenreOfMovieDto> getAllFKGenre() {
@@ -31,29 +45,29 @@ public class FKGenreServiceImpl implements FKGenreService {
     }
 
     @Override
-    public List<GenreDto> getGenreOnMovie(int movieId) {
-        return fkGenreRepository.findAll().stream().map(genreOfMovie -> {
-            if (genreOfMovie.getMovie().getId().equals(movieId)) {
-                return movieGenreMap.genreToGenreDto(genreOfMovie.getGenre());
-            } else {
-                return null;
+    public List<GenreDto> getGenreOnMovie(Integer movieId) {
+        List<GenreDto> genreDtos = new ArrayList<>();
+        for (GenreOfMovie genreOfMovie : fkGenreRepository.findAll()) {
+            if (genreOfMovie.getId().getMovieId().equals(movieId)) {
+                genreDtos.add(movieGenreMap.genreToGenreDto(genreOfMovie.getGenre()));
             }
-        }).collect(Collectors.toList());
+        }
+        return genreDtos;
     }
 
     @Override
-    public List<MovieDto> getMovieOnGenre(int genreId) {
-        return fkGenreRepository.findAll().stream().map(genreOfMovie -> {
-            if (genreOfMovie.getGenre().getId().equals(genreId)) {
-                return movieDetailMap.movieToMovieDto(genreOfMovie.getMovie());
-            } else {
-                return null;
+    public List<MovieDto> getMovieOnGenre(Integer genreId) {
+        List<MovieDto> movieDtos = new ArrayList<>();
+        for (GenreOfMovie genreOfMovie : fkGenreRepository.findAll()) {
+            if (genreOfMovie.getId().getGenreId().equals(genreId)) {
+                movieDtos.add(movieDetailMap.movieToMovieDto(genreOfMovie.getMovie()));
             }
-        }).collect(Collectors.toList());
+        }
+        return movieDtos;
     }
 
     @Override
-    public void deleteByGenreId(int genreId) {
+    public void deleteByGenreId(Integer genreId) {
         List<GenreOfMovie> genreOfMovies = fkGenreRepository.findAll();
         genreOfMovies.forEach(fkGenre -> {
             if (fkGenre.getGenre().getId() == genreId) {
@@ -63,7 +77,7 @@ public class FKGenreServiceImpl implements FKGenreService {
     }
 
     @Override
-    public void deleteByMovieId(int movieId) {
+    public void deleteByMovieId(Integer movieId) {
         List<GenreOfMovie> genreOfMovies = fkGenreRepository.findAll();
         genreOfMovies.forEach(fkGenre -> {
             if (fkGenre.getMovie().getId() == movieId) {
@@ -75,10 +89,10 @@ public class FKGenreServiceImpl implements FKGenreService {
     @Override
     public void removeGenreExits(Integer movieId) {
         List<GenreOfMovie> genresPresentOfMovie = fkGenreRepository.findAll();
-            for (GenreOfMovie genre : genresPresentOfMovie) {
-                if (genre.getId().getMovieId() == movieId) {
-                    fkGenreRepository.delete(genre);
-                }
+        for (GenreOfMovie genre : genresPresentOfMovie) {
+            if (genre.getId().getMovieId() == movieId) {
+                fkGenreRepository.deleteGenre(genre.getId().getMovieId(), genre.getId().getGenreId());
             }
         }
     }
+}

@@ -1,0 +1,46 @@
+.img-account-profile {
+  height: 10rem;
+  width: 10rem;
+}
+.rounded-circle {
+  border-radius: 50% !important;
+  border-style: inset;
+}
+.card {
+  box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+}
+.card .card-header {
+  font-weight: 500;
+}
+.card-header:first-child {
+  border-radius: 0.35rem 0.35rem 0 0;
+}
+.card-header {
+  padding: 1rem 1.35rem;
+  margin-bottom: 0;
+  background-color: rgba(33, 40, 50, 0.03);
+  border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+.text-label {
+  color: #111111;
+  font-size: 16px;
+  font-weight: bold;
+}
+.i-birthday {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.form-error {
+  font-size: 12px;
+  color: red;
+}
+.loading {
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  z-index: 999;
+  display: flex;
+  top: 100px;
+  justify-content: center;
+}

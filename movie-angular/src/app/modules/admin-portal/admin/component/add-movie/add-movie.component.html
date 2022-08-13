@@ -1,0 +1,485 @@
+<div class="root_add_movie">
+  <h1>Add Movie</h1>
+  <mat-divider></mat-divider>
+  <mat-dialog-content>
+    <form
+      class="dialog"
+      [formGroup]="movieService.formMovie"
+    >
+      <div>
+        <div class="card mb-3 mb-xl-0">
+          <!--      filed image showing-->
+          <div class="card-header">Image movie</div>
+          <div class="card-body">
+            <div class="img-poster">
+              <img
+                [src]="getPoster()"
+                alt="image_showing"
+              >
+            </div>
+            <div class="item">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                formControlName="poster"
+                [ngClass]="{'is-invalid':submitted && movieService.formMovie.get('poster')?.errors?.['required']}"
+              >
+              <div class="invalid-feedback form-error text-danger"><strong>Poster</strong> is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3 mb-xl-0">
+          <!--      filed image showing-->
+          <div class="card-header">Image movie</div>
+          <div class="card-body">
+            <div class="img-showing">
+              <img
+                [src]="getImage()"
+                alt="image_showing"
+              >
+            </div>
+            <div class="item">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                formControlName="image_showing"
+                [ngClass]="{'is-invalid':submitted && movieService.formMovie.get('image_showing')?.errors?.['required']}"
+              >
+              <div class="invalid-feedback form-error text-danger"><strong>Image movie</strong> is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-xl-0 w-100">
+        <div class="card-header">Movie Content</div>
+        <div class="card-body row">
+          <div class="col">
+            <!--      filed Movie's name-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Movie's name</mat-label>
+                <textarea
+                  class="movie_title"
+                  matInput
+                  formControlName="name"
+                ></textarea>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('name')?.errors?.['required']">
+                  Name's movie is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie's slug-->
+            <div class="item pointer-cursor">
+              <mat-form-field appearance="outline">
+                <mat-label>Slug</mat-label>
+                <input
+                  matInput
+                  [readonly]="true"
+                  formControlName="slug"
+                  [ngModel]="convertSlug()"
+                >
+                <mat-error *ngIf="submitted && movieService.formMovie.get('slug')?.errors?.['required']">
+                  Slug is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie's price-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Price($)</mat-label>
+                <input
+                  matInput
+                  formControlName="moviePrice"
+                >
+                <mat-error *ngIf="submitted && movieService.formMovie.get('moviePrice')?.errors?.['required']">
+                  Price is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie's details-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Movie's description</mat-label>
+                <textarea
+                  matInput
+                  formControlName="description"
+                ></textarea>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('description')?.errors?.['required']">
+                  Movie's detail is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie `status`-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Movie Status</mat-label>
+                <mat-select formControlName="movieStatus">
+                  <mat-option
+                    value=""
+                    selected
+                  ></mat-option>
+                  <mat-option
+                    *ngFor="let i of movieStatusList"
+                    [value]="i.value"
+                  >{{i.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie `country`-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Country</mat-label>
+                <mat-select formControlName="countryCode">
+                  <mat-option
+                    value=""
+                    selected
+                  ></mat-option>
+                  <mat-option
+                    *ngFor="let i of countries"
+                    [value]="i.alpha3Code"
+                  >{{i.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('countryCode')?.errors?.['required']">
+                  Country is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+          <div class="col">
+            <!--      filed link trailer-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Link Trailer</mat-label>
+                <input
+                  matInput
+                  placeholder="Link trailer"
+                  formControlName="linkTrailer"
+                >
+              </mat-form-field>
+            </div>
+            <!--      filed link movie-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Link Movie</mat-label>
+                <input
+                  matInput
+                  placeholder="Link Movie"
+                  formControlName="linkMovie"
+                  [(ngModel)]="linkMovie"
+                  (input)="changeLinkMovie()"
+                >
+                <mat-error *ngIf="submitted && movieService.formMovie.get('linkMovie')?.errors?.['required']">
+                  Link movie is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Release Date-->
+            <div class="item">
+              <mat-form-field
+                class="date-picker"
+                appearance="outline"
+              >
+                <mat-label>Release Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  [max]="maxDate"
+                  formControlName="releaseDate"
+                  placeholder="DD/MM/YYYY"
+                >
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #picker
+                  color="primary"
+                ></mat-datepicker>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('releaseDate')?.errors?.['required']">
+                  Release Date is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie Duration-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Movie duration(minutes)</mat-label>
+                <input
+                  matInput
+                  [readonly]="true"
+                  placeholder="Movie duration"
+                  [readonly]="true"
+                  [ngModel]="getDuration()"
+                  formControlName="movieDuration"
+                >
+                <mat-error *ngIf="submitted && movieService.formMovie.get('movieDuration')?.errors?.['required']">
+                  Movie duration is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie `quality`-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Quality</mat-label>
+                <mat-select formControlName="quality">
+                  <mat-option
+                    value=""
+                    selected
+                  ></mat-option>
+                  <mat-option
+                    *ngFor="let i of qualities"
+                    [value]="i.value"
+                  >{{i.value}}p</mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('quality')?.errors?.['required']">
+                  Quality is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--      filed Movie `quality`-->
+            <div class="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Translation status</mat-label>
+                <mat-select formControlName="translationStatus">
+                  <mat-option
+                    value=""
+                    selected
+                  ></mat-option>
+                  <mat-option
+                    *ngFor="let i of translationStatusList"
+                    [value]="i.value"
+                  >{{i.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && movieService.formMovie.get('translationStatus')?.errors?.['required']">
+                  Translation status is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="preview-video d-flex w-100">
+          <div class="w-100 h-100 pre-trailer item-pre">
+            <div>
+              <h6>Preview Trailer</h6>
+            </div>
+            <div class="item-video">
+              <video
+              id="player-trailer"
+                *ngIf="movieService.formMovie.value.linkTrailer"
+                [src]="movieService.formMovie.value.linkTrailer"
+                [poster]="getPoster()"
+                (loadeddata)="onMetadataTrailer()"
+                autoplay
+                class="h-100 w-100"
+                controls
+              ></video>
+            </div>
+          </div>
+          <div class="w-100 h-100 pre-movie item-pre">
+            <div>
+              <h6>Preview Movie</h6>
+            </div>
+            <div class="item-video">
+              <video
+                id="player-movie"
+                *ngIf="linkMovie && !checkLink"
+                controls
+                autoplay
+                #video
+                (loadedmetadata)="onMetadata(video)"
+                [poster]="getPoster()"
+                class="h-100 w-100"
+              >
+                <source
+                  [src]="linkMovie"
+                  type="video/mp4"
+                >
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="card group-fk">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <!--      filed Movie Genre-->
+            <div class="add-fk">
+              <div class="genre">
+                <mat-form-field
+                  class="add-fk-form-field"
+                  appearance="outline"
+                >
+                  <mat-label>Movie Genre</mat-label>
+                  <mat-select
+                    [formControl]="movieGenre"
+                    [multiple]="true"
+                  >
+                    <mat-select-trigger>
+                      <mat-chip-list>
+                        <mat-chip
+                          *ngFor="let id of movieGenre.value"
+                          [removable]="true"
+                          [value]="id"
+                          (removed)="removeGenre(id)"
+                        >
+                          {{genreId(id).name}}
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let genre of genreList"
+                      [value]="genre.id"
+                    >{{genre.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="button-add-fk">
+                <button
+                  type="button"
+                  class="btn btn-outline-success small"
+                  (click)="onCreateGenre()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <!--      filed Movie Director-->
+            <div class="add-fk">
+              <div class="director">
+                <mat-form-field
+                  class="add-fk-form-field"
+                  appearance="outline"
+                >
+                  <mat-label>Movie Director</mat-label>
+                  <mat-select
+                    [formControl]="movieDirector"
+                    [multiple]="true"
+                  >
+                    <mat-select-trigger>
+                      <mat-chip-list>
+                        <mat-chip
+                          *ngFor="let id of movieDirector.value"
+                          [removable]="true"
+                          [value]="id"
+                          (removed)="removeDirector(id)"
+                        >
+                          <mat-chip-avatar>
+                            <img
+                              style="height: 100%; width: 100%"
+                              src="{{directorId(id).avatar.url}}"
+                              alt="Director avatar"
+                            >
+                          </mat-chip-avatar>
+                          {{directorId(id).name}}
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let director of directorList"
+                      [value]="director.id"
+                    >
+                      <mat-chip-list>
+                        <mat-chip>
+                          <mat-chip-avatar>
+                            <img
+                              style="height: 100%; width: 100%"
+                              src="{{director.avatar}}"
+                              alt="avatar"
+                            >
+                          </mat-chip-avatar>
+                          {{director.name}}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="button-add-fk">
+                <button
+                  type="button"
+                  class="btn btn-outline-success small"
+                  (click)="onCreateDirector()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!--      filed Movie Cast-->
+          <div class="col add-fk">
+            <div class="cast card mb-3 mb-xl-0">
+              <div class="card-header">Movie cast</div>
+              <div class="card-body">
+                <div>
+                  <button
+                    mat-raised-button
+                    (click)="openCastList()"
+                    type="button"
+                    class="btn btn-success small"
+                  >
+                    <mat-icon>person_add</mat-icon>
+                  </button>
+                </div>
+                <div>
+                  <mat-divider></mat-divider>
+                </div>
+                <div
+                  class="choose-list"
+                  *ngIf="castListChoosed.length > 0"
+                >
+                  <div *ngFor="let castChoose of castListChoosed">
+                    <div class="cast-chosen-root">
+                      <div class="cast-chosen">
+                        <app-cast [cast]="castChoose.castDetail.id"></app-cast>
+                        <label style="font-size: 11px; color: #505050;">in the role</label>
+                        <label style="font-size: 17px; color: #202020;"><strong>{{castChoose.character}}</strong></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-add-fk">
+              <button
+                type="button"
+                class="btn btn-outline-success small"
+                (click)="onCreateCast()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="group-button">
+      <button
+        class="button-cast"
+        mat-stroked-button
+        color="warn"
+        style="background-color: white"
+        (click)="onNoClick()"
+      >
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+      <button
+        type="submit"
+        (click)="saveMovie()"
+        class="save-movie-btn"
+        mat-stroked-button
+        color="primary"
+        style="background-color: white"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

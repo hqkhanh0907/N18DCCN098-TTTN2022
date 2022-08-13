@@ -1,10 +1,7 @@
 package com.example.demo.model;
 
 import com.example.demo.model.Key.GroupOfRolesKey;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -20,14 +17,16 @@ public class GroupOfRoles {
     @EmbeddedId
     private GroupOfRolesKey id = new GroupOfRolesKey();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @MapsId("accountId")
     @JoinColumn(name = "account_id")
+    @EqualsAndHashCode.Exclude
     private Account account = new Account();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
+    @EqualsAndHashCode.Exclude
     private AccountRole accountRole = new AccountRole();
 
 
@@ -39,8 +38,4 @@ public class GroupOfRoles {
         return id != null && Objects.equals(id, that.id);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

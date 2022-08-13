@@ -1,20 +1,8 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -89,32 +77,37 @@ public class Movie {
 
     @NotNull
     @Column(name = "country_code")
-    private Integer countryCode;
-
+    private String countryCode;
+    @NotNull
     @Column(name = "movie_price")
     private Float moviePrice;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<DirectorOfMovie> directorOfMovies = new ArrayList<>();
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<FavoriteMovie> favoriteMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<GenreOfMovie> genreOfMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<AccountHistory> accountHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<MovieEvaluate> movieEvaluates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<CastOfMovie> castOfMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<BillingInformation> billingInformations = new ArrayList<>();
 
 }

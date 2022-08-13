@@ -23,7 +23,8 @@ public class Genre {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "genre", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private List<GenreOfMovie> genreOfMovies = new ArrayList<>();
+
 }

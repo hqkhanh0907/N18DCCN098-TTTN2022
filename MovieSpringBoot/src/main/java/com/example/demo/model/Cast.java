@@ -19,7 +19,7 @@ public class Cast {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "avatar")
     @NotNull(message = "Cast's avatar cannot be empty")
@@ -36,7 +36,7 @@ public class Cast {
     @NotNull(message = "Cast's birthday cannot be empty")
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "cast", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cast", cascade = {CascadeType.ALL})
     @EqualsAndHashCode.Exclude
     private List<CastOfMovie> castOfMovies = new ArrayList<>();
 }

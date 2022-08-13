@@ -8,14 +8,14 @@ import java.util.List;
 public interface MovieDirectorService {
     List<DirectorDto> getAllMovieDirector();
 
-    DirectorDto getMovieDirectorById(int id);
+    DirectorDto getMovieDirectorById(Integer id);
 
-    String deleteMovieDirectorById(int id);
+    String deleteMovieDirectorById(Integer id);
 
     DirectorDto createMovieDirector(DirectorDto movieDirectorDTO);
 
     String editMovieDirector(DirectorDto movieDirectorDTO);
 
-    DirectorPage getAllDirectorPage(int pageNo, int pageSize, String sortBy, String sortDir);
+    DirectorPage getAllDirectorPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
 
 }

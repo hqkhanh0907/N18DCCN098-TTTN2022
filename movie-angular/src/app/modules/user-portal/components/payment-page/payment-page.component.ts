@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService } from 'src/app/service/shared/account.service';
 import { MovieService } from 'src/app/service/shared/movie.service';
 import { UTIL } from 'src/app/shared/util/util';
+import { UtilClass } from 'src/app/shared/util/utilClass';
 import { ModalPaymentComponent } from '../modal-payment/modal-payment.component';
 
 @Component({
@@ -23,9 +24,10 @@ export class PaymentPageComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private activeRouter: ActivatedRoute,
+    private router: Router,
     private movieService: MovieService,
     private accService: AccountService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.slug = this.activeRouter.snapshot.params['slug'];
@@ -99,9 +101,9 @@ export class PaymentPageComponent implements OnInit {
       },
       promotion: {
         id:
-          this.promo !== undefined && this.promo !== null
+          this.promo !== null && this.promo !== undefined
             ? this.promo.id
-            : UTIL.DEFAULT_PROMO,
+            : UTIL.DEFAULT_PROMO
       },
       status: UTIL.NOT_PAY,
     };
@@ -117,5 +119,21 @@ export class PaymentPageComponent implements OnInit {
     modalRef.componentInstance.billInfo = billInfo;
     modalRef.componentInstance.movie = this.movie;
     modalRef.componentInstance.amount = this.getAmount();
+    modalRef.closed.subscribe((data: any) => {
+      if (data !== undefined && data === true) {
+        UtilClass.showMessageAlert(
+          UTIL.ICON_SUCCESS,
+          UTIL.PAY_SUCCESSFULLY
+        );
+        this.router.navigate(['/mp/movie/' + this.slug]);
+      } else {
+        UtilClass.showRequestDeleteMovie(UTIL.PAY_NOT_SUCCESSFULLY);
+      }
+      
+    });
+    modalRef.dismissed.subscribe(() => {
+      UtilClass.showMessageAlert(
+        UTIL.ICON_WARNING, UTIL.PAY_NOT_SUCCESSFULLY);
+    });
   }
 }

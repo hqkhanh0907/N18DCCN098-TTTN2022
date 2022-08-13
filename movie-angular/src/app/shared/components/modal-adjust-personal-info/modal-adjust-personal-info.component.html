@@ -1,5 +1,8 @@
 <div class="modal-changeInfo">
-  <div class="loading" *ngIf="isLoading">
+  <div
+    class="loading"
+    *ngIf="isLoading"
+  >
     <p-progressSpinner></p-progressSpinner>
   </div>
   <div class="modal-header">
@@ -17,9 +20,11 @@
         [style.--image]="getImage()"
         for="avatar"
       >
-        <label for="avatar" class="pointer-cursor">
-          <i class="icofont icofont-camera"></i
-        ></label>
+        <label
+          for="avatar"
+          class="pointer-cursor"
+        >
+          <i class="icofont icofont-camera"></i></label>
         <input
           hidden
           type="file"
@@ -30,10 +35,12 @@
         />
       </label>
     </div>
-    <form class="container" [formGroup]="adjustAccount">
+    <form
+      class="container"
+      [formGroup]="adjustAccount"
+    >
       <div class="form-group grid-item username pointer-default">
-        <label>Username</label
-        ><input
+        <label>Username</label><input
           type="text"
           class="form-control pointer-default"
           readonly
@@ -42,8 +49,7 @@
       </div>
       <div class="account-body">
         <div class="grid-item">
-          <label>Email<span style="color: red">*</span></label
-          ><input
+          <label>Email<span style="color: red">*</span></label><input
             type="text"
             class="form-control"
             placeholder="Enter your email"
@@ -65,8 +71,7 @@
           </div>
         </div>
         <div class="grid-item">
-          <label>Phone number</label
-          ><input
+          <label>Phone number</label><input
             type="text"
             class="form-control"
             formControlName="phoneNumber"
@@ -83,8 +88,7 @@
           </div>
         </div>
         <div class="grid-item">
-          <label>First name<span style="color: red">*</span></label
-          ><input
+          <label>First name<span style="color: red">*</span></label><input
             type="text"
             class="form-control"
             placeholder="Enter first name"
@@ -101,8 +105,7 @@
           </div>
         </div>
         <div class="grid-item">
-          <label>Last name<span style="color: red">*</span></label
-          ><input
+          <label>Last name<span style="color: red">*</span></label><input
             type="text"
             class="form-control"
             placeholder="Enter last name"
@@ -119,15 +122,18 @@
           </div>
         </div>
         <div class="form-group grid-item">
-          <label>Gender<span style="color: red">*</span></label
-          ><select
+          <label>Gender<span style="color: red">*</span></label>
+          <select
             class="form-control"
             formControlName="gender"
             [ngModel]="accountInf.gender"
             [ngClass]="{
               'is-invalid': submitted && adjustAccount.get('gender')?.errors?.['required']}"
           >
-            <option *ngFor="let gender of genders" [value]="gender.id">
+            <option
+              *ngFor="let gender of genders"
+              [value]="gender.id"
+            >
               {{ gender.name }}
             </option>
           </select>
@@ -136,7 +142,11 @@
         <div class="grid-item">
           <label>Birthday<span style="color: red">*</span></label>
           <div class="input-group">
-            <button class="btn" (click)="d2.toggle()" type="button">
+            <button
+              class="btn"
+              (click)="d2.toggle()"
+              type="button"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -148,12 +158,12 @@
                 <path
                   d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
                 />
-              </svg></button
-            ><input
+              </svg></button><input
               class="form-control"
               placeholder="dd-mm-yyyy"
               name="d2"
               formControlName="birthday"
+              [maxDate]="maxDate"
               ngbDatepicker
               #d2="ngbDatepicker"
               [ngClass]="{
@@ -176,8 +186,8 @@
       </div>
       <div class="grid-item address">
         <div class="p">
-          <label>Province</label
-          ><ng-select
+          <label>Province</label>
+          <ng-select
             [items]="provinces"
             bindLabel="name"
             bindValue="code"
@@ -189,8 +199,8 @@
           ></ng-select>
         </div>
         <div class="d">
-          <label>District</label
-          ><ng-select
+          <label>District</label>
+          <ng-select
             [items]="inputDistrict"
             bindLabel="name"
             bindValue="code"
@@ -202,8 +212,8 @@
           ></ng-select>
         </div>
         <div class="w">
-          <label>Ward</label
-          ><ng-select
+          <label>Ward</label>
+          <ng-select
             [items]="inputWard"
             bindLabel="name"
             bindValue="code"
@@ -213,23 +223,29 @@
           ></ng-select>
         </div>
       </div>
-      <div class="grid-item">
-        <label>Address details</label
-        ><input
+      <div class="grid-item"> 
+        <label>Address details</label><input
           [readonly]="getWID()"
           type="text"
           class="form-control"
           placeholder="Enter details address"
           formControlName="addressDetails"
         />
-        <div class="form-error text-warning" *ngIf="getWID()">
+        <div
+          class="form-error text-warning"
+          *ngIf="getWID()"
+        >
           Select ward to enter details
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-update" (click)="nextProcess()">
+    <button
+      type="button"
+      class="btn btn-update"
+      (click)="nextProcess()"
+    >
       Update
     </button>
   </div>

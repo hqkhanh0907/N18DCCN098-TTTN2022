@@ -1,25 +1,20 @@
 package com.example.demo.service.implement;
 
-import com.example.demo.dto.AccountDto;
-import com.example.demo.dto.AccountPage;
-import com.example.demo.dto.GroupOfRolesMapper;
+import com.example.demo.dto.*;
+import com.example.demo.dto.map.AccountHistoryMapper;
 import com.example.demo.dto.map.AccountMapper;
+import com.example.demo.dto.map.GroupOfRolesMapper;
 import com.example.demo.exception.AccountExeption;
 import com.example.demo.exception.MailException;
 import com.example.demo.exception.UsernameExitException;
-import com.example.demo.model.Account;
-import com.example.demo.model.AccountRole;
-import com.example.demo.model.GroupOfRoles;
+import com.example.demo.model.*;
+import com.example.demo.model.Key.FavoriteMovieKey;
 import com.example.demo.model.Key.GroupOfRolesKey;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.AccountRoleRepository;
-import com.example.demo.service.AccountService;
-import com.example.demo.service.ImageService;
-import com.example.demo.service.MovieEvaluateService;
-import com.example.demo.service.RoleForAccountService;
-import com.example.demo.service.SendMailService;
-import com.example.demo.service.UserHistoryService;
-import com.example.demo.service.VerificationTokenService;
+import com.example.demo.repository.FavoriteMovieRepository;
+import com.example.demo.repository.MovieDetailRepository;
+import com.example.demo.service.*;
 import com.example.demo.util.AppConstants;
 import com.example.demo.util.DataUtils;
 import com.nimbusds.jose.shaded.json.JSONObject;
@@ -34,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.example.demo.util.AppConstants.DEFAULT_IMAGE_ACCOUNTS;
@@ -51,12 +47,20 @@ public class AccountServiceImpl implements AccountService {
     private final VerificationTokenService verificationTokenService;
     private final MovieEvaluateService movieEvaluateService;
     private final ImageService imageService;
+    private final MovieDetailRepository movieDetailRepository;
+    private final FavoriteMovieRepository favoriteMovieRepository;
+    private final AccountHistoryMapper accountHistoryMapper;
     private final GroupOfRolesMapper groupOfRolesMapper;
 
     @Override
     public List<AccountDto> getAllAccounts() {
         return accountRepository.findAll().stream().map(account -> {
-            return accountMap.accountToAccountDto(account);
+            AccountDto accountDto = accountMap.accountToAccountDto(account);
+            List<GroupOfRolesDto> groupOfRolesDtos = account.getGroupOfRoleses().stream().map(groupOfRoles -> {
+                return groupOfRolesMapper.groupOfRolesToGroupOfRolesDto(groupOfRoles);
+            }).collect(Collectors.toList());
+            accountDto.setGroupOfRolesDtos(groupOfRolesDtos);
+            return accountDto;
         }).collect(Collectors.toList());
     }
 
@@ -79,8 +83,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccountById(int accountId) {
-        return accountMap.accountToAccountDto(accountRepository.getById(accountId));
+    public AccountDto getAccountById(Integer accountId) {
+        Account account = accountRepository.findById(accountId).orElse(null);
+        List<GroupOfRolesDto> groupOfRolesDtos = account.getGroupOfRoleses().stream().map(
+                groupOfRoles -> {
+                    return groupOfRolesMapper.groupOfRolesToGroupOfRolesDto(groupOfRoles);
+                }).collect(Collectors.toList());
+        AccountDto accountDto = accountMap.accountToAccountDto(account);
+        accountDto.setGroupOfRolesDtos(groupOfRolesDtos);
+        return accountDto;
     }
 
     @Override
@@ -137,51 +148,85 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto editAccountByUsername(AccountDto accountDto) throws MailException {
+    public AccountDto editAccountById(AccountDto accountDto) throws MailException {
         Account account = accountRepository.findById(accountDto.getId()).orElse(null);
-        assert account != null;
         if (checkEmail(accountDto.getEmail(), account.getUsername()) != false) {
             throw new MailException("Email is exit");
         } else {
-            accountRepository.save(accountMap.AccountDtoToAccount(accountDto));
+            if (!Objects.isNull(account.getGroupOfRoleses()) && !account.getGroupOfRoleses().isEmpty()) {
+                roleForAccountService.deleteRole(accountDto.getId());
+            }
+            account.setFirstname(accountDto.getFirstname());
+            account.setEmail(accountDto.getEmail());
+            account.setEnable(accountDto.getEnable());
+            account.setPhoneNumber(accountDto.getPhoneNumber());
+            account.setBirthday(accountDto.getBirthday());
+            account.setGender(accountDto.getGender());
+            account.setLastname(accountDto.getLastname());
+            if (!Objects.isNull(accountDto.getWardId())) {
+                account.setWardId(accountDto.getWardId());
+            }
+            if (!Objects.isNull(accountDto.getAddressDetails())) {
+                account.setAddressDetails(accountDto.getAddressDetails());
+            }
+            if (!Objects.isNull(accountDto.getGroupOfRolesDtos())) {
+//                account.setGroupOfRoleses(
+//                        accountDto
+//                                .getGroupOfRolesDtos()
+//                                .stream().map(groupOfRolesDto -> {
+//                                    GroupOfRoles groupOfRoles = new GroupOfRoles();
+//                                    GroupOfRolesKey groupOfRolesKey = new GroupOfRolesKey(
+//                                            groupOfRolesDto.getId().getAccountId(),
+//                                            groupOfRolesDto.getId().getRoleId());
+//                                    AccountRole accountRole = accountRoleRepository
+//                                            .findById(groupOfRolesDto.getId().getRoleId()).orElse(null);
+//                                    groupOfRoles.setId(groupOfRolesKey);
+//                                    groupOfRoles.setAccount(account);
+//                                    groupOfRoles.setAccountRole(accountRole);
+//                                    return groupOfRoles;
+//                                }).collect(Collectors.toList()));
+                for (GroupOfRolesDto groupOfRolesDto : accountDto.getGroupOfRolesDtos()) {
+                    roleForAccountService.addRoleForAccount(groupOfRolesDto.getId());
+                }
+            }
+            accountRepository.save(account);
             return accountDto;
         }
     }
 
 
-
-
-
     @Override
-    public AccountDto createAccount(Account accountCreate, int roleId) throws
+    public AccountDto createAccount(AccountDto accountDto) throws
             MailException, UsernameExitException {
         Account account = new Account();
         //check mail bang fasle => email không tồn tại
-        if (this.checkEmail(accountCreate.getEmail(), accountCreate.getUsername()) == false
-                && this.checkUsername(accountCreate.getUsername()) == false) {
+        if (this.checkEmail(accountDto.getEmail(), accountDto.getUsername()) == false
+                && this.checkUsername(accountDto.getUsername()) == false) {
             String gPass = DataUtils.generateTempPwd(8);
-            account.setUsername(accountCreate.getUsername());
+            account.setUsername(accountDto.getUsername());
             account.setPassword(passwordEncoder.encode(gPass));
-            account.setEmail(accountCreate.getEmail());
-            account.setLastname(accountCreate.getLastname());
-            account.setFirstname(accountCreate.getFirstname());
-            account.setBirthday(accountCreate.getBirthday());
-            account.setGender(accountCreate.getGender());
-            account.setAvatar(null);
-            account.setEnable(accountCreate.getEnable());
+            account.setEmail(accountDto.getEmail());
+            account.setLastname(accountDto.getLastname());
+            account.setFirstname(accountDto.getFirstname());
+            account.setEnable(accountDto.getEnable());
+            if (Objects.isNull(accountDto.getBirthday())) {
+                account.setBirthday(accountDto.getBirthday());
+            }
+            account.setGender(accountDto.getGender());
             accountRepository.save(account);
-            roleForAccountService.addRoleForAccount(
-                    accountRepository.findMovieAccountByUsername(accountCreate.getUsername()),
-                    accountRoleRepository.getById(roleId));
-            accountRepository.save(account);
-            sendMailService.create(account, gPass);
+            for (GroupOfRolesDto groupOfRolesDto : accountDto.getGroupOfRolesDtos()) {
+                roleForAccountService.addRoleForAccount(groupOfRolesDto.getId());
+            }
+            if (account.getEnable()) {
+                sendMailService.create(account, gPass);
+            }
             return accountMap.accountToAccountDto(account);
         }
         return null;
     }
 
     @Override
-    public AccountPage getAllUsersPage(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public AccountPage getAllUsersPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
@@ -221,13 +266,94 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean saveImageAcc(MultipartFile image, int accId) {
+    public boolean saveImageAcc(MultipartFile image, Integer accId) {
         Account account = accountRepository.findById(accId).orElse(null);
         assert account != null;
         JSONObject path = imageService.uploadImage(image, account.getUsername(), DEFAULT_IMAGE_ACCOUNTS);
         account.setAvatar(path.getAsString("path"));
         accountRepository.save(account);
         return true;
+    }
+
+    @Override
+    public Boolean follow(FavoriteMovieDto favoriteMovieDto) {
+        try {
+            Account account = accountRepository.findById(favoriteMovieDto.getId().getAccountId()).orElse(null);
+            List<FavoriteMovie> favoriteMovies = account.getFavoriteMovies();
+            FavoriteMovie favoriteMovie = new FavoriteMovie();
+            //new key
+            FavoriteMovieKey favoriteMovieKey = new FavoriteMovieKey();
+            favoriteMovieKey.setMovieId(favoriteMovieDto.getId().getMovieId());
+            favoriteMovieKey.setAccountId(favoriteMovieDto.getId().getAccountId());
+            //new favorite
+            favoriteMovie.setId(favoriteMovieKey);
+            favoriteMovie.setMovie(movieDetailRepository.findById(favoriteMovieDto.getId().getMovieId()).orElse(null));
+            favoriteMovie.setAccount(account);
+            favoriteMovie.setDate(favoriteMovieDto.getDate());
+            if (Objects.isNull(favoriteMovies) || favoriteMovies.isEmpty()) {
+                favoriteMovies.add(favoriteMovie);
+            } else {
+                Boolean checkExit = false;
+                for (FavoriteMovie favoriteMovieCheck : favoriteMovies) {
+                    if (favoriteMovieCheck.getId().equals(favoriteMovieKey)) {
+                        checkExit = true;
+                        break;
+                    }
+                }
+                if (checkExit.equals(false)) {
+                    favoriteMovies.add(favoriteMovie);
+                }
+            }
+            account.setFavoriteMovies(favoriteMovies);
+            accountRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Boolean getFollow(FavoriteMovieKey favoriteMovieKey) {
+        try {
+            Account account = accountRepository.findById(favoriteMovieKey.getAccountId()).orElse(null);
+            FavoriteMovie favoriteMovie = favoriteMovieRepository.findById(favoriteMovieKey).orElse(null);
+            if (account.getFavoriteMovies().contains(favoriteMovie)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Boolean saveHistory(AccountHistoryDto accountHistoryDto) {
+        try {
+            Account account = accountRepository.findById(accountHistoryDto.getAccountHistoryKey().getAccountId()).orElse(null);
+            Movie movie = movieDetailRepository.findById(accountHistoryDto.getAccountHistoryKey().getAccountId()).orElse(null);
+            AccountHistory accountHistory = accountHistoryMapper.accountHistoryDtoToAccountHistory(accountHistoryDto);
+            accountHistory.setAccount(account);
+            accountHistory.setMovie(movie);
+            List<AccountHistory> accountHistories = account.getAccountHistories();
+            if (Objects.isNull(accountHistories) || accountHistories.isEmpty()) {
+                accountHistories.add(accountHistory);
+            } else {
+                accountHistories.stream().map(accountHistoryCheck -> {
+                    if ((accountHistoryCheck.getAccountHistoryKey().getAccountId() == accountHistory.getAccountHistoryKey().getAccountId()) &&
+                            (accountHistoryCheck.getAccountHistoryKey().getMovieId() == accountHistory.getAccountHistoryKey().getMovieId())) {
+                        accountHistoryCheck.setDate(accountHistory.getDate());
+                        accountHistoryCheck.setTime_watched(accountHistory.getTime_watched());
+                    }
+                    return accountHistoryCheck;
+                }).collect(Collectors.toList());
+            }
+            account.setAccountHistories(accountHistories);
+            accountRepository.save(account);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public boolean checkEmail(String email, String username) throws MailException {
@@ -248,7 +374,7 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-    private List<GroupOfRoles> setDefaultRole(int accId) {
+    private List<GroupOfRoles> setDefaultRole(Integer accId) {
         List<GroupOfRoles> groupOfRoles = new ArrayList<>();
         groupOfRoles.add(new GroupOfRoles(
                 new GroupOfRolesKey(accId, AppConstants.DEFAULT_ROLE_KEY_USER),

@@ -40,6 +40,6 @@ public class MovieDto implements Serializable {
     @NotNull
     private Integer translationStatus;
     @NotNull
-    private Integer countryCode;
+    private String countryCode;
     private Float moviePrice;
 }

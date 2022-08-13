@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
-import { async } from 'rxjs';
 import { MovieService } from 'src/app/service/shared/movie.service';
 import { UTIL } from 'src/app/shared/util/util';
 
@@ -15,12 +15,10 @@ export class ModalPaymentComponent implements OnInit {
   @Input() amount: any;
   public payPalConfig?: IPayPalConfig;
 
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: MovieService,
+    public activeModal: NgbActiveModal) {}
 
   ngOnInit() {
-    console.log(this.movie);
-    console.log(this.billInfo);
-    console.log(this.amount);
     this.initConfig();
   }
   private initConfig(): void {
@@ -83,11 +81,12 @@ export class ModalPaymentComponent implements OnInit {
         if (data.status === UTIL.COMPLETE_PAY_STATUS) {
           setTimeout(async () => {
             this.billInfo.status = UTIL.PAYED;
+            console.log(this.billInfo);
             await this.movieService
               .addInfoBill(this.billInfo)
               .toPromise()
               .then((data: any) => {
-                console.log(data);
+                this.activeModal.close(data);
               });
           });
         }

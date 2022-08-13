@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreDto implements Serializable {
-    private int id;
+    private Integer id;
     @NotNull
     private String name;
 }

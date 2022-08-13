@@ -14,38 +14,38 @@ import java.util.List;
 public interface MovieDetailService {
     List<MovieDto> getAllMovie();
 
-    MovieDto getMovieById(int movieId);
+    MovieDto getMovieById(Integer movieId);
     MovieDto getMovieBySlug(String slug);
 
 
-//    MovieDetailPage getAllMovieDetailPage(int pageNo, int pageSize, String sortBy, String sortDir);
+//    MovieDetailPage getAllMovieDetailPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
 
     MovieDto addMovieDetail(Movie movieDTO) throws Exception;
 
     MovieDto editMovieDetail(Movie movieDTO) throws Exception;
 
-    Movie deleteMovieDetail(int id) throws Exception;
+    Movie deleteMovieDetail(Integer id) throws Exception;
 
     Movie getMovieDetailByName(String name);
 
     List<MovieRate> getListMovieRate() throws Exception;
 
-    MovieRate getRateMovie(int id) throws Exception;
+    MovieRate getRateMovie(Integer id) throws Exception;
 
-    List<GenreDto> getMovieGenres(int id);
+    List<GenreDto> getMovieGenres(Integer id);
 
 
-    List<CastDto> getMovieCasts(int id);
+    List<CastDto> getMovieCasts(Integer id);
 
     List<MovieDto> search(String searchQuery);
 
-    List<MovieEvaluateDto> loadEvaluate(int movieId);
+    List<MovieEvaluateDto> loadEvaluate(Integer movieId);
 
-    List<MovieEvaluateDto> loadEvaluateInAcc(int accId);
+    List<MovieEvaluateDto> loadEvaluateInAcc(Integer accId);
 
     Movie saveEvaluate(MovieEvaluateDto movieEvaluateDTO);
 
-    Boolean checkBillingByAccId(int accId, int movieId);
+    Boolean checkBillingByAccId(Integer accId, Integer movieId);
 
     Boolean addInfoBill(BillingInformationDto billingInformationDto);
 

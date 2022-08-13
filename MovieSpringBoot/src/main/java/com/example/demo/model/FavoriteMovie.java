@@ -1,20 +1,9 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.example.demo.model.Key.FavoriteMovieKey;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 
 @AllArgsConstructor
@@ -25,20 +14,23 @@ import java.sql.Date;
 @Entity
 @Table(name = "favorite_movie")
 public class FavoriteMovie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @EmbeddedId
+    private FavoriteMovieKey id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("accountId")
     @JoinColumn(name = "account_id")
+    @EqualsAndHashCode.Exclude
     private Account account;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("movieId")
     @JoinColumn(name = "movie_id")
+    @EqualsAndHashCode.Exclude
     private Movie movie;
 
     @Column(name = "date")
     private Date date;
+
 
 }

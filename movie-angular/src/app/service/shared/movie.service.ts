@@ -14,52 +14,65 @@ export class MovieService {
     }).set('Content-Type', 'application/json'),
   };
   formMovie = new FormGroup({
-    title: new FormControl('', [Validators.required]),
-    poster: new FormControl('', [Validators.required]),
-    details: new FormControl('', [Validators.required]),
-    movieStatus: new FormControl(true, [Validators.required]),
-    linkTrailer: new FormControl(''),
-    linkMovie: new FormControl('', [Validators.required]),
-    releaseDate: new FormControl('', [Validators.required]),
+    name: new FormControl(null, Validators.required),
+    poster: new FormControl(null, Validators.required),
+    slug: new FormControl(null, Validators.required),
+    image_showing: new FormControl(null, Validators.required),
+    description: new FormControl(null, Validators.required),
+    movieStatus: new FormControl(null, Validators.required),
+    quality: new FormControl(null, Validators.required),
+    linkTrailer: new FormControl(null),
+    linkMovie: new FormControl(null, Validators.required),
+    movieDuration: new FormControl(null, Validators.required),
+    translationStatus: new FormControl(null, Validators.required),
+    countryCode: new FormControl(null, Validators.required),
+    moviePrice: new FormControl(null, Validators.required),
+    releaseDate: new FormControl(null, Validators.required),
   });
   private httpOptionsBasic = {
     headers: new HttpHeaders().set('Content-Type', 'application/json'),
   };
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   initializeFormGroup() {
     this.formMovie = new FormGroup({
-      title: new FormControl('', [Validators.required]),
-      poster: new FormControl('', [Validators.required]),
-      details: new FormControl('', [Validators.required]),
-      movieStatus: new FormControl(true, [Validators.required]),
-      linkTrailer: new FormControl(''),
-      linkMovie: new FormControl('', [Validators.required]),
-      releaseDate: new FormControl('', [Validators.required]),
+      name: new FormControl(null, Validators.required),
+      poster: new FormControl(null, Validators.required),
+      image_showing: new FormControl(null, Validators.required),
+      slug: new FormControl(null, Validators.required),
+      description: new FormControl(null, Validators.required),
+      movieStatus: new FormControl(null, Validators.required),
+      quality: new FormControl(null, Validators.required),
+      linkTrailer: new FormControl(null),
+      linkMovie: new FormControl(null, Validators.required),
+      movieDuration: new FormControl(null, Validators.required),
+      translationStatus: new FormControl(null, Validators.required),
+      countryCode: new FormControl(null, Validators.required),
+      moviePrice: new FormControl(null, Validators.required),
+      releaseDate: new FormControl(null, Validators.required),
     });
   }
   editFormGroup(movie: any) {
     this.formMovie = new FormGroup({
-      title: new FormControl(movie.title, [Validators.required]),
-      poster: new FormControl(movie.poster, [Validators.required]),
-      details: new FormControl(movie.detail, [Validators.required]),
-      movieStatus: new FormControl(movie.movieStatus, [Validators.required]),
+      name: new FormControl(movie.name, Validators.required),
+      poster: new FormControl(movie.poster, Validators.required),
+      image_showing: new FormControl(movie.image_showing, Validators.required),
+      slug: new FormControl(movie.slug, Validators.required),
+      description: new FormControl(movie.description, Validators.required),
+      movieStatus: new FormControl(movie.movieStatus, Validators.required),
+      quality: new FormControl(movie.quality, Validators.required),
       linkTrailer: new FormControl(movie.linkTrailer),
-      linkMovie: new FormControl(movie.linkMovie, [Validators.required]),
-      releaseDate: new FormControl(new Date(movie.releaseDate), [
-        Validators.required,
-      ]),
+      linkMovie: new FormControl(movie.linkMovie, Validators.required),
+      movieDuration: new FormControl(movie.movieDuration, Validators.required),
+      translationStatus: new FormControl(movie.translationStatus, Validators.required),
+      countryCode: new FormControl(movie.countryCode, Validators.required),
+      moviePrice: new FormControl(movie.moviePrice, Validators.required),
+      releaseDate: new FormControl(new Date(movie.releaseDate), Validators.required),
     });
   }
 
-  public getAllMovie(): Observable<any> {
-    return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetailAll'
-    );
-  }
-
-  public getMovieByTitle(title: string): Observable<any> {
+  public getMovie(): Observable<any> {
     this.headers = sessionStorage.getItem('token');
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -67,14 +80,50 @@ export class MovieService {
       }).set('Content-Type', 'application/json'),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetailByTitle/' + title,
+      'http://localhost:8080/api/movieDetail/getMovieDetailAll',
+      this.httpOptions
+    );
+  }
+  public getAllMovie(): Observable<any> {
+    return this.httpClient.get<any>(
+      'http://localhost:8080/api/movieDetail/getMovieDetailAll'
+    );
+  }
+
+  public getMovieByName(name: string): Observable<any> {
+    this.headers = sessionStorage.getItem('token');
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set('Content-Type', 'application/json'),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getMovieDetailByName?name=${name}`,
+      this.httpOptions
+    );
+  }
+  public getFollow(favoriteId: any): Observable<any> {
+    this.headers = sessionStorage.getItem('token');
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set('Content-Type', 'application/json'),
+    };
+    return this.httpClient.post<any>(
+      'http://localhost:8080/api/acc/getFollow', favoriteId,
       this.httpOptions
     );
   }
   public addInfoBill(billInfo: any): Observable<any> {
+    this.headers = sessionStorage.getItem('token');
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set('Content-Type', 'application/json'),
+    };
     return this.httpClient.post<any>(
       'http://localhost:8080/api/movieDetail/addInfoBill',
-      JSON.stringify(billInfo)
+      JSON.stringify(billInfo), this.httpOptions
     );
   }
   public getMovieBySlug(slug: any): Observable<any> {
@@ -126,6 +175,15 @@ export class MovieService {
   }
 
   public getRateMovie(id: number): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+    };
+    return this.httpClient.get<any>(
+      'http://localhost:8080/api/movieDetail/getMovieRate/' + id,
+      this.httpOptions
+    );
+  }
+  public checkPay(accountId: any, movieId: any): Observable<any> {
     this.headers = sessionStorage.getItem('token');
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -133,7 +191,7 @@ export class MovieService {
       }).set('Content-Type', 'application/json'),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieRate/' + id,
+      `http://localhost:8080/api/bill/checkpay/${accountId}/${movieId}`,
       this.httpOptions
     );
   }
@@ -145,6 +203,26 @@ export class MovieService {
     return this.httpClient.post(
       `http://localhost:8080/api/movieDetail/addMovie`,
       JSON.stringify(movie),
+      this.httpOptions
+    );
+  }
+  public follow(favorite: any) {
+    if (sessionStorage.getItem('token')) {
+      this.headers = 'Bearer ' + sessionStorage.getItem('token');
+    }
+    return this.httpClient.post(
+      `http://localhost:8080/api/acc/follow`,
+      JSON.stringify(favorite),
+      this.httpOptions
+    );
+  }
+  public unFollow(favoriteId: any) {
+    if (sessionStorage.getItem('token')) {
+      this.headers = 'Bearer ' + sessionStorage.getItem('token');
+    }
+    return this.httpClient.post(
+      `http://localhost:8080/api/acc/un-follow`,
+      JSON.stringify(favoriteId),
       this.httpOptions
     );
   }
@@ -160,7 +238,7 @@ export class MovieService {
     );
   }
 
-  public addGenretoMovie(fkGenre: any) {
+  public addGenreToMovie(fkGenre: any) {
     if (sessionStorage.getItem('token')) {
       this.headers = sessionStorage.getItem('token');
     }

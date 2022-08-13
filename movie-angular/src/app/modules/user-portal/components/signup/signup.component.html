@@ -1,79 +1,173 @@
 <div class="container">
   <div class="signup">
     <div class="col-md-offset-5 col-md-3">
-      <div class="form-signup">
+      <form
+        class="form-signup"
+        [formGroup]="singUpAccount"
+      >
         <h3>Sign Up</h3>
         <div class="item">
+          <label>Username<span style="color: red">*</span></label>
           <input
             type="text"
             class="form-control input-sm chat-input"
             placeholder="Username"
+            formControlName = "username"
+            [ngClass]="{
+            'is-invalid': submitted && singUpAccount.get('username')?.errors?.['required']}"
           />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="singUpAccount.get('username')?.errors?.['required']"
+          >
+            Please enter username!
+          </div>
         </div>
         <div class="item">
+          <label>Password<span style="color: red">*</span></label>
           <input
             type="password"
             class="form-control input-sm chat-input"
             placeholder="Password"
+            formControlName = "password"
+            [ngClass]="{
+            'is-invalid': submitted && singUpAccount.get('password')?.errors?.['required']}"
           />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="singUpAccount.get('password')?.errors?.['required']"
+          >
+            Please enter password!
+          </div>
         </div>
         <div class="item">
+          <label>Email<span style="color: red">*</span></label>
           <input
             type="email"
             class="form-control input-sm chat-input"
             placeholder="Email"
+            formControlName = "email"
+            [ngClass]="{
+            'is-invalid': submitted && (singUpAccount.get('email')?.errors?.['required'] || singUpAccount.get('email')?.errors?.['email'])}"
           />
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="singUpAccount.get('email')?.errors?.['required']"
+          >
+            Please enter email!
+          </div>
+          <div
+            class="invalid-feedback form-error"
+            *ngIf="singUpAccount.get('email')?.errors?.['email']"
+          >
+            Enter the correct email format
+          </div>
         </div>
         <div class="row group-item">
           <div class="col item-child">
-            <input
-              type="text"
-              class="form-control input-sm chat-input"
-              placeholder="First name"
-            />
+            <div class="item">
+              <label>First name<span style="color: red">*</span></label>
+              <input
+                type="text"
+                class="form-control input-sm chat-input"
+                placeholder="First name"
+                formControlName = "firstname"
+                [ngClass]="{
+                'is-invalid': submitted && singUpAccount.get('firstname')?.errors?.['required']}"
+              />
+              <div
+                class="invalid-feedback form-error"
+                *ngIf="singUpAccount.get('firstname')?.errors?.['required']"
+              >
+                Please enter first name!
+              </div>
+            </div>
           </div>
           <div class="col item-child">
-            <input
-              type="text"
-              class="form-control input-sm chat-input"
-              placeholder="Last name"
-            />
+            <div class="item">
+              <label>Last name<span style="color: red">*</span></label>
+              <input
+                type="text"
+                class="form-control input-sm chat-input"
+                placeholder="Last name"
+                formControlName = "lastname"
+                [ngClass]="{
+                'is-invalid': submitted && singUpAccount.get('lastname')?.errors?.['required']}"
+              />
+              <div
+                class="invalid-feedback form-error"
+                *ngIf="singUpAccount.get('lastname')?.errors?.['required']"
+              >
+                Please enter last name!
+              </div>
+            </div>
           </div>
         </div>
         <div class="item">
-          <input
-            type="text"
-            class="form-control input-sm chat-input"
-            placeholder="Birthday"
-          />
-        </div>
-        <div class="item"><span>Gender</span></div>
-        <div class="row group-item">
-          <div class="col item-child">
-            <input
-              type="radio"
-              id="customRadioInline1"
-              name="customRadioInline1"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="customRadioInline1"
-              ><span>Male</span></label
+          <label>Birthday<span style="color: red">*</span></label>
+          <div class="input-group">
+            <button
+              class="btn"
+              (click)="d2.toggle()"
+              type="button"
             >
-          </div>
-          <div class="col item-child-radio">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-calendar"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
+                />
+              </svg>
+            </button>
             <input
-              type="radio"
-              id="customRadioInline2"
-              name="customRadioInline1"
-              class="custom-control-input"
+              class="form-control i-birthday"
+              placeholder="dd-mm-yyyy"
+              name="d2"
+              formControlName="birthday"
+              ngbDatepicker
+              #d2="ngbDatepicker"
+              style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;"
+              [ngClass]="{
+              'is-invalid': submitted && (singUpAccount.get('birthday')?.errors?.['required'] || singUpAccount.get('birthday')?.errors?.['pattern'])}"
             />
-            <label class="custom-control-label" for="customRadioInline2"
-              ><span>Female</span></label
+            <div
+              class="invalid-feedback form-error"
+              *ngIf="singUpAccount.get('birthday')?.errors?.['required']"
             >
+              Please enter birthday!
+            </div>
+            <div
+              class="invalid-feedback form-error"
+              *ngIf="singUpAccount.get('birthday')?.errors?.['pattern']"
+            >
+              Enter the correct date format
+            </div>
           </div>
         </div>
-        <div><a class="theme-btn theme-btn none-underline">Sign Up</a></div>
-      </div>
+        <div class="item">
+          <label>Gender<span style="color: red">*</span></label><select
+            class="form-control"
+            formControlName="gender"
+            [ngModel]="gender"
+            [ngClass]="{
+              'is-invalid': submitted && singUpAccount.get('gender')?.errors?.['required']}"
+          >
+            <option
+              *ngFor="let gender of genders"
+              [value]="gender.id"
+            >
+              {{ gender.name }}
+            </option>
+          </select>
+          <div class="invalid-feedback form-error">Please choose gender!</div>
+        </div>
+        <div (click)="signUp()"><a class="theme-btn theme-btn none-underline">Sign Up</a></div>
+      </form>
     </div>
   </div>
 </div>

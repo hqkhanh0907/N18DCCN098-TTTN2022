@@ -1,8 +1,6 @@
 package com.example.demo.service.implement;
 
-import com.example.demo.dto.CastDto;
 import com.example.demo.dto.CastOfMovieDto;
-import com.example.demo.dto.MovieDto;
 import com.example.demo.dto.map.CastMapper;
 import com.example.demo.dto.map.CastOfMovieMapper;
 import com.example.demo.dto.map.MovieMapper;
@@ -12,6 +10,7 @@ import com.example.demo.service.CastOfMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,44 +20,49 @@ public class CastOfMovieServiceImpl implements CastOfMovieService {
     private final FKCastRepository fkCastRepository;
     private final CastOfMovieMapper castOfMovieMapper;
     private final CastMapper castMapper;
-    private final MovieMapper movieMapper;
+    private final MovieMapper movieDetailMap;
 
     @Override
-    public List<CastDto> getCastByMovieId(Integer id) {
-        return fkCastRepository.findAll().stream().map(castOfMovie -> {
-            if (castOfMovie.getId().getMovieId().equals(id)) {
-                return castMapper.castToCastDto(castOfMovie.getCast());
-            } else {
-                return null;
+    public List<CastOfMovieDto> getCastByMovieId(Integer movieId) {
+        List<CastOfMovieDto> castOfMovieDtos = new ArrayList<>();
+        for (CastOfMovie castOfMovie : fkCastRepository.findAll()) {
+            if (castOfMovie.getId().getMovieId().equals(movieId)) {
+                castOfMovieDtos.add(castOfMovieMapper.castOfMovieToCastOfMovieDto(castOfMovie));
             }
-        }).collect(Collectors.toList());
+        }
+        return castOfMovieDtos;
     }
 
     @Override
-    public List<MovieDto> getMovieDetailByCastId(Integer id) {
-        return fkCastRepository.findAll().stream().map(castOfMovie -> {
-            return (castOfMovie.getId().getCastId().equals(id)) ? movieMapper.movieToMovieDto(castOfMovie.getMovie()) : null;
-        }).collect(Collectors.toList());
+    public List<CastOfMovieDto> getMovieDetailByCastId(Integer catsId) {
+        List<CastOfMovieDto> castOfMovieDtos = new ArrayList<>();
+        for (CastOfMovie castOfMovie : fkCastRepository.findAll()) {
+            if (castOfMovie.getId().getCastId().equals(catsId)) {
+                castOfMovieDtos.add(castOfMovieMapper.castOfMovieToCastOfMovieDto(castOfMovie));
+            }
+        }
+        return castOfMovieDtos;
     }
 
     @Override
-    public void deleteFkCastByCastId(int castId) {
+    public void deleteFkCastByCastId(Integer castId) {
         List<CastOfMovie> castOfMovies = fkCastRepository.findAll();
         castOfMovies.forEach(fkCast -> {
-            if (fkCast.getCast().getId() == castId) {
+            if (fkCast.getCast().getId().equals(castId)) {
                 fkCastRepository.delete(fkCast);
             }
         });
     }
 
     @Override
-    public void deleteFkCastByMovieId(int movieDetailId) {
+    public Boolean deleteFkCastByMovieId(Integer movieDetailId) {
         List<CastOfMovie> castOfMovies = fkCastRepository.findAll();
         castOfMovies.forEach(fkCast -> {
-            if (fkCast.getMovie().getId() == movieDetailId) {
-                fkCastRepository.delete(fkCast);
+            if (fkCast.getMovie().getId().equals(movieDetailId)) {
+                fkCastRepository.deleteById(fkCast.getId());
             }
         });
+        return true;
     }
 
     @Override
@@ -73,8 +77,17 @@ public class CastOfMovieServiceImpl implements CastOfMovieService {
         List<CastOfMovie> castsPresentOfMovie = fkCastRepository.findAll();
         for (CastOfMovie cast : castsPresentOfMovie) {
             if (cast.getId().getMovieId() == movieId) {
-                fkCastRepository.delete(cast);
+                fkCastRepository.deleteCastOfMovie(cast.getId().getMovieId(), cast.getId().getCastId());
             }
+        }
+    }
+
+    @Override
+    public void saveCastOfMovie(CastOfMovie castOfMovie) {
+        try {
+            fkCastRepository.saveCastOfMovie(castOfMovie.getId().getMovieId(), castOfMovie.getId().getCastId(), castOfMovie.getCastCharacter());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

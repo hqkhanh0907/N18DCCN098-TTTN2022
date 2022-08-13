@@ -27,16 +27,16 @@ public class MovieDetailController {
     private final EntityManager entityManager;
 
 //    @GetMapping("/page")
-//    public MovieDetailPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+//    public MovieDetailPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
 //        return movieDetailService.getAllMovieDetailPage(pageNo, pageSize, sortBy, sortDir);
 //    }
 
     @GetMapping("/getMovieDetail/{id}")
-    public ResponseEntity<?> getMovieDetailById(@PathVariable int id) {
+    public ResponseEntity<?> getMovieDetailById(@PathVariable Integer id) {
         return new ResponseEntity<>(movieDetailService.getMovieById(id), HttpStatus.OK);
     }
     @GetMapping("/checkBillByAccId/{accId}/{movieId}")
-    public ResponseEntity<?> checkBillingByAccId(@PathVariable("accId") int accId,@PathVariable("movieId") int movieId) {
+    public ResponseEntity<?> checkBillingByAccId(@PathVariable("accId") Integer accId,@PathVariable("movieId") Integer movieId) {
         return new ResponseEntity<>(movieDetailService.checkBillingByAccId(accId, movieId), HttpStatus.OK);
     }
 
@@ -58,17 +58,17 @@ public class MovieDetailController {
     }
 
     @GetMapping("/getMovieRate/{id}")
-    public ResponseEntity<?> getMovierate(@PathVariable int id) throws Exception {
+    public ResponseEntity<?> getMovierate(@PathVariable Integer id) throws Exception {
         return new ResponseEntity<>(movieDetailService.getRateMovie(id), HttpStatus.OK);
     }
 
     @GetMapping("/getGenreByMovieId/{id}")
-    public ResponseEntity<?> getGenreByMovieId(@PathVariable int id) {
+    public ResponseEntity<?> getGenreByMovieId(@PathVariable Integer id) {
         return new ResponseEntity<>(movieDetailService.getMovieGenres(id), HttpStatus.OK);
     }
 
     @GetMapping("/getCastByMovieId/{id}")
-    public ResponseEntity<?> getCastByMovieId(@PathVariable int id) {
+    public ResponseEntity<?> getCastByMovieId(@PathVariable Integer id) {
         return new ResponseEntity<>(movieDetailService.getMovieCasts(id), HttpStatus.OK);
     }
 
@@ -97,7 +97,7 @@ public class MovieDetailController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> removeMovie(@PathVariable int id) throws Exception {
+    public ResponseEntity<?> removeMovie(@PathVariable Integer id) throws Exception {
         return new ResponseEntity<>(movieDetailService.deleteMovieDetail(id), HttpStatus.OK);
     }
 
@@ -109,12 +109,12 @@ public class MovieDetailController {
     }
 
     @GetMapping("/loadEvaluateInMovie/{idMovie}")
-    public ResponseEntity<?> loadEvaluateInMovie(@PathVariable("idMovie") int movieId) {
+    public ResponseEntity<?> loadEvaluateInMovie(@PathVariable("idMovie") Integer movieId) {
         return new ResponseEntity<>(movieDetailService.loadEvaluate(movieId), HttpStatus.OK);
     }
 
     @GetMapping("/loadEvaluateInAccount/{idAcc}")
-    public ResponseEntity<?> loadEvaluateInAccount(@PathVariable("idAcc") int accId) {
+    public ResponseEntity<?> loadEvaluateInAccount(@PathVariable("idAcc") Integer accId) {
         return new ResponseEntity<>(movieDetailService.loadEvaluateInAcc(accId), HttpStatus.OK);
     }
 

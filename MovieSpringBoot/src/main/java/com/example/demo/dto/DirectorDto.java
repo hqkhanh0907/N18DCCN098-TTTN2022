@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DirectorDto implements Serializable {
-    private int id;
+    private Integer id;
     @NotBlank(message = "Director's avatar cannot be empty")
     private String avatar;
     @NotBlank(message = "Director's name cannot be empty")

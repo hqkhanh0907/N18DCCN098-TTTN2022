@@ -1,0 +1,16 @@
+<div class="movie-item-style-2 movie-item-style-1">
+  <img src="{{movie.image_showing}}" alt="img movie">
+  <div class="hvr-inner">
+    <button class="detail" (click)="detailMovie(movie.id)">
+      <a>Chi tiết</a>
+    </button>
+  </div>
+  <div class="hvr-inner">
+    <button class="delete" (click)="deleteMovie(movie.id)">
+      <a>Xoá</a>
+    </button>
+  </div>
+  <div class="mv-item-infor pointer-default">
+    <h6><a>{{movie.name}}</a></h6>
+  </div>
+</div>

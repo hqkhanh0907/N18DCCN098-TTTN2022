@@ -3,7 +3,7 @@ package com.example.demo.dto;
 import java.time.Instant;
 
 public class VerificationTokenDTO {
-    private int id;
+    private Integer id;
 
     private AccountDto AccountDto;
 

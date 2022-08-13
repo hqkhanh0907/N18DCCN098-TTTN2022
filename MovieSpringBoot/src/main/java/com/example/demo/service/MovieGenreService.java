@@ -7,9 +7,9 @@ import java.util.List;
 public interface MovieGenreService {
     List<GenreDto> getAllMovieGen();
 
-    GenreDto getMovieGenreById(int id);
+    GenreDto getMovieGenreById(Integer id);
 
-    String deleteMovieGenreById(int id);
+    String deleteMovieGenreById(Integer id);
 
     GenreDto createMovieGenre(GenreDto movieGenreDTO);
 

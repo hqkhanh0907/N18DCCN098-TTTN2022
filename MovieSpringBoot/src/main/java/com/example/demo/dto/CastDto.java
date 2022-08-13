@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CastDto implements Serializable {
-    private int id;
+    private Integer id;
     @NotNull(message = "Cast's avatar cannot be empty")
     private String avatar;
     @NotBlank(message = "Cast's name cannot be empty")

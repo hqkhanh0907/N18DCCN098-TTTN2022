@@ -1,0 +1,24 @@
+h1, 
+h2, 
+h3,
+h4,
+h5,
+h6 {
+    color: #000;
+}
+div {
+  color: #000;
+}
+.root-add-new-user {
+  width: fit-content;
+  height: fit-content;
+}
+.form-check {
+  max-width: fit-content;
+}
+
+.text-label{
+  color: #111111;
+  font-size: 16px;
+  font-weight: bold;
+}

@@ -10,8 +10,8 @@ import com.example.demo.service.FKDirectorService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,29 +21,29 @@ public class FKDirectorServiceImpl implements FKDirectorService {
     private final DirectorMapper movieDirectorMap;
 
     @Override
-    public List<DirectorDto> getDirectorByMovieId(int movieDetailId) {
-        return fkDirectorRepository.findAll().stream().map(directorOfMovie -> {
-            if (directorOfMovie.getMovie().getId().equals(movieDetailId)) {
-                return movieDirectorMap.directorToDirectorDto(directorOfMovie.getDirector());
-            } else {
-                return null;
+    public List<DirectorDto> getDirectorByMovieId(Integer movieDetailId) {
+        List<DirectorDto> directorDtos = new ArrayList<>();
+        for(DirectorOfMovie directorOfMovie: fkDirectorRepository.findAll()) {
+            if (directorOfMovie.getId().getMovieId().equals(movieDetailId)) {
+                directorDtos.add(movieDirectorMap.directorToDirectorDto(directorOfMovie.getDirector()));
             }
-        }).collect(Collectors.toList());
+        }
+        return directorDtos;
     }
 
     @Override
-    public List<MovieDto> getMovieDetailByDirectorId(int directorId) {
-        return fkDirectorRepository.findAll().stream().map(directorOfMovie -> {
-            if (directorOfMovie.getDirector().getId().equals(directorId)) {
-                return movieDetailMap.movieToMovieDto(directorOfMovie.getMovie());
-            } else {
-                return null;
+    public List<MovieDto> getMovieDetailByDirectorId(Integer directorId) {
+        List<MovieDto> movieDtos = new ArrayList<>();
+        for(DirectorOfMovie directorOfMovie: fkDirectorRepository.findAll()) {
+            if (directorOfMovie.getId().getDirectorId().equals(directorId)) {
+                movieDtos.add(movieDetailMap.movieToMovieDto(directorOfMovie.getMovie()));
             }
-        }).collect(Collectors.toList());
+        }
+        return movieDtos;
     }
 
     @Override
-    public void deleteFkDirectorByDirectorId(int directorId) {
+    public void deleteFkDirectorByDirectorId(Integer directorId) {
         List<DirectorOfMovie> directorOfMovies = fkDirectorRepository.findAll();
         directorOfMovies.forEach(fkDirector -> {
             if (fkDirector.getDirector().getId() == directorId) {
@@ -53,7 +53,7 @@ public class FKDirectorServiceImpl implements FKDirectorService {
     }
 
     @Override
-    public void deleteFkDirectorByMovieId(int movieDetailId) {
+    public void deleteFkDirectorByMovieId(Integer movieDetailId) {
         List<DirectorOfMovie> directorOfMovies = fkDirectorRepository.findAll();
         directorOfMovies.forEach(fkDirector -> {
             if (fkDirector.getMovie().getId() == movieDetailId) {
@@ -67,9 +67,19 @@ public class FKDirectorServiceImpl implements FKDirectorService {
         List<DirectorOfMovie> directorsPresentOfMovie = fkDirectorRepository.findAll();
         for (DirectorOfMovie director : directorsPresentOfMovie) {
             if (director.getId().getMovieId() == movieId) {
-                fkDirectorRepository.delete(director);
+                fkDirectorRepository.deleteDirector(director.getId().getMovieId(), director.getId().getDirectorId());
             }
         }
     }
+
+    @Override
+    public void saveDirectorOfMovie(DirectorOfMovie director) {
+        try {
+            fkDirectorRepository.saveDirector(director.getId().getMovieId(), director.getId().getDirectorId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

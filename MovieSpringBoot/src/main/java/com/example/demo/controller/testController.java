@@ -1,16 +1,52 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.CastOfMovie;
+import com.example.demo.model.GenreOfMovie;
+import com.example.demo.repository.FKCastRepository;
+import com.example.demo.repository.FKGenreRepository;
 import com.example.demo.service.AccountService;
+import com.example.demo.service.CastOfMovieService;
+import com.example.demo.service.FKGenreService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
 public class testController {
     private final AccountService accountService;
+    private final FKCastRepository fkCastRepository;
+    private final CastOfMovieService castOfMovieService;
+    private final FKGenreService fkGenreService;
+    private final FKGenreRepository fkGenreRepository;
 
-//    @GetMapping("/getAcc")
-//    public ResponseEntity<List<AccountDto>> getAllAcc() {
-//        return new ResponseEntity<>(accountService.getAllAccounts(), HttpStatus.OK);
-//    }
+    @GetMapping("/deleteCastByMovie/{id}")
+    public ResponseEntity<?> getAllAcc(@PathVariable("id") Integer id) {
+        castOfMovieService.deleteFkCastByMovieId(id);
+        List<CastOfMovie> castOfMovies = fkCastRepository.findAll();
+        System.out.println(castOfMovies);
+        return new ResponseEntity<>(castOfMovies, HttpStatus.OK);
+    }
+
+    @GetMapping("/deleteGenreByMovie/{id}")
+    public ResponseEntity<?> test(@PathVariable("id") Integer id) {
+        fkGenreService.removeGenreExits(id);
+        List<GenreOfMovie> castOfMovies = fkGenreRepository.findAll();
+        System.out.println(castOfMovies);
+        return new ResponseEntity<>(castOfMovies, HttpStatus.OK);
+    }
+
+    @PostMapping("/testAddGenre")
+    public ResponseEntity<?> responseEntity(@RequestBody GenreOfMovie genreOfMovieDto) {
+        fkGenreService.removeGenreExits(genreOfMovieDto.getId().getMovieId());
+        try {
+            fkGenreService.saveGenreOfMovie(genreOfMovieDto);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
 }

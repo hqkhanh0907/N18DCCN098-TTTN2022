@@ -8,9 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.Objects;
 
 import static com.example.demo.util.AppConstants.*;
@@ -23,7 +21,7 @@ public class ImageServiceImpl implements ImageService {
     private final AccountRepository accountRepository;
 
     @Override
-    public JSONObject uploadImage(MultipartFile multipartFile, String fileName, int type) {
+    public JSONObject uploadImage(MultipartFile multipartFile, String fileName, Integer type) {
         JSONObject path = new JSONObject();
         String extension = getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         File fileRootDir = new File("./");
@@ -54,13 +52,12 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ImageModel getImage(String url) {
+    public ImageModel getImage(String url) throws IOException {
         ImageModel imageModel = new ImageModel();
         File file = new File(url);
         if (file.exists()) {
             imageModel.setImgName(file.getName());
             imageModel.setUrl(decompressZLib(file));
-            System.out.println("\n\n\n\n\n" + imageModel + "\n\n\n\n");
             return imageModel;
         }
         return null;

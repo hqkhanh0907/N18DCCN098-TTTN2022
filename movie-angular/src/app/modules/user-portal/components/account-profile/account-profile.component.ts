@@ -39,7 +39,9 @@ export class AccountProfileComponent implements OnInit {
     this.isLoading = true;
     await this.getAllAddress();
     await this.getAcc();
-    await this.getAvatar();
+    if (this.accountInf.avatar) {
+      await this.getAvatar();
+    }
     this.isLoading = false;
   }
   async getAvatar() {
@@ -140,7 +142,7 @@ export class AccountProfileComponent implements OnInit {
         this.wList = data;
       });
   }
-  getAddressDetails() {}
+  getAddressDetails() { }
   changePass() {
     const modalRef = this.modalService.open(ModalChangePasswordComponent);
     modalRef.componentInstance.accountInf = this.accountInf;
@@ -158,8 +160,5 @@ export class AccountProfileComponent implements OnInit {
     modalRef.componentInstance.wards = this.wList;
     modalRef.componentInstance.inputDistrict = this.inputDistrict;
     modalRef.componentInstance.inputWard = this.inputWard;
-    modalRef.closed.subscribe(() => {
-      location.reload();
-    });
   }
 }

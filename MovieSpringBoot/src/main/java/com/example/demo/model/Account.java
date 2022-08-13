@@ -1,9 +1,6 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,14 +55,13 @@ public class Account implements Serializable {
     @Column(name = "firstname")
     private String firstname;
 
-    @NotNull
     @Column(name = "birthday")
     private Date birthday;
 
     @Column(name = "ward_id")
-    private String wardId;
+    private Integer wardId;
 
-    @Column(name = "address_details")
+    @Column(name = "details_address")
     private String addressDetails;
 
     @Column(name = "phone_number")
@@ -75,23 +71,24 @@ public class Account implements Serializable {
     @Column(name = "gender")
     private Boolean gender;
 
-    @OneToMany(mappedBy = "account", cascade = javax.persistence.CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<GroupOfRoles> groupOfRoleses = new ArrayList<>();
 
-
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<MovieEvaluate> movieEvaluates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<FavoriteMovie> favoriteMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account", orphanRemoval = true)
-    private List<Promotion> promotions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "account", orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<AccountHistory> accountHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
     private List<BillingInformation> billingInformations = new ArrayList<>();
 
 }

@@ -9,13 +9,13 @@ public interface MovieCastService {
 
     List<CastDto> getAllCast();
 
-    CastDto getMovieCastById(int id);
+    CastDto getMovieCastById(Integer id);
 
-    String deleteMovieCastById(int id);
+    String deleteMovieCastById(Integer id);
 
     CastDto createMovieCast(CastDto castDto);
 
     String editMovieCast(CastDto castDto);
 
-    CastPage getAllCastPage(int pageNo, int pageSize, String sortBy, String sortDir);
+    CastPage getAllCastPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
 }

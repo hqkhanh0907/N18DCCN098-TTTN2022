@@ -27,12 +27,12 @@ public class MovieGenreServiceImpl implements MovieGenreService {
     }
 
     @Override
-    public GenreDto getMovieGenreById(int id) {
+    public GenreDto getMovieGenreById(Integer id) {
         return genreMapper.genreToGenreDto(movieGenreRepository.getById(id));
     }
 
     @Override
-    public String deleteMovieGenreById(int id) {
+    public String deleteMovieGenreById(Integer id) {
         Genre genre = movieGenreRepository.findById(id).orElse(null);
         if (genre == null) {
             throw new RuntimeException("Not found genre");

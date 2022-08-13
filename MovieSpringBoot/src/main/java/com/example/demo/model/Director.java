@@ -36,7 +36,7 @@ public class Director {
     @NotNull(message = "Director's birthday cannot be empty")
     private Date birthday;
 
-    @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "director", cascade = {CascadeType.ALL})
     @EqualsAndHashCode.Exclude
     private List<DirectorOfMovie> directorOfMovies = new ArrayList<>();
 }

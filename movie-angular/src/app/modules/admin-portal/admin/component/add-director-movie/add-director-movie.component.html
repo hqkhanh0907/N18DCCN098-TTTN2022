@@ -1,0 +1,68 @@
+<h1>Add Movie's Director</h1>
+<mat-dialog-content>
+  <form [formGroup]="directorForm">
+    <div class="dialog">
+      <div class="card mb-3 mb-xl-0">
+        <!--      filed poster-->
+        <div class="card-header text-center">Director Avatar</div>
+        <div class="card-body">
+          <div class="img-poster">
+            <img src="{{directorImage.url}}"
+                 alt="poster">
+          </div>
+          <div class="item">
+            <input class="form-control form-control-sm"
+                   (change)="handleFileUpload($event)"
+                   type="file" accept="image/*" formControlName="avatar"
+                   [ngClass]="{'is-invalid':submitted && directorForm.get('avatar')?.errors?.['required']}">
+            <div class="invalid-feedback form-error small"><strong>Avatar</strong> is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3 mb-xl-0">
+        <div class="card-body">
+          <div class="item">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="directorForm.get('name')?.errors?.['required']">
+                Name is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="item">
+            <mat-form-field class="date-picker" appearance="outline">
+              <mat-label>Birthday</mat-label>
+              <input matInput [matDatepicker]="picker" [max]="maxDate" formControlName="birthday"
+                     [errorStateMatcher]="matcher">
+              <mat-error *ngIf="directorForm.get('birthday')?.errors?.['required']">
+                Birthday is <strong>required</strong>
+              </mat-error>
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker color="primary"></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="item">
+            <mat-form-field appearance="outline">
+              <mat-label>Story</mat-label>
+              <textarea matInput formControlName="story"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="group-button">
+    <button class="button-cast" mat-raised-button (click)="onNoClick()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button type="submit" (click)="saveDirector()" [disabled]="directorForm.invalid" class="button-genre save-movie-btn"
+            mat-raised-button>
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</mat-dialog-actions>

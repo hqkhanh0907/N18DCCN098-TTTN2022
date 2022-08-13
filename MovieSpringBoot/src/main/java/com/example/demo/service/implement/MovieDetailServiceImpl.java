@@ -1,38 +1,11 @@
 package com.example.demo.service.implement;
 
-import com.example.demo.dto.BillingInformationDto;
-import com.example.demo.dto.CastDto;
-import com.example.demo.dto.GenreDto;
-import com.example.demo.dto.MovieDto;
-import com.example.demo.dto.MovieEvaluateDto;
-import com.example.demo.dto.MovieRate;
-import com.example.demo.dto.PromotionDto;
-import com.example.demo.dto.map.CastMapper;
-import com.example.demo.dto.map.GenreMapper;
-import com.example.demo.dto.map.MovieEvaluateMapper;
-import com.example.demo.dto.map.MovieMapper;
-import com.example.demo.dto.map.PromotionMapper;
-import com.example.demo.model.Account;
-import com.example.demo.model.BillingInformation;
-import com.example.demo.model.Cast;
-import com.example.demo.model.CastOfMovie;
-import com.example.demo.model.Director;
-import com.example.demo.model.Genre;
+import com.example.demo.dto.*;
+import com.example.demo.dto.map.*;
+import com.example.demo.model.*;
 import com.example.demo.model.Key.BillingInformationKey;
-import com.example.demo.model.Movie;
-import com.example.demo.model.MovieEvaluate;
-import com.example.demo.model.Promotion;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.MovieCastRepository;
-import com.example.demo.repository.MovieDetailRepository;
-import com.example.demo.repository.MovieDirectorRepository;
-import com.example.demo.repository.MovieGenreRepository;
-import com.example.demo.repository.PromotionRepository;
-import com.example.demo.service.CastOfMovieService;
-import com.example.demo.service.FKDirectorService;
-import com.example.demo.service.FKGenreService;
-import com.example.demo.service.MovieDetailService;
-import com.example.demo.service.MovieEvaluateService;
+import com.example.demo.repository.*;
+import com.example.demo.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +33,8 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     private final AccountRepository accountRepository;
     private final PromotionMapper promotionMapper;
     private final PromotionRepository promotionRepository;
+    private final FKCastRepository fkCastRepository;
+    private final GenreOfMovieMapper genreOfMovieMapper;
 
     @Override
     public List<MovieDto> getAllMovie() {
@@ -69,8 +44,8 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public MovieDto getMovieById(int movieId) {
-        return movieMapper.movieToMovieDto(movieDetailRepository.getById(movieId));
+    public MovieDto getMovieById(Integer movieId) {
+        return movieMapper.movieToMovieDto(movieDetailRepository.findById(movieId).orElse(null));
     }
 
     @Override
@@ -79,7 +54,7 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
 //    @Override
-//    public MovieDetailPage getAllMovieDetailPage(int pageNo, int pageSize, String sortBy, String sortDir) {
+//    public MovieDetailPage getAllMovieDetailPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir) {
 //
 //        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 //
@@ -126,72 +101,58 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     @Override
     public MovieDto editMovieDetail(Movie movieRequest) throws Exception {
         assert movieRequest.getId() != null;
-        Movie movie = movieDetailRepository.getById(movieRequest.getId());
+        Movie movie = movieDetailRepository.findById(movieRequest.getId()).orElse(null);
         if (checkExitNameEditMovie(movieRequest.getName(), movie.getId())) {
             throw new Exception("The title of the movie already exists!");
         } else {
+            if (!movie.getCastOfMovies().isEmpty() && !Objects.isNull(movie.getCastOfMovies())) {
+                castOfMovieService.removeFkCastExits(movie.getId());
+            }
+            if (!Objects.isNull(movie.getDirectorOfMovies()) && !movie.getDirectorOfMovies().isEmpty()) {
+                fkDirectorService.removieDirectorExits(movie.getId());
+            }
+            if (!movie.getGenreOfMovies().isEmpty() && !Objects.isNull(movie.getGenreOfMovies())) {
+                fkGenreService.removeGenreExits(movie.getId());
+            }
             movie.setName(movieRequest.getName());
             movie.setPoster(movieRequest.getPoster());
+            movie.setImage_showing(movieRequest.getImage_showing());
+            movie.setSlug(movieRequest.getSlug());
+            movie.setMoviePrice(movieRequest.getMoviePrice());
             movie.setDescription(movieRequest.getDescription());
             movie.setMovieStatus(movieRequest.getMovieStatus());
+            movie.setCountryCode(movieRequest.getCountryCode());
+            movie.setTranslationStatus(movieRequest.getTranslationStatus());
             movie.setLinkTrailer(movieRequest.getLinkTrailer());
             movie.setLinkMovie(movieRequest.getLinkMovie());
             movie.setReleaseDate(movieRequest.getReleaseDate());
             movie.setMovieDuration(movieRequest.getMovieDuration());
-            movie.setViewNumber(movieRequest.getViewNumber());
-            if (movieRequest.getMovieEvaluates() != null) {
-                movie.setMovieEvaluates(movieRequest.getMovieEvaluates().stream().map(movieEvaluate -> {
-                    Movie movieDetailEvaluate = movieDetailRepository.getById(movieEvaluate.getId().getMovieId());
-                    Account account = accountRepository.getById(movieEvaluate.getId().getUserId());
-                    MovieEvaluate newEvaluate = new MovieEvaluate();
-                    newEvaluate.setMovie(movieDetailEvaluate);
-                    newEvaluate.setAccount(account);
-                    newEvaluate.setDate(movieEvaluate.getDate());
-                    newEvaluate.setContent(movieEvaluate.getContent());
-                    newEvaluate.setRate(movieEvaluate.getRate());
-                    return newEvaluate;
-                }).collect(Collectors.toList()));
+            if (!Objects.isNull(movieRequest.getCastOfMovies())) {
+                for (CastOfMovie castOfMovie: movieRequest.getCastOfMovies()) {
+                    castOfMovieService.saveCastOfMovie(castOfMovie);
+                }
             }
-            if (movieRequest.getCastOfMovies() != null) {
-                castOfMovieService.removeFkCastExits(movieRequest.getId());
-                movie.setCastOfMovies(movieRequest.getCastOfMovies().stream().map(fkCast -> {
-                    Movie movieCast = movieDetailRepository.getById(fkCast.getId().getMovieId());
-                    Cast cast = movieCastRepository.getById(fkCast.getId().getCastId());
-                    CastOfMovie newCastOfMovie = new CastOfMovie();
-                    newCastOfMovie.setMovie(movieCast);
-                    newCastOfMovie.setCast(cast);
-                    newCastOfMovie.setCastCharacter(fkCast.getCastCharacter());
-                    return newCastOfMovie;
-                }).collect(Collectors.toList()));
+            if (!Objects.isNull(movieRequest.getGenreOfMovies())) {
+                for(GenreOfMovie genreOfMovie: movieRequest.getGenreOfMovies()){
+                    fkGenreService.saveGenreOfMovie(genreOfMovie);
+                }
             }
-            if (movieRequest.getGenreOfMovies() != null) {
-                fkGenreService.removeGenreExits(movieRequest.getId());
-                movie.setGenreOfMovies(movieRequest.getGenreOfMovies().stream().map(fkGenre -> {
-                    Movie movieGenre = movieDetailRepository.getById(fkGenre.getId().getMovieId());
-                    Genre genre = movieGenreRepository.getById(fkGenre.getId().getGenreId());
-                    fkGenre.setMovie(movieGenre);
-                    fkGenre.setGenre(genre);
-                    return fkGenre;
-                }).collect(Collectors.toList()));
+            if (!Objects.isNull(movieRequest.getDirectorOfMovies())) {
+                for (DirectorOfMovie director: movieRequest.getDirectorOfMovies()) {
+                    fkDirectorService.saveDirectorOfMovie(director);
+                }
             }
-            if (movieRequest.getDirectorOfMovies() != null) {
-                fkDirectorService.removieDirectorExits(movieRequest.getId());
-                movie.setDirectorOfMovies(movieRequest.getDirectorOfMovies().stream().map(fkDirector -> {
-                    Movie movieDirector = movieDetailRepository.getById(fkDirector.getId().getMovieId());
-                    Director director = movieDirectorRepository.getById(fkDirector.getId().getDirectorId());
-                    fkDirector.setMovie(movieDirector);
-                    fkDirector.setDirector(director);
-                    return fkDirector;
-                }).collect(Collectors.toList()));
+            try {
+                movieDetailRepository.save(movie);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-            movieDetailRepository.save(movie);
             return movieMapper.movieToMovieDto(movieRequest);
         }
-
     }
 
     @Override
-    public Movie deleteMovieDetail(int id) throws Exception {
+    public Movie deleteMovieDetail(Integer id) throws Exception {
         Movie movie = movieDetailRepository.findById(id).orElse(null);
         if (movie == null) {
             throw new Exception("Move not found");
@@ -225,12 +186,12 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public MovieRate getRateMovie(int id) throws Exception {
+    public MovieRate getRateMovie(Integer id) throws Exception {
         Movie movie = movieDetailRepository.findById(id).orElse(null);
         if (movie != null) {
             List<MovieEvaluate> movieEvaluates = movieEvaluateService.getMovieEvaluates();
-            int sumRate = 0;
-            int countMovie = 0;
+            Integer sumRate = 0;
+            Integer countMovie = 0;
             assert movieEvaluates != null;
             for (MovieEvaluate movieEvaluate : movieEvaluates) {
                 if (movieEvaluate.getId().getMovieId() == id) {
@@ -249,8 +210,8 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public List<GenreDto> getMovieGenres(int id) {
-        Movie movie = movieDetailRepository.getById(id);
+    public List<GenreDto> getMovieGenres(Integer id) {
+        Movie movie = movieDetailRepository.findById(id).orElse(null);
         if (movie.getGenreOfMovies() != null || movie.getGenreOfMovies().size() != 0) {
             return movie.getGenreOfMovies().stream().map(genreOfMovie -> {
                 return genreMapper.genreToGenreDto(genreOfMovie.getGenre());
@@ -260,8 +221,8 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public List<CastDto> getMovieCasts(int id) {
-        Movie movieCast = movieDetailRepository.getById(id);
+    public List<CastDto> getMovieCasts(Integer id) {
+        Movie movieCast = movieDetailRepository.findById(id).orElse(null);
         if (movieCast.getCastOfMovies() != null || movieCast.getCastOfMovies().size() != 0) {
             return movieCast.getCastOfMovies().stream().map(castOfMovie -> {
                 return castMapper.castToCastDto(castOfMovie.getCast());
@@ -278,7 +239,7 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public List<MovieEvaluateDto> loadEvaluate(int movieId) {
+    public List<MovieEvaluateDto> loadEvaluate(Integer movieId) {
         return movieEvaluateService.getMovieEvaluates().stream().map(movieEvaluate -> {
             if (movieEvaluate.getId().getMovieId() == movieId) {
                 return movieEvaluateMapper.movieEvaluateToMovieEvaluateDto(movieEvaluate);
@@ -289,7 +250,7 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public List<MovieEvaluateDto> loadEvaluateInAcc(int accId) {
+    public List<MovieEvaluateDto> loadEvaluateInAcc(Integer accId) {
         return movieEvaluateService.getMovieEvaluates().stream().map(movieEvaluate -> {
             if (movieEvaluate.getId().getUserId() == accId) {
                 return movieEvaluateMapper.movieEvaluateToMovieEvaluateDto(movieEvaluate);
@@ -302,11 +263,10 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     @Override
     public Movie saveEvaluate(MovieEvaluateDto movieEvaluateDTO) {
         Movie movie = movieDetailRepository.findById(movieEvaluateDTO.getId().getMovieId()).orElse(null);
-        System.out.println("\n\n\n\n" + movie + "\n\n\n\n\n");
         try {
             MovieEvaluate movieEvaluate = movieEvaluateMapper.movieEvaluateDtoToMovieEvaluate(movieEvaluateDTO);
             movieEvaluate.setMovie(movie);
-            movieEvaluate.setAccount(accountRepository.getById(movieEvaluateDTO.getId().getUserId()));
+            movieEvaluate.setAccount(accountRepository.findById(movieEvaluateDTO.getId().getUserId()).orElse(null));
             List<MovieEvaluate> movieEvaluates = new ArrayList<>();
             if (movie.getMovieEvaluates() != null) {
                 movieEvaluates = movie.getMovieEvaluates();
@@ -324,15 +284,14 @@ public class MovieDetailServiceImpl implements MovieDetailService {
             movie.setMovieEvaluates(movieEvaluates);
             movieDetailRepository.save(movie);
         } catch (Exception e) {
-            System.out.println("\n\n\n\n" + e + "\n\n\n\n\n");
             throw new RuntimeException(e);
         }
         return movie;
     }
 
     @Override
-    public Boolean checkBillingByAccId(int accId, int movieId) {
-        Movie movie = movieDetailRepository.getById(movieId);
+    public Boolean checkBillingByAccId(Integer accId, Integer movieId) {
+        Movie movie = movieDetailRepository.findById(movieId).orElse(null);
         List<BillingInformation> billingInformations = movie.getBillingInformations();
         if (Objects.isNull(billingInformations) || billingInformations.isEmpty()) {
             return false;
@@ -356,7 +315,7 @@ public class MovieDetailServiceImpl implements MovieDetailService {
         Integer movieId = billingInformationDto.getBillingInformationKey().getMovieId();
         BillingInformationKey billingInformationKey = new BillingInformationKey(accountId, movieId);
         billingInformation.setBillingInformationKey(billingInformationKey);
-        billingInformation.setAccount(accountRepository.getById(billingInformationDto.getBillingInformationKey().getAccountId()));
+        billingInformation.setAccount(accountRepository.findById(billingInformationDto.getBillingInformationKey().getAccountId()).orElse(null));
         billingInformation.setMovie(movie);
         billingInformation.setPromotion(promotion);
         billingInformation.setStatus(billingInformationDto.getStatus());
@@ -372,7 +331,7 @@ public class MovieDetailServiceImpl implements MovieDetailService {
         return promotionDto;
     }
 
-    public boolean checkExitNameEditMovie(String title, int id) {
+    public boolean checkExitNameEditMovie(String title, Integer id) {
         List<Movie> movies = movieDetailRepository.findAll();
         for (Movie movie : movies) {
             if (movie.getName().equals(title) && (id != movie.getId())) {

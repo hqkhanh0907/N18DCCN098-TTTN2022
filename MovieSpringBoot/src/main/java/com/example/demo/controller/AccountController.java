@@ -1,51 +1,42 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AccountDto;
-import com.example.demo.dto.AccountPage;
-import com.example.demo.dto.Password;
+import com.example.demo.dto.*;
+import com.example.demo.dto.key.FavoriteMovieKeyDto;
 import com.example.demo.exception.MailException;
 import com.example.demo.exception.UsernameExitException;
 import com.example.demo.model.Account;
+import com.example.demo.model.Key.FavoriteMovieKey;
 import com.example.demo.model.utils.PagingHeaders;
 import com.example.demo.model.utils.PagingResponse;
 import com.example.demo.service.AccountService;
-import com.example.demo.service.ImageService;
+import com.example.demo.service.FavoriteMovieService;
 import com.example.demo.util.AppConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/acc")
 public class AccountController {
-    private final ImageService imageService;
     private final AccountService accountService;
+    private final FavoriteMovieService favoriteMovieService;
 
     @GetMapping("/page")
-    public AccountPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+    public AccountPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
         return accountService.getAllUsersPage(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @PostMapping("/createAcc/{roleId}")
-    public ResponseEntity<?> createNewAccount(@RequestBody @Valid Account account, @PathVariable("roleId") int roleId) throws UsernameExitException, MailException {
-        return new ResponseEntity<>(accountService.createAccount(account, roleId), HttpStatus.CREATED);
+    @PostMapping("/createAcc")
+    public ResponseEntity<?> createNewAccount(@RequestBody AccountDto accountDto) throws UsernameExitException, MailException {
+        return new ResponseEntity<>(accountService.createAccount(accountDto), HttpStatus.CREATED);
     }
+
     @PutMapping("/saveImageAccount/{accId}")
-    public ResponseEntity<Boolean> saveImageAccount(@RequestParam("image")MultipartFile image, @PathVariable("accId") int accId) {
+    public ResponseEntity<Boolean> saveImageAccount(@RequestParam("image") MultipartFile image, @PathVariable("accId") Integer accId) {
         return new ResponseEntity<>(accountService.saveImageAcc(image, accId), HttpStatus.OK);
     }
 
@@ -53,12 +44,14 @@ public class AccountController {
     public ResponseEntity<?> getAccount(@PathVariable String username) {
         return new ResponseEntity<>(accountService.getAccountByUsernameDTO(username), HttpStatus.OK);
     }
+
     @GetMapping("/getAllAccount")
     public ResponseEntity<?> getAllAccount() {
         return new ResponseEntity<>(accountService.getAllAccounts(), HttpStatus.OK);
     }
+
     @GetMapping("/getAccById/{accId}")
-    public ResponseEntity<?> getAccById(@PathVariable("accId") int id){
+    public ResponseEntity<?> getAccById(@PathVariable("accId") Integer id) {
         return new ResponseEntity<>(accountService.getAccountById(id), HttpStatus.OK);
     }
 
@@ -70,7 +63,7 @@ public class AccountController {
     @PutMapping("/edit")
     public ResponseEntity<?> editAccountByUsername(@RequestBody AccountDto account) throws UsernameExitException, MailException {
 
-        return new ResponseEntity<>(accountService.editAccountByUsername(account), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.editAccountById(account), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteAcc/{username}")
@@ -94,6 +87,26 @@ public class AccountController {
     public ResponseEntity<?> forgotPassword(@PathVariable String email) {
         Account account = accountService.getAccountByEmail(email);
         return new ResponseEntity<>(accountService.forgotPassword(account), HttpStatus.OK);
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<?> follow(@RequestBody FavoriteMovieDto favoriteMovieDto) {
+        return new ResponseEntity<>(accountService.follow(favoriteMovieDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/un-follow")
+    public ResponseEntity<?> unFollow(@RequestBody FavoriteMovieKeyDto favoriteMovieKeyDto) {
+        return new ResponseEntity<>(favoriteMovieService.unFollow(favoriteMovieKeyDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/getFollow")
+    public ResponseEntity<?> getFollow(@RequestBody FavoriteMovieKey favoriteMovieKey) {
+        return new ResponseEntity<>(accountService.getFollow(favoriteMovieKey), HttpStatus.OK);
+    }
+
+    @PostMapping("/saveHistory")
+    public ResponseEntity<?> saveHistory(@RequestBody AccountHistoryDto accountHistoryDto) {
+        return new ResponseEntity<>(accountService.saveHistory(accountHistoryDto), HttpStatus.OK);
     }
 
     public HttpHeaders returnHttpHeaders(PagingResponse response) {

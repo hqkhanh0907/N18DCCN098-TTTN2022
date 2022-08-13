@@ -1,0 +1,40 @@
+<mat-toolbar class="header-toolbar">
+  <div class="header"></div>
+  <button class="btn_profile" mat-button (click)="openProfilePage()">
+    <div class="image_profile">
+      <div class="img_account_profile">
+        <img class="img_acount_detail" *ngIf="accImage"
+             src="{{accImage.url}}"
+             alt="{{accImage.imgName}}">
+      </div>
+      <div class="style_username">Hi, <strong style="font-size: 18px">{{username}}</strong></div>
+    </div>
+  </button>
+  <button mat-raised-button class="btn_menu" [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" [class]="'customize'">
+    <button mat-menu-item class="btn_menu_use btn_account" (click)="openProfilePage()">
+      <div class="image_profile">
+        <div class="img_account">
+          <img class="img_acount_detail" *ngIf="accImage"
+               src="{{accImage.url}}"
+               alt="{{accImage.imgName}}">
+        </div>
+        <div class="style_username">
+          <div class="username"><strong>Huỳnh Quốc Khánh</strong></div>
+          <div class="footer_username">Your profile</div>
+        </div>
+      </div>
+    </button>
+    <div>
+      <mat-list>
+        <mat-divider style="background-color: #C9C9C98E; size: 1px; margin-bottom: 5px"></mat-divider>
+      </mat-list>
+    </div>
+    <button class="btn_logout style_menu btn_menu_use" mat-menu-item (click)="this.logout()">
+      <mat-icon class="style_menu">exit_to_app</mat-icon>
+      Logout
+    </button>
+  </mat-menu>
+</mat-toolbar>

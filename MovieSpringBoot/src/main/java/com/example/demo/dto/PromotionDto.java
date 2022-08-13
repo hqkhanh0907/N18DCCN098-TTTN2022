@@ -14,7 +14,6 @@ public class PromotionDto implements Serializable {
     private Integer id;
     private String code_name;
     private String description;
-    private AccountDto account;
     private Date start_date;
     private Date end_date;
     private Float percent_discount;

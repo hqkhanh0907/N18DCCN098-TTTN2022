@@ -1,38 +1,70 @@
 <div class="container">
   <div class="row login">
-    <div class="col-md-offset-5 col-md-3">
-      <div class="form-login" [formGroup]="loginForm">
-        <h3>Login</h3>
+    <div
+      class="form-login"
+      [formGroup]="loginForm"
+    >
+      <h3>Login</h3>
+      <div class="item">
+        <label>Username</label>
         <input
           type="text"
           id="username"
           class="form-control input-sm chat-input"
           placeholder="Username"
           formControlName="username"
+          [ngClass]="{
+            'is-invalid': submitted && loginForm.get('username')?.errors?.['required']}"
         />
-        <br />
+        <div
+          class="invalid-feedback form-error"
+          *ngIf="loginForm.get('username')?.errors?.['required']"
+        >
+          Please enter username!
+        </div>
+      </div>
+      <div class="item">
+        <label>Password</label>
         <input
           type="password"
           id="password"
           class="form-control input-sm chat-input"
           placeholder="Password"
           formControlName="password"
-        /><br />
-        <div>
-          <a class="theme-btn theme-btn none-underline" (click)="checkLogin()"
-            >Login</a
-          >
+          [ngClass]="{
+            'is-invalid': submitted && loginForm.get('password')?.errors?.['required']}"
+        />
+        <div
+          class="invalid-feedback form-error"
+          *ngIf="loginForm.get('password')?.errors?.['required']"
+        >
+          Please enter password!
         </div>
-        <div class="forgot-password">
-          <a class="none-underline pointer-cursor">Forgot password</a>
+      </div>
+      <div>
+        <div
+          class="form-error text-danger"
+          *ngIf="errorMessage"
+        >{{errorMessage}}!
         </div>
-        <div class="outer"><span>or</span></div>
-        <div class="signup">
-          <span>Do not have an account?</span
-          ><a class="pointer-cursor none-underline" (click)="goSignUp()">
-            Sign up now</a
-          >
-        </div>
+
+      </div>
+      <div class="item d-flex justify-content-center">
+        <a
+          class="theme-btn theme-btn none-underline"
+          (click)="checkLogin()"
+        >Login</a>
+      </div>
+      <div class="forgot-password">
+        <a class="none-underline pointer-cursor">Forgot password</a>
+      </div>
+      <div class="outer"><span>or</span></div>
+      <div class="signup">
+        <span>Do not have an account?</span><a
+          class="pointer-cursor none-underline"
+          (click)="goSignUp()"
+        >
+          Sign up now</a>
       </div>
     </div>
   </div>

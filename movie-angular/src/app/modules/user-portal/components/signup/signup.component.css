@@ -67,3 +67,10 @@ input {
     display: flex;
     justify-content: center;
 }
+.btn{
+    background-color: #dfdfdf;
+}
+.input-group>input {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

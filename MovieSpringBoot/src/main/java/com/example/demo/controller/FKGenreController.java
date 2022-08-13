@@ -21,13 +21,13 @@ public class FKGenreController {
 
     //get all genre on a movie
     @GetMapping("/getAllGenre/{movieId}")
-    public ResponseEntity<?> getAllGenreByMovie(@PathVariable int movieId){
+    public ResponseEntity<?> getAllGenreByMovie(@PathVariable Integer movieId){
         return new ResponseEntity<>(fkGenreService.getGenreOnMovie(movieId), HttpStatus.OK);
     }
 
     //get all movie on genre
     @GetMapping("/getAllMovie/{genreId}")
-    public ResponseEntity<?> getAllMovieByGenre(@PathVariable int genreId){
+    public ResponseEntity<?> getAllMovieByGenre(@PathVariable Integer genreId){
         return new ResponseEntity<>(fkGenreService.getMovieOnGenre(genreId), HttpStatus.OK);
     }
 

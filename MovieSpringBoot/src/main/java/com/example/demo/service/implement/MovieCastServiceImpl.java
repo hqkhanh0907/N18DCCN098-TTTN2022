@@ -31,13 +31,13 @@ public class MovieCastServiceImpl implements MovieCastService {
     }
 
     @Override
-    public CastDto getMovieCastById(int id) {
+    public CastDto getMovieCastById(Integer id) {
         return castMapper.castToCastDto(movieCastRepository.getById(id));
     }
 
 
     @Override
-    public String deleteMovieCastById(int id) {
+    public String deleteMovieCastById(Integer id) {
         Cast cast = movieCastRepository.findById(id).orElse(null);
         if (cast == null) {
             throw new RuntimeException("Cast not found");
@@ -81,7 +81,7 @@ public class MovieCastServiceImpl implements MovieCastService {
     }
 
     @Override
-    public CastPage getAllCastPage(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public CastPage getAllCastPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir) {
 
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 

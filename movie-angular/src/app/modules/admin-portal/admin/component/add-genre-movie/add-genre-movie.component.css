@@ -1,0 +1,22 @@
+* {
+  width: 100%;
+}
+h1, 
+h2, 
+h3,
+h4,
+h5,
+h6 {
+    color: #000;
+}
+div {
+  color: #000;
+}
+.group-button {
+  text-align: center;
+  float: left;
+}
+.group-button .button-genre {
+  width: 10%;
+  margin: 10px;
+}

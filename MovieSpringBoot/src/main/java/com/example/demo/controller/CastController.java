@@ -25,7 +25,7 @@ public class CastController {
 
     //get page cast
     @GetMapping("/page")
-    public CastPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
+    public CastPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
         return movieCastService.getAllCastPage(pageNo, pageSize, sortBy, sortDir);
     }
 
@@ -37,7 +37,7 @@ public class CastController {
 
     //get cast by id
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCastById(@PathVariable int id) {
+    public ResponseEntity<?> getCastById(@PathVariable Integer id) {
         return new ResponseEntity<>(movieCastService.getMovieCastById(id), HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class CastController {
 
     //delete cats
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> removeCastById(@PathVariable int id){
+    public ResponseEntity<?> removeCastById(@PathVariable Integer id){
         return new ResponseEntity<>(movieCastService.deleteMovieCastById(id),HttpStatus.OK);
     }
 }

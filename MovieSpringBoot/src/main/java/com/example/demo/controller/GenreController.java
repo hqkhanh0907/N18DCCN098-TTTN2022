@@ -30,7 +30,7 @@ public class GenreController {
 
     //get genre by id
     @GetMapping("/getById/{id}")
-    public ResponseEntity<?> getGenreById(@PathVariable int id) {
+    public ResponseEntity<?> getGenreById(@PathVariable Integer id) {
         return new ResponseEntity<>(movieGenreService.getMovieGenreById(id), HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class GenreController {
 
     //Delete genre by id
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> deleteGenreById(@PathVariable int id) {
+    public ResponseEntity<?> deleteGenreById(@PathVariable Integer id) {
         return new ResponseEntity<>(movieGenreService.deleteMovieGenreById(id), HttpStatus.OK);
     }
 }

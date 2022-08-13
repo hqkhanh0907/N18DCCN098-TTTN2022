@@ -3,22 +3,23 @@ package com.example.demo.service.implement;
 import com.example.demo.dto.AccountHistoryDto;
 import com.example.demo.dto.map.AccountHistoryMapper;
 import com.example.demo.model.AccountHistory;
+import com.example.demo.model.Key.AccountHistoryKey;
+import com.example.demo.repository.AccountHistoryRepository;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.MovieDetailRepository;
-import com.example.demo.repository.UserHistoryRepository;
 import com.example.demo.service.UserHistoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 public class UserHistoryServiceImpl implements UserHistoryService {
-    private final UserHistoryRepository userHistoryRepository;
+    private final AccountHistoryRepository userHistoryRepository;
     private final AccountHistoryMapper accountHistoryMapper;
     private final AccountRepository accountRepository;
     private final MovieDetailRepository movieDetailRepository;
@@ -30,7 +31,7 @@ public class UserHistoryServiceImpl implements UserHistoryService {
     }
 
     @Override
-    public void deleteUserHistoryFromAccount(int userId) {
+    public void deleteUserHistoryFromAccount(Integer userId) {
         List<AccountHistory> userHistories = userHistoryRepository.findAll();
         userHistories.forEach(accountHistory -> {
             if (accountHistory.getAccount().getId() == userId) {
@@ -64,7 +65,7 @@ public class UserHistoryServiceImpl implements UserHistoryService {
     }
 
     @Override
-    public List<AccountHistoryDto> getAllByAccount(int id) {
+    public List<AccountHistoryDto> getAllByAccount(Integer id) {
         List<AccountHistoryDto> userHistoryDTOS = new ArrayList<>();
         for (AccountHistory accountHistory : userHistoryRepository.findAll()) {
             if (accountHistory.getAccount().getId() == id) {
@@ -72,5 +73,15 @@ public class UserHistoryServiceImpl implements UserHistoryService {
             }
         }
         return userHistoryDTOS;
+    }
+
+    @Override
+    public AccountHistoryDto getHistoryById(AccountHistoryKey accountHistoryKey) {
+        AccountHistory accountHistory = userHistoryRepository.findById(accountHistoryKey).orElse(null);
+        if (Objects.isNull(accountHistory)) {
+            return null;
+        } else {
+            return accountHistoryMapper.accountHistoryToAccountHistoryDto(accountHistory);
+        }
     }
 }

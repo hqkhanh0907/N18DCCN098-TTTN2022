@@ -2,11 +2,7 @@ package com.example.demo.dto.map;
 
 import com.example.demo.dto.AccountHistoryDto;
 import com.example.demo.model.AccountHistory;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface AccountHistoryMapper {

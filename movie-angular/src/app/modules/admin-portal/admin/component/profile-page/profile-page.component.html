@@ -1,0 +1,290 @@
+<div class="container-xl px-4 mt-4">
+  <div class="row">
+    <form
+      class="col-xl-4"
+      [formGroup]="uploadAccImage"
+    >
+      <!-- Profile picture card-->
+      <div class="card mb-4 mb-xl-0">
+        <div class="card-header">Profile Picture</div>
+        <div class="card-body text-center">
+          <!-- Profile picture image-->
+          <img
+            class="img-account-profile rounded-circle mb-2 image-account-edit-page"
+            src="{{accImage.url}}"
+            alt="{{accImage.imgName}}"
+          >
+          <input
+            class="form-control form-control-sm"
+            (change)="handleFileUpload($event)"
+            type="file"
+            accept="image/*"
+            formControlName="accImage"
+            [ngClass]="{'is-invalid':uploadImageSubmitted && uploadAccImage.get('accImage')?.errors?.['required']}"
+          >
+          <div class="invalid-feedback form-error small">Image is require</div>
+          <!-- Profile picture help block-->
+          <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+          <!-- Profile picture upload button-->
+          <button
+            class="btn btn-primary"
+            type="submit"
+            (click)="uploadAccImageSubmit()"
+          >Upload new image</button>
+        </div>
+      </div>
+    </form>
+    <div class="col-xl-8">
+      <!-- Account details card-->
+      <form
+        class="card mb-4"
+        [formGroup]="updateAccountForm"
+      >
+        <div class="card-header">Account Details</div>
+        <div class="card-body">
+          <div
+            class="loading"
+            *ngIf="isLoading"
+          >
+            <p-progressSpinner></p-progressSpinner>
+          </div>
+          <!-- Form Group (username)-->
+          <div class="form-group mb-3">
+            <label
+              class="small mb-1 text-label"
+              for="inputUsername"
+            >Username</label>
+            <input
+              class="form-control"
+              id="inputUsername"
+              type="text"
+              formControlName="userName"
+              readonly
+            >
+          </div>
+          <!-- Form Row-->
+          <div class="row gx-3 mb-3">
+            <!-- Form Group (first name)-->
+            <div class="form-group col-md-6">
+              <label class="small mb-1  text-label">First name</label>
+              <input
+                class="form-control"
+                formControlName="firstName"
+                [ngClass]="{'is-invalid':submitted && updateAccountForm.get('firstName')?.errors?.['required']}"
+                type="text"
+                placeholder="Enter your first name"
+              >
+              <div class="invalid-feedback form-error">First Name is require</div>
+            </div>
+            <!-- Form Group (last name)-->
+            <div class="form-group col-md-6">
+              <label class="small mb-1 text-label">Last name</label>
+              <input
+                class="form-control"
+                formControlName="lastName"
+                [ngClass]="{'is-invalid':submitted && updateAccountForm.get('lastName')?.errors?.['required']}"
+                type="text"
+                placeholder="Enter your last name"
+              >
+              <div class="invalid-feedback form-error">Last Name is require</div>
+
+
+            </div>
+          </div>
+          <!-- Form Row        -->
+          <div class="row gx-3 mb-3">
+            <div class="p col">
+              <label class="small mb-1 text-label">Province</label>
+              <ng-select
+                [items]="provinces"
+                bindLabel="name"
+                bindValue="code"
+                formControlName="province"
+                [(ngModel)]="pId"
+                (clear)="clearOnProvince()"
+                (change)="showDList()"
+                placeholder="Choose..."
+              ></ng-select>
+            </div>
+            <div class="d col">
+              <label class="small mb-1 text-label">District</label>
+              <ng-select
+                [items]="inputDistrict"
+                bindLabel="name"
+                bindValue="code"
+                formControlName="district"
+                [(ngModel)]="dId"
+                (change)="showWList()"
+                (clear)="clearOnDistrict()"
+                placeholder="Choose..."
+              ></ng-select>
+            </div>
+            <div class="w col">
+              <label class="small mb-1 text-label">Ward</label>
+              <ng-select
+                [items]="inputWard"
+                bindLabel="name"
+                bindValue="code"
+                formControlName="ward"
+                (clear)="clearWardId()"
+                [(ngModel)]="wId"
+                placeholder="Choose..."
+              ></ng-select>
+            </div>
+          </div>
+          <!-- Form Group (location)-->
+          <div class="form-group mb-3">
+            <label
+              class="small mb-1 text-label"
+              for="inputLocation"
+            >Address</label>
+            <input
+              class="form-control"
+              [readonly]="!updateAccountForm.value.ward"
+              id="inputLocation"
+              type="text"
+              [(ngModel)]="locationDetail"
+              formControlName="addressDetails"
+              placeholder="Enter your location"
+            >
+            <div
+              class="form-error text-warning"
+              *ngIf="!updateAccountForm.value.ward"
+            >
+              Select ward to enter details
+            </div>
+          </div>
+          <!-- Form Row-->
+          <div class="row gx-3 mb-3">
+
+            <!-- Form Group (phone number)-->
+            <div class="col-md-6">
+              <label
+                class="small mb-1 text-label"
+                for="inputPhone"
+              >Phone number</label>
+              <input
+                class="form-control"
+                id="inputPhone"
+                type="text"
+                [value]="updateAccountForm.value.phoneNumber"
+                formControlName="phoneNumber"
+                placeholder="Enter your phone number"
+                [ngClass]="{'is-invalid':submitted && updateAccountForm.get('phoneNumber')?.errors?.['pattern']}"
+              >
+              <div
+                *ngIf="updateAccountForm.get('phoneNumber')?.errors?.['pattern']"
+                class="invalid-feedback form-error"
+              >
+                Invalid number phone
+              </div>
+            </div>
+            <!-- Form Group (birthday)-->
+            <div class="col-md-6">
+              <label class="small mb-1 text-label">Birthday</label>
+              <div class="input-group">
+                <button
+                  class="btn border border-secondary"
+                  (click)="d2.toggle()"
+                  type="button"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-calendar"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
+                    />
+                  </svg>
+                </button>
+                <input
+                  class="form-control i-birthday"
+                  placeholder="dd-mm-yyyy"
+                  name="d2"
+                  [maxDate]="maxDate"
+                  formControlName="birthday"
+                  ngbDatepicker
+                  #d2="ngbDatepicker"
+                  [ngClass]="{
+              'is-invalid': submitted && (updateAccountForm.get('birthday')?.errors?.['required'] || updateAccountForm.get('birthday')?.errors?.['pattern'])}"
+                />
+                <div
+                  class="invalid-feedback form-error"
+                  *ngIf="updateAccountForm.get('birthday')?.errors?.['required']"
+                >
+                  Please enter birthday!
+                </div>
+                <div
+                  class="invalid-feedback form-error"
+                  *ngIf="updateAccountForm.get('birthday')?.errors?.['pattern']"
+                >
+                  Enter the correct date format
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Form Group (email address and gender)-->
+          <div
+            class="row mb3"
+          >
+            <div class="col-md-6">
+              <label class="small mb-1 text-label">Email address</label>
+              <input
+                class="form-control"
+                formControlName="email"
+                [ngClass]="{'is-invalid':submitted && 
+                (updateAccountForm.get('email')?.errors?.['email'] || 
+                updateAccountForm.get('email')?.errors?.['required'])}"
+                type="text"
+                placeholder="Enter your email"
+              >
+              <div
+                *ngIf="updateAccountForm.get('email')?.errors?.['email']"
+                class="invalid-feedback form-error"
+              >Your
+                email is not in the correct format
+              </div>
+              <div
+                *ngIf="updateAccountForm.get('email')?.errors?.['required']"
+                class="invalid-feedback form-error"
+              >Your
+                email is required
+              </div>
+            </div>
+            <!-- Form Group (gender group)-->
+            <div class="col-md-6">
+              <label class="small mb-1 text-label">Gender</label>
+              <select
+                class="form-control"
+                formControlName="gender"
+                [ngClass]="{
+              'is-invalid': submitted && updateAccountForm.get('gender')?.errors?.['required']}"
+              >
+                <option
+                  *ngFor="let gender of genders"
+                  [value]="gender.id"
+                >
+                  {{ gender.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <!-- Save changes button-->
+          <div class="form-group">
+            <button
+              class="btn btn-primary"
+              type="submit"
+              (click)="onSubmit()"
+            >Save changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

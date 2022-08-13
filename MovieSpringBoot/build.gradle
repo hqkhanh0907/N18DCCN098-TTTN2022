@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.18.3'
     implementation 'org.apache.lucene:lucene-core:9.1.0'
     implementation 'org.hibernate:hibernate-search-orm:5.11.10.Final'
+    implementation 'commons-io:commons-io:2.6'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'

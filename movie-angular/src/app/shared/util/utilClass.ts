@@ -18,10 +18,19 @@ export class UtilClass {
     Toast.fire({
       icon,
       title,
-    }).then((r) => {});
+    });
   }
   static showMessBasic(message: any) {
     Swal.fire(message);
+  }
+  static async showMessSuccessfully(title: any, message: any, icon: any) {
+    let resultSf = false;
+    await Swal.fire(title, message, icon).then((result: any) => {
+      if (result.isConfirmed) {
+        resultSf = true;
+       }
+    });
+    return resultSf;
   }
   static async showRequestDeleteMovie(titleText: string) {
     let resultDelete = false;

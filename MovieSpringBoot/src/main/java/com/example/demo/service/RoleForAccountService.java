@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AccountRoleDto;
-import com.example.demo.model.Account;
-import com.example.demo.model.AccountRole;
+import com.example.demo.dto.GroupOfRolesKeyDto;
 
 import java.util.List;
 
 public interface RoleForAccountService {
-    List<AccountRoleDto> getRoleForAccount(int accId);
+    List<AccountRoleDto> getRoleForAccount(Integer accId);
 
-    void deleteRole(int userId);
+    void deleteRole(Integer userId);
 
-    void addRoleForAccount(Account account, AccountRole accountRole);
+    void addRoleForAccount(GroupOfRolesKeyDto groupOfRolesKeyDto);
 }
