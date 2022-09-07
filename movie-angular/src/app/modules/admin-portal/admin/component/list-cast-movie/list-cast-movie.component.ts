@@ -45,7 +45,6 @@ export class ListCastMovieComponent implements OnInit {
   }
 
   onNoClick() {
-    console.log('\n\n Data: ', this.data);
     this.dialogRef.close(this.data);
   }
 

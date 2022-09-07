@@ -27,11 +27,8 @@ export class LoginServiceService {
   }
 
   public getAccImage(url: string): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     const path = new FormData();
     path.set(`url`, url.toString());
@@ -52,10 +49,7 @@ export class LoginServiceService {
   }
 
   public logOut() {
-    sessionStorage.removeItem(`idAcc`);
-    sessionStorage.removeItem(`username`);
-    sessionStorage.removeItem(`token`);
-    sessionStorage.removeItem(`rolename`);
+    sessionStorage.clear();
   }
   public setSessionLogin(loginResponse: any) {
     for (let i = 0; i < loginResponse.accountRoleDtos.length; i++) {

@@ -208,11 +208,9 @@ export class ProfilePageComponent implements OnInit {
 
   async onSubmit() {
     this.submitted = true;
-    console.log('info ', this.infoAccount);
-    console.log('form ', this.updateAccountForm.value);
     this.infoAccount.firstname = this.updateAccountForm.value.firstName;
     this.infoAccount.addressDetails = this.updateAccountForm.value.addressDetails;
-    this.infoAccount.birthday = new Date(this.updateAccountForm.value.birthday).getTime();
+    this.infoAccount.birthday = new Date(UtilClass.mapDate(this.updateAccountForm.value.birthday)).getTime();
     this.infoAccount.email = this.updateAccountForm.value.email;
     this.infoAccount.gender = this.updateAccountForm.value.gender;
     this.infoAccount.lastname = this.updateAccountForm.value.lastName;

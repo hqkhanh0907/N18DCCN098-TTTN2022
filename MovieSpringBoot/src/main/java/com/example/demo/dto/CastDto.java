@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,6 +22,6 @@ public class CastDto implements Serializable {
     private String name;
     private String story;
     @NotNull(message = "Cast's birthday cannot be empty")
-    private LocalDate birthday;
+    private Date birthday;
     private List<CastOfMovieDto> castOfMovies = new ArrayList<>();
 }

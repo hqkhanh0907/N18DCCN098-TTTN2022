@@ -61,7 +61,6 @@ export class SignupComponent implements OnInit {
     }
     if (this.submitted && this.singUpAccount.valid) {
       this.signService.signUp(signUpRequest).subscribe((data: any) => {
-        console.log(data);
         if (data.statusCode === undefined) {
           // this.router.navigate(['mp/login']);
           UtilClass.showMessSuccessfully(

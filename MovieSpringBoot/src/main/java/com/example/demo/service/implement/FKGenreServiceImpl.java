@@ -71,7 +71,7 @@ public class FKGenreServiceImpl implements FKGenreService {
         List<GenreOfMovie> genreOfMovies = fkGenreRepository.findAll();
         genreOfMovies.forEach(fkGenre -> {
             if (fkGenre.getGenre().getId() == genreId) {
-                fkGenreRepository.delete(fkGenre);
+                fkGenreRepository.deleteGenre(fkGenre.getId().getMovieId(), fkGenre.getId().getGenreId());
             }
         });
     }

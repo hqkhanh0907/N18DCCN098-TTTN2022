@@ -11,11 +11,11 @@ public interface MovieCastService {
 
     CastDto getMovieCastById(Integer id);
 
-    String deleteMovieCastById(Integer id);
+    Boolean deleteMovieCastById(Integer id);
 
     CastDto createMovieCast(CastDto castDto);
 
-    String editMovieCast(CastDto castDto);
+    Boolean editMovieCast(CastDto castDto);
 
     CastPage getAllCastPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
 }

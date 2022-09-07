@@ -10,11 +10,11 @@ public interface MovieDirectorService {
 
     DirectorDto getMovieDirectorById(Integer id);
 
-    String deleteMovieDirectorById(Integer id);
+    Boolean deleteMovieDirectorById(Integer id);
 
     DirectorDto createMovieDirector(DirectorDto movieDirectorDTO);
 
-    String editMovieDirector(DirectorDto movieDirectorDTO);
+    Boolean editMovieDirector(DirectorDto movieDirectorDTO);
 
     DirectorPage getAllDirectorPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
 

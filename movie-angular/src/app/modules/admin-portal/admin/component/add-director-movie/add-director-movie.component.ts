@@ -1,7 +1,8 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DATE_FORMATS} from '@angular/material/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatDialogRef} from '@angular/material/dialog';
 import { ImageService } from 'src/app/service/shared/upload-image.service';
 import { ImageModel } from 'src/app/shared/model/ImageModel';
 import { UTIL } from 'src/app/shared/util/util';
@@ -15,9 +16,12 @@ import { MyErrorStateMatcher } from '../../../util/MyErrorStateMatcher';
   selector: 'app-add-director-movie',
   templateUrl: './add-director-movie.component.html',
   styleUrls: ['./add-director-movie.component.css'],
-  providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}
-  ]
+  providers: [{
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+  },
+  { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }]
 })
 export class AddDirectorMovieComponent implements OnInit {
   directorForm = new FormGroup({});
@@ -35,7 +39,7 @@ export class AddDirectorMovieComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.maxDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.maxDate = new Date((new Date().getFullYear() - 8), new Date().getMonth(), new Date().getDate());
     this.directorForm = new FormGroup({
       avatar: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),

@@ -1,0 +1,8 @@
+.data-movie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.no-data {
+    height: 300px !important;
+}

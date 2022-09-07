@@ -8,6 +8,7 @@ import com.example.demo.service.FavoriteMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -31,6 +32,16 @@ public class FavoriteMovieServiceImpl implements FavoriteMovieService {
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteFavByAccount(Integer id) {
+        List<FavoriteMovie> favoriteMovies = favoriteMovieRepository.findAll();
+        for (FavoriteMovie favoriteMovie: favoriteMovies) {
+            if (favoriteMovie.getId().getAccountId() == id) {
+                favoriteMovieRepository.deleteFavorte(favoriteMovie.getId().getAccountId(), favoriteMovie.getId().getMovieId());
+            }
         }
     }
 }

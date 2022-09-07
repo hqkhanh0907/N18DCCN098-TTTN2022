@@ -13,15 +13,33 @@ export class ModalPaymentComponent implements OnInit {
   @Input() billInfo: any;
   @Input() movie: any;
   @Input() amount: any;
+  @Input() discount: any;
   public payPalConfig?: IPayPalConfig;
 
   constructor(private movieService: MovieService,
-    public activeModal: NgbActiveModal) {}
+    public activeModal: NgbActiveModal) { }
 
   ngOnInit() {
     this.initConfig();
   }
   private initConfig(): void {
+    let amount = Number(this.amount) < 0 ? {
+      currency_code: 'USD',
+      value: this.amount
+    } : {
+      currency_code: 'USD',
+      value: this.amount,
+      breakdown: {
+        item_total: {
+          currency_code: 'USD',
+          value: this.movie.moviePrice,
+        },
+        discount: {
+          currency_code: 'USD',
+          value: this.discount
+        }
+      },
+    }
     this.payPalConfig = {
       currency: 'USD',
       clientId: String(UTIL.CLIENT_ID),
@@ -30,16 +48,7 @@ export class ModalPaymentComponent implements OnInit {
           intent: 'CAPTURE',
           purchase_units: [
             {
-              amount: {
-                currency_code: 'USD',
-                value: this.amount,
-                breakdown: {
-                  item_total: {
-                    currency_code: 'USD',
-                    value: this.amount,
-                  },
-                },
-              },
+              amount: amount,
               items: [
                 {
                   name: this.movie.name,

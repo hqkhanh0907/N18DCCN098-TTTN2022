@@ -2,12 +2,17 @@ import { ImageService } from 'src/app/service/shared/upload-image.service';
 import Swal from 'sweetalert2';
 
 export class UtilClass {
+  static DELIMITER = '-';
+  static mapDate(birthday: any): string {
+    const date = birthday.split(this.DELIMITER);
+    return `${parseInt(date[2], 10)}${this.DELIMITER}${parseInt(date[1], 10)}${this.DELIMITER}${parseInt(date[0], 10)}`
+  }
   static showMessageAlert(icon: any, title: any) {
     const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 3000,
+      timer: 4000,
       timerProgressBar: false,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -21,7 +26,10 @@ export class UtilClass {
     });
   }
   static showMessBasic(message: any) {
-    Swal.fire(message);
+    Swal.fire({
+      title: "Notify",
+      text: message
+    });
   }
   static async showMessSuccessfully(title: any, message: any, icon: any) {
     let resultSf = false;

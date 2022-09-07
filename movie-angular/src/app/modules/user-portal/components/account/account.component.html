@@ -28,9 +28,20 @@
         <h6>
           <a
             class="none-underline pointer-cursor text-default {{
-              getActive('favourite')
+              getActive('transaction-history')
             }}"
-            (click)="goLink('favourite')"
+            (click)="goLink('transaction-history')"
+            ><i class="icofont icofont-list"></i>Transaction history</a
+          >
+        </h6>
+      </div>
+      <div class="menu-item">
+        <h6>
+          <a
+            class="none-underline pointer-cursor text-default {{
+              getActive('favorite')
+            }}"
+            (click)="goLink('favorite')"
             ><i class="icofont icofont-heart"></i>Favourite</a
           >
         </h6>

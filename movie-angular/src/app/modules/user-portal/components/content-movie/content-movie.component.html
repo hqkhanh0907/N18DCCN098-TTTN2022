@@ -1,0 +1,110 @@
+<div
+    class="is-loading"
+    *ngIf="!isLoading"
+>
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<div class="container pb-5">
+    <div class="pt-5 mainmenu filter">
+        <ul class="d-flex primary-menu justify-content-start">
+            <li class="mr-1"><a
+                    class="none-underline pointer-cursor {{getActive('all')}}"
+                    (click)="showList('all')"
+                >All</a></li>
+            <!-- <li class="mr-1"><a
+                    class="none-underline pointer-cursor {{getActive('cartoon')}}"
+                    (click)="showList('cartoon')"
+                >Cartoon</a></li>
+            <li class="mr-1"><a
+                    class="none-underline pointer-cursor {{getActive('creepy')}}"
+                    (click)="showList('creepy')"
+                >Creepy</a></li> -->
+        </ul>
+        <div class="d-flex">
+            <div class="d-flex">
+                <div *ngIf="genres && genres.length > 0">
+                    <div
+                        ngbDropdown
+                        class="d-inline-block"
+                    >
+                        <div class="d-flex">
+                            <button
+                                type="button"
+                                class="btn text-white border-0 {{getActiveGenre()}}"
+                                ngbDropdownToggle
+                            >Genre<span *ngIf="genre">: <i><strong>{{genre.name}}</strong></i>
+                                </span>
+                            </button>
+                            <div
+                                class="d-flex justify-content-center flex-column ml-2 pointer-cursor"
+                                *ngIf="genre"
+                            >
+                                <i
+                                    class="icofont icofont-close-line text-danger"
+                                    (click)="removeGenre()"
+                                ></i>
+                            </div>
+                        </div>
+                        <div ngbDropdownMenu>
+                            <label
+                                for="btn-genre-{{item.id}}"
+                                class="pointer-cursor"
+                                ngbDropdownItem
+                                *ngFor="let item of genres"
+                            ><button
+                                    id="btn-genre-{{item.id}}"
+                                    class="btn-on-dropdown {{getActiveGenreBtn(item)}}"
+                                    (click)="showListGenre(item)"
+                                >{{item.name}}</button></label>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div *ngIf="countries && countries.length > 0">
+                    <div
+                        ngbDropdown
+                        class="d-inline-block"
+                    >
+                        <div class="d-flex">
+                            <button
+                                type="button"
+                                class="btn text-white border-0 {{getActiveCountry()}}"
+                                ngbDropdownToggle
+                            >Country<span *ngIf="country">: <i><strong>{{country.name}}</strong></i>
+                                </span>
+                            </button>
+
+                            <div
+                                class="d-flex justify-content-center flex-column ml-2 pointer-cursor"
+                                *ngIf="country"
+                            >
+                                <i
+                                    class="icofont icofont-close-line text-danger"
+                                    (click)="removeCountry()"
+                                ></i>
+                            </div>
+                        </div>
+                        <div ngbDropdownMenu>
+                            <label
+                                for="btn-genre-{{item.id}}"
+                                class="pointer-cursor"
+                                ngbDropdownItem
+                                *ngFor="let item of countries"
+                            ><button
+                                    id="btn-genre-{{item.id}}"
+                                    class="btn-on-dropdown {{getActiveCountryBtn(item)}}"
+                                    (click)="showListCountry(item)"
+                                >{{item.name}}</button></label>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="showListMovie">
+        <app-list-movie-data [movies]="showListMovie"></app-list-movie-data>
+    </div>
+</div>

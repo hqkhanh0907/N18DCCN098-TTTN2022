@@ -1,9 +1,9 @@
 .root-payment {
+    margin: 150px 0 0 0;
     width: 100%;
 }
 
 .container {
-    margin: 150px 0 0 0;
     padding: 0 50px;
     max-width: 100%;
 }

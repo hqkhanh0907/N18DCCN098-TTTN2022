@@ -31,7 +31,7 @@ Description: Online Movie,Vedio and TV Show HTML Template
 
 :root {
   --bs-text-color-default: #818181;
-  --width-video: 1000px;
+  --width-video: 1200px;
   --height-video: calc((var(--width-video) * 9) / 16);
 }
 
@@ -129,7 +129,6 @@ label {
 select:focus,
 select:active {
   box-shadow: none;
-  border: 0;
   outline: 0;
 }
 
@@ -342,7 +341,6 @@ input::-webkit-input-placeholder {
 -------- HEADER AREA CSS START --------
 ---------------------------------------*/
 .header {
-  padding: 1px 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -430,12 +428,19 @@ input::-webkit-input-placeholder {
   transform: scaleY(0);
   transition: all 0.4s;
 }
-
+.mainmenu li a.active {
+  font-weight: 800 !important;
+}
 .mainmenu li a.active,
 .mainmenu li a:hover {
   color: #eb315a;
 }
-
+.more-evaluate a:hover {
+  color: #eb315a;
+}
+.more-evaluate a {
+  color: #f5f5f5;
+}
 .header-right form {
   width: fit-content;
   border: 1px solid #eee;
@@ -668,6 +673,8 @@ hr {
 
 .single-portfolio {
   margin: 10px;
+  display: block;
+  max-width: 166px;
 }
 
 .video-area,
@@ -1419,7 +1426,7 @@ hr {
   align-items: center;
 }
 
-.watch-movie > video {
+.watch-movie > #player-movie {
   width: var(--width-video);
   height: var(--height-video);
 }
@@ -1456,4 +1463,43 @@ hr {
 
 .modal-content {
   width: fit-content;
+}
+
+/* SEARCH BOX */
+.search-box {
+  margin: 150px 0 50px 0;
+}
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.is-loading {
+  position: fixed;
+  background: #181818;
+  opacity: 0.95;
+  transition: visibility 0s linear 0s, opacity 300ms;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-data {
+  display: flex;
+  height: 100% !important;
+  width: 100% !important;
+  align-items: center;
+  justify-content: center;
+}
+.btn-on-dropdown {
+  border: none;
+  background: rgba(0, 0, 0, 0);
 }

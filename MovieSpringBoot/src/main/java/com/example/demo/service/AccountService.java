@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.dto.AccountDto;
-import com.example.demo.dto.AccountHistoryDto;
-import com.example.demo.dto.AccountPage;
-import com.example.demo.dto.FavoriteMovieDto;
+import com.example.demo.dto.*;
 import com.example.demo.exception.MailException;
 import com.example.demo.exception.UsernameExitException;
 import com.example.demo.model.Account;
@@ -50,4 +47,10 @@ public interface AccountService {
     Boolean getFollow(FavoriteMovieKey favoriteMovieKey);
 
     Boolean saveHistory(AccountHistoryDto accountHistoryDto);
+
+    List<MovieDto> getMovieHistoryByAccId(Integer accId);
+
+    List<MovieDto> getMovieFavoriteByAccId(Integer accId);
+
+    List<BillingInformationDto> getBillByAccId(Integer accId);
 }

@@ -9,9 +9,9 @@ public interface MovieGenreService {
 
     GenreDto getMovieGenreById(Integer id);
 
-    String deleteMovieGenreById(Integer id);
+    Boolean deleteMovieGenreById(Integer id);
 
     GenreDto createMovieGenre(GenreDto movieGenreDTO);
 
-    String editMovieGenre(GenreDto movieGenreDTO);
+    Boolean editMovieGenre(GenreDto genreDto);
 }

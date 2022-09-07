@@ -15,26 +15,47 @@ export class AccountService {
     }).set(`Content-Type`, `application/json`),
   };
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getAccount(accId: number): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get(
       `http://localhost:8080/api/acc/getAccById/` + accId,
       this.httpOptions
     );
   }
-  getAllAccount(): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
+  getBillByAccId(accId: any): Observable<any> {
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(
+      `http://localhost:8080/api/acc/getBillByAccId/${accId}`,
+      this.httpOptions
+    );
+  }
+  getMovieHistoryByAccId(accId: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(
+      `http://localhost:8080/api/acc/getMovieHistoryByAccId/${accId}`,
+      this.httpOptions
+    );
+  }
+  getMovieFavoriteByAccId(accId: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(
+      `http://localhost:8080/api/acc/getMovieFavoriteByAccId/${accId}`,
+      this.httpOptions
+    );
+  }
+  getAllAccount(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get(
       `http://localhost:8080/api/acc/getAllAccount`,
@@ -43,11 +64,8 @@ export class AccountService {
   }
 
   updateAccount(account: any): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.put(
       `http://localhost:8080/api/acc/edit`,
@@ -57,11 +75,8 @@ export class AccountService {
   }
 
   deleteAccByUsername(username: string): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.delete(
       `http://localhost:8080/api/acc/deleteAcc/` + username,
@@ -69,11 +84,8 @@ export class AccountService {
     );
   }
   getAllRole(): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get(
       `http://localhost:8080/role/getAllRole`,
@@ -82,11 +94,8 @@ export class AccountService {
   }
 
   addAccount(acc: any) {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.post(
       `http://localhost:8080/api/acc/createAcc/`,
@@ -105,17 +114,23 @@ export class AccountService {
       this.httpOptions
     );
   }
-  saveHistory(history: any): Observable<any>   {
-    this.headers = sessionStorage.getItem(`token`);
+  saveHistory(history: any): Observable<any> {
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.post(
       `http://localhost:8080/api/acc/saveHistory`, JSON.stringify(history),
       this.httpOptions
     );
+  }
+  saveEvaluate(evaluate: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.post(
+      `http://localhost:8080/api/movieDetail/saveEvaluate`,
+      JSON.stringify(evaluate),
+      this.httpOptions);
   }
   public getProvinceByCode(code: any): Observable<any> {
     return this.httpClient.get(`https://provinces.open-api.vn/api/p/` + code);

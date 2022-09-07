@@ -9,6 +9,10 @@ import {AddMovieComponent} from './admin/component/add-movie/add-movie.component
 import {ProfilePageComponent} from './admin/component/profile-page/profile-page.component';
 import {UserComponent} from './admin/component/user/user.component';
 import { AuthGaurdService } from 'src/app/service/admin/auth-gaurd-service-service.service';
+import { GenreComponent } from './admin/component/genre/genre.component';
+import { PromotionComponent } from './admin/component/promotion/promotion.component';
+import { PageCastComponent } from './admin/component/page-cast/page-cast.component';
+import { DirectorComponent } from './admin/component/director/director.component';
 
 const routes: Routes = [
   {
@@ -21,7 +25,11 @@ const routes: Routes = [
           {path: 'profile', component: ProfilePageComponent},
           {path: 'movie', component: MovieComponent},
           {path: 'dashboard', component: DashboardComponent},
-          {path: 'user', component: UserComponent}
+          {path: 'user', component: UserComponent},
+          {path: 'genre', component: GenreComponent},
+          {path: 'promotion', component: PromotionComponent},
+          {path: 'cast', component: PageCastComponent},
+          {path: 'director', component: DirectorComponent}
         ],
         canActivate: [AuthGaurdService]
       },

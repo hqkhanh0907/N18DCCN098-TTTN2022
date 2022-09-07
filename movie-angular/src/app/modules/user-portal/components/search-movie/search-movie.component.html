@@ -1,0 +1,18 @@
+<div class="search-box">
+    <div class="container">
+        <div>
+            <h2>Search: {{search}}</h2>
+        </div>
+        <div class="mt-4">
+            <div>
+                <h4>Result:</h4>
+            </div>
+            <div *ngIf="checkMovie()">
+                <app-list-movie-data [movies]="movies"></app-list-movie-data>
+            </div>
+            <div *ngIf="!checkMovie()">
+                <h1>Not Found</h1>
+            </div>
+        </div>
+    </div>
+</div>

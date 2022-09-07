@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'app-carousel-movie',
   templateUrl: './carousel-movie.component.html',
   styleUrls: ['./carousel-movie.component.css'],
 })
 export class CarouselMovieComponent implements OnInit {
+  @Input() movies!: any[];
+  @Input() title: any;
+  lMovies: any[] = [];
   responsiveOptions: any;
   constructor() {
     this.responsiveOptions = [
@@ -27,5 +29,6 @@ export class CarouselMovieComponent implements OnInit {
     ];
   }
 
-  ngOnInit() {}
+  async ngOnInit() {
+  }
 }

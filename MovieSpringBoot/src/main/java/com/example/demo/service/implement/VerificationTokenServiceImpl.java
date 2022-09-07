@@ -18,7 +18,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         List<VerificationToken> verificationTokens = verificationTokenRepository.findAll();
         verificationTokens.forEach(verificationToken -> {
             if (verificationToken.getAccount().getId() == userId) {
-                verificationTokenRepository.delete(verificationToken);
+                verificationTokenRepository.deleteAccountToken(verificationToken.getId());
             }
         });
     }

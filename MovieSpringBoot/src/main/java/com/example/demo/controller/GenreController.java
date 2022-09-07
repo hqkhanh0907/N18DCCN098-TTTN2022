@@ -41,9 +41,9 @@ public class GenreController {
     }
 
     //Edit genre
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> editGenre(@PathVariable GenreDto id) {
-        return new ResponseEntity<>(movieGenreService.editMovieGenre(id), HttpStatus.OK);
+    @PutMapping("/edit")
+    public ResponseEntity<?> editGenre(@RequestBody GenreDto genreDto) {
+        return new ResponseEntity<>(movieGenreService.editMovieGenre(genreDto), HttpStatus.OK);
     }
 
     //Delete genre by id

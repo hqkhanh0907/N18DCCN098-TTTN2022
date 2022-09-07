@@ -19,32 +19,42 @@ export class MovieCastService {
   }
 
   public getCast(): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
       `http://localhost:8080/api/cast/getAll`,
       this.httpOptions
     );
   }
+  deleteCast(id: number): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.delete<any>(
+      `http://localhost:8080/api/cast/remove/${id}`,
+      this.httpOptions
+    );
+  }
 
   public getCastById(id: number): Observable<any> {
-    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set(`Content-Type`, `application/json`),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get(
       `http://localhost:8080/api/cast/` + id,
       this.httpOptions
     );
   }
+  editCast(cast: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders({
+      }).set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.put(`http://localhost:8080/api/cast/edit`, JSON.stringify(cast), this.httpOptions);
+  }
 
-  public addCast(movieCast: MovieCast) {
+  public addCast(movieCast: any) {
     if (sessionStorage.getItem(`token`)) {
       this.headers = sessionStorage.getItem(`token`);
     }
@@ -52,7 +62,6 @@ export class MovieCastService {
     this.cast.name = movieCast.name;
     this.cast.story = movieCast.story;
     this.cast.birthday = movieCast.birthday;
-    console.log(JSON.stringify(this.cast));
     return this.httpClient.post(
       `http://localhost:8080/api/cast/create`,
       JSON.stringify(this.cast), this.httpOptions);

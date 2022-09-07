@@ -1,0 +1,119 @@
+<div class="root-promo">
+    <h1>Edit Promotion</h1>
+    <mat-divider></mat-divider>
+    <mat-dialog-content>
+        <form [formGroup]="promoForm">
+            <div class="dialog">
+                <div class="item">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Code name</mat-label>
+                        <input
+                            matInput
+                            formControlName="code_name"
+                            [(ngModel)]="codeName"
+                            (input)="upperCase()"
+                        >
+                        <mat-error *ngIf="promoForm.get('code_name')?.errors?.['required']">
+                            Code name is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="item">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Description</mat-label>
+                        <textarea
+                            matInput
+                            formControlName="description"
+                        ></textarea>
+                        <mat-error *ngIf="promoForm.get('description')?.errors?.['required']">
+                            Description is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="item">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Discount(%)</mat-label>
+                        <input
+                            matInput
+                            formControlName="percent_discount"
+                            type="number"
+                        >
+                        <mat-error *ngIf="promoForm.get('percent_discount')?.errors?.['required']">
+                            Discount is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="d-flex item">
+                    <mat-form-field
+                        class="date-picker"
+                        appearance="outline"
+                    >
+                        <mat-label>Start date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker_start"
+                            [max]="getMaxDate()"
+                            formControlName="start_date"
+                            placeholder="dd/MM/yyyy"
+                        >
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker_start"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker
+                            #picker_start
+                            color="primary"
+                        ></mat-datepicker>
+                        <mat-error *ngIf="promoForm.get('start_date')?.errors?.['required']">
+                            Start date is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        class="date-picker"
+                        appearance="outline"
+                    >
+                        <mat-label>End date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker_end"
+                            [min]="getMinDate()"
+                            formControlName="end_date"
+                            placeholder="dd/MM/yyyy"
+                        >
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker_end"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker
+                            #picker_end
+                            color="primary"
+                        ></mat-datepicker>
+                        <mat-error *ngIf="promoForm.get('end_date')?.errors?.['required']">
+                            End date is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <div class="group-button">
+            <button
+                class="button-genre"
+                mat-raised-button
+                (click)="onNoClick()"
+            >
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+            <button
+                type="submit"
+                [disabled]="promoForm.invalid"
+                class="button-genre save-movie-btn"
+                (click)="savePromo()"
+                mat-raised-button
+            >
+                <mat-icon>save</mat-icon>
+            </button>
+        </div>
+    </mat-dialog-actions>
+</div>

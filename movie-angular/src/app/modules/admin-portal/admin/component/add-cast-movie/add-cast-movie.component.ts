@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DATE_FORMATS} from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { ImageService } from 'src/app/service/shared/upload-image.service';
 import { ImageModel } from 'src/app/shared/model/ImageModel';
@@ -15,9 +16,12 @@ import { MyErrorStateMatcher } from '../../../util/MyErrorStateMatcher';
   selector: 'app-add-cast-movie',
   templateUrl: './add-cast-movie.component.html',
   styleUrls: ['./add-cast-movie.component.css'],
-  providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}
-  ]
+  providers: [{
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+  },
+  { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }]
 })
 export class AddCastMovieComponent implements OnInit {
   castForm!: FormGroup;
@@ -36,7 +40,7 @@ export class AddCastMovieComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.maxDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    this.maxDate = new Date((new Date().getFullYear() - 8), new Date().getMonth(), new Date().getDate());
     this.castForm = new FormGroup({
       avatar: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),

@@ -63,14 +63,11 @@ export class ImageService {
     );
   }
   public getAccImage(url: string): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
     };
     const path = new FormData();
-    path.set('url', url.toString());
+    path.set('url', url);
     return this.httpClient.post('http://localhost:8080/getImage/', path);
   }
 }

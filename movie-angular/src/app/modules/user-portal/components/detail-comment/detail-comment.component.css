@@ -1,44 +1,45 @@
 .comment {
-    display: flex;
-
+  display: flex;
+}
+ngb-rating::ng-deep > span {
+  color: yellow;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .ava-cmt {
-    width: 50px;
-    height: 50px;
-    min-width: 50px;
-    border-radius: 50%;
-    background-color: rgb(101, 250, 101);
-    margin: 0 10px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  margin: 0 10px;
+  overflow: hidden;
 }
-
-.h-evaluate {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.h-evaluate>div>h6 {
+.mr-3 > div > h6 {
+    padding: 0;
     margin: 0;
 }
-
+.h-evaluate {
+  display: flex;
+  align-items: flex-start;
+}
+time {
+    font-size: 13px;
+}
 .time-evaluate {
-    padding-right: 80px;
+  padding-right: 80px;
 }
 
 .detail-comment {
-    margin: 0 0 30px 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start
+  margin: 0 0 30px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-
-.detail-comment-item {
-    margin: 0 0 10px 0;
-}
-
-.cmt-paragraph>p {
-    color: #828282;
-    padding: 0 80px 0 0;
-    width: 100%;
+.cmt-paragraph > p {
+  color: #828282;
+  padding: 0 80px 0 0;
+  width: 100%;
 }

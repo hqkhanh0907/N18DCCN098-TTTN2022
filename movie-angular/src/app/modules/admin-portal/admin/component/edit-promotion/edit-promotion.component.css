@@ -1,0 +1,36 @@
+* {
+    width: 100%;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #000;
+  }
+  div {
+    color: #000;
+  }
+  .root-promo{
+    width: fit-content;
+  }
+  .group-button {
+    float: left;
+  }
+  .group-button .button-genre {
+    width: 10%;
+    margin: 10px;
+  }
+  
+  .mat-divider {
+    border-top-width: 1px;
+    border-color: #c9c9c98e;
+    margin-top: 3px;
+    margin-bottom: 20px;
+  }
+  mat-dialog-content {
+    display: flex;
+    margin: 0;
+    max-height: 50vh;
+  }

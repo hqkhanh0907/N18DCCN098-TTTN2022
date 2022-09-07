@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
       .loginAdmin(loginRequest)
       .toPromise()
       .then((data: any) => {
-        console.log(data);
         if (data.statusCode !== undefined) {
           this.errorMessage = data.message;
         } else {
@@ -50,6 +49,5 @@ export class LoginComponent implements OnInit {
           }
         }
       });
-      console.log(this.errorMessage);
   }
 }

@@ -5,7 +5,7 @@ ngb-rating::ng-deep>span {
 
 .r-evaluate {
     background-color: black;
-    padding: 50px;
+    padding: 60px 120px;
 }
 
 .d-comment {
@@ -38,4 +38,10 @@ ngb-rating::ng-deep>span {
 
 .list-evaluate {
     margin: 50px 0 0 0;
+}
+.eva-comment {
+    color: rgb(155, 155, 155);
+    height: 50px;
+    border-radius: 10px;
+    resize: none;
 }

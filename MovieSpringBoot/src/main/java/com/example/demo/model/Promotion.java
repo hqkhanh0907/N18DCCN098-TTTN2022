@@ -1,12 +1,11 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,5 +33,10 @@ public class Promotion {
 
     @Column(name = "percent_discount")
     private Float percent_discount;
+
+
+    @OneToMany(mappedBy = "promotion", cascade = {CascadeType.ALL})
+    @EqualsAndHashCode.Exclude
+    private List<BillingInformation> billingInformations = new ArrayList<>();
 
 }

@@ -1,0 +1,108 @@
+h1, 
+h2, 
+h3,
+h4,
+h5,
+h6 {
+    color: #000 !important;
+}
+div {
+  color: #000 !important;
+}
+label {
+    color: #111 !important;
+}
+.show-entries {
+  width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.head-user {
+  display: block;
+  align-items: center;
+  margin: 10px;
+}
+
+.title-list-user h1 {
+  margin: 0;
+  padding: 0;
+  color: #2f2a2a;
+  text-transform: uppercase;
+}
+
+mat-divider {
+  border-top-width: 2px;
+  border-color: #C9C9C98E;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.group-btn-user {
+  height: 38px;
+}
+
+.search-root {
+  display: flex;
+  height: fit-content;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-setting {
+  background-color: #1f5cff; /* Dành cho các trình duyệt không hỗ trợ gradient*/
+  background-image: linear-gradient(#00236b, #7019fd);
+}
+
+.dropdown .btn,
+.dropdown-menu .btn {
+  display: flex;
+  height: 38px;
+}
+
+.btn-edit-user {
+  background-color: #1267b6; /* Dành cho các trình duyệt không hỗ trợ gradient*/
+  background-image: linear-gradient(#0058ff, #5e99ff);
+}
+
+.btn-delete-user {
+  background-color: #1f5cff; /* Dành cho các trình duyệt không hỗ trợ gradient*/
+  background-image: linear-gradient(#0058ff, #5e99ff);
+}
+
+.group-on-table {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.search-group {
+  width: 70%;
+  height: 50%;
+  align-content: center;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.group-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pagination-movie {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.format-status {
+  align-items: center;
+}
+
+.td-item{
+  width: 150px !important;
+}

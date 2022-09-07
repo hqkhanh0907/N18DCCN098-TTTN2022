@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddGenreMovieComponent } from '../add-genre-movie/add-genre-movie.component';
 import { AddCastMovieComponent } from '../add-cast-movie/add-cast-movie.component';
@@ -23,14 +23,18 @@ import { UtilClass } from 'src/app/shared/util/utilClass';
 import { ImageModel } from 'src/app/shared/model/ImageModel';
 import slugify from 'slugify';
 import * as Plyr from 'plyr';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 
 @Component({
   templateUrl: './add-movie.component.html',
   styleUrls: ['./add-movie.component.css'],
-  providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
-  ]
+  providers: [{
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+  },
+  { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }]
 })
 export class AddMovieComponent implements OnInit {
   countSave = 0;

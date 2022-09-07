@@ -230,9 +230,7 @@
           </div>
 
           <!-- Form Group (email address and gender)-->
-          <div
-            class="row mb3"
-          >
+          <div class="row mb3">
             <div class="col-md-6">
               <label class="small mb-1 text-label">Email address</label>
               <input
@@ -247,14 +245,12 @@
               <div
                 *ngIf="updateAccountForm.get('email')?.errors?.['email']"
                 class="invalid-feedback form-error"
-              >Your
-                email is not in the correct format
+              >Your email is not in the correct format
               </div>
               <div
                 *ngIf="updateAccountForm.get('email')?.errors?.['required']"
                 class="invalid-feedback form-error"
-              >Your
-                email is required
+              >Your email is required
               </div>
             </div>
             <!-- Form Group (gender group)-->
@@ -276,7 +272,7 @@
             </div>
           </div>
           <!-- Save changes button-->
-          <div class="form-group">
+          <div class="form-group mt-2">
             <button
               class="btn btn-primary"
               type="submit"

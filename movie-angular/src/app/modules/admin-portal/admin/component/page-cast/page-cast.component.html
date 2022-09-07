@@ -1,0 +1,38 @@
+<div>
+    <div class="head-movie">
+      <div class="add-movie">
+        <button class="add-movie-btn" mat-raised-button (click)="onCreate()">
+          <mat-icon>playlist_add</mat-icon>
+        </button>
+      </div>
+      <div class="title-list-movie">
+        <h1>cast list</h1>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+      <div class="search-root">
+        <mat-form-field appearance="outline" class="search-group">
+          <input placeholder="Search cast'name here..." matInput type="search" [(ngModel)]="searchCast" />
+          <button *ngIf="searchCast !== ''" matSuffix mat-icon-button aria-label="Clear" (click)="searchCast=''">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-icon *ngIf="searchCast === ''" matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="list-movie">
+        <div class="pagination-movie">
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+        <div class="flex-wrap-movielist">
+          <div *ngFor="let cast of casts | movieFilter: searchCast | paginate: { itemsPerPage: 32, currentPage: p }">
+            <app-cast-child [cast]="cast" class="test" (deleteMovieEvent)="updateAfterDelete($event)" (editMovieEvent)="updateAfterEdit($event)">
+            </app-cast-child>
+          </div>
+        </div>
+        <div class="pagination-movie">
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>

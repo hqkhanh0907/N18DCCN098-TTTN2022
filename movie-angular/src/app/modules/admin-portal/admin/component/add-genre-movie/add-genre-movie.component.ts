@@ -50,7 +50,6 @@ export class AddGenreMovieComponent implements OnInit {
   onNoClick() {
     this.movieGenre.getGenre().subscribe((data: any) => {
       this.genreList = data;
-      console.log(this.genreList);
       this.dialogRef.close(this.genreList);
     });
   }

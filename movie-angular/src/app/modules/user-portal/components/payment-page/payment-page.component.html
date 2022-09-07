@@ -1,22 +1,48 @@
 <div class="root-payment">
+  <div
+    class="is-loading"
+    *ngIf="!isLoading"
+  >
+    <p-progressSpinner></p-progressSpinner>
+  </div>
   <div class="container">
-    <div class="mb-5"><h3>Pay</h3></div>
+    <div
+      class="mb-5"
+      *ngIf="!checkPay"
+    >
+      <h3>Payment</h3>
+    </div>
+    <div
+      class="mb-5"
+      *ngIf="checkPay"
+    >
+      <h3>Payment details</h3>
+    </div>
     <div class="pay-page row">
       <div class="left-payment col-sm-6">
         <div class="details-movie-pay box-background">
-          <div class="title-info-payment">
+          <div class="title-info-payment" *ngIf="movie">
             <h5>{{ movie.name }}</h5>
           </div>
           <div><span>Watch forever</span></div>
         </div>
         <div class="promotion box-background">
-          <div class="title-info-payment"><h5>Enter promo code</h5></div>
+          <div class="title-info-payment">
+            <h5>Enter promo code</h5>
+          </div>
           <div class="input-promo">
             <div class="mt-4 mb-2">
-              <input class="rounded" type="text" [formControl]="promoCode" />
+              <input
+                [readonly]="checkPay"
+                class="rounded text-light bg-dark border-0"
+                type="text"
+                [formControl]="promoCode"
+                (input)="changeInputPromo()"
+              />
             </div>
             <div class="gr-btn-apply d-flex justify-content-end">
               <button
+                [disabled]="checkPay"
                 class="btn btn-info text-white"
                 (click)="applyPromoCode()"
               >
@@ -24,17 +50,19 @@
               </button>
             </div>
           </div>
-          <div *ngIf="promo !== undefined && !checkPromo">
+          <div *ngIf="promo !== undefined && !checkPromo && promoCode.value">
             <h6 class="form-error">
               Promo code is incorrect or does not exist. Please re-enter!
             </h6>
           </div>
-          <div *ngIf="promo !== undefined && checkPromo">
+          <div *ngIf="promo !== undefined && checkPromo && promoCode.value">
             <h6 class="form-valid">Promo code correct</h6>
           </div>
         </div>
         <div class="paypal box-background">
-          <div class="title-info-payment"><h4>Payment method</h4></div>
+          <div class="title-info-payment">
+            <h4>Payment method</h4>
+          </div>
           <div>
             <img
               class="w-25 h-25 img-method-payment"
@@ -69,10 +97,13 @@
               </div>
             </div>
             <div class="rows-content-infor-payment amount-pay">
-              <div *ngIf="promo">
+              <div *ngIf="promo  && promoCode.value">
                 <span>Promo -{{ promo.percent_discount }}%</span>
               </div>
-              <div class="d-flex justify-content-end" *ngIf="promo">
+              <div
+                class="d-flex justify-content-end"
+                *ngIf="promo  && promoCode.value"
+              >
                 <h6>- {{ getDiscountPromo() }}$</h6>
               </div>
               <div><span>Amount to be paid</span></div>
@@ -86,7 +117,10 @@
                 Service
               </p>
             </div>
-            <div class="d-flex justify-content-center">
+            <div
+              class="d-flex justify-content-center"
+              *ngIf="!checkPay"
+            >
               <button
                 class="btn btn-pay text-white px-5"
                 (click)="goPaypalModal()"

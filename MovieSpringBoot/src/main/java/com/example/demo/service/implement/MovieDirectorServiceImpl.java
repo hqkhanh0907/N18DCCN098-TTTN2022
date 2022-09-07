@@ -4,8 +4,9 @@ import com.example.demo.dto.DirectorDto;
 import com.example.demo.dto.DirectorPage;
 import com.example.demo.dto.map.DirectorMapper;
 import com.example.demo.model.Director;
+import com.example.demo.model.DirectorOfMovie;
+import com.example.demo.repository.FKDirectorRepository;
 import com.example.demo.repository.MovieDirectorRepository;
-import com.example.demo.service.FKDirectorService;
 import com.example.demo.service.MovieDirectorService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class MovieDirectorServiceImpl implements MovieDirectorService {
     private final MovieDirectorRepository movieDirectorRepository;
     private final DirectorMapper directorMapper;
-    private final FKDirectorService fkDirectorService;
+    private final FKDirectorRepository fkDirectorRepository;
 
     @Override
     public List<DirectorDto> getAllMovieDirector() {
@@ -36,15 +38,28 @@ public class MovieDirectorServiceImpl implements MovieDirectorService {
     }
 
     @Override
-    public String deleteMovieDirectorById(Integer id) {
+    public Boolean deleteMovieDirectorById(Integer id) {
         Director director = movieDirectorRepository.findById(id).orElse(null);
-        if (director == null) {
+        if (Objects.isNull(director)) {
             throw new RuntimeException("Director not found");
         } else {
-            fkDirectorService.deleteFkDirectorByDirectorId(id);
-            movieDirectorRepository.delete(director);
-            return "Delete a director successfully";
+            if (!checkDirectorOnMovie(director.getId())) {
+                movieDirectorRepository.delete(director);
+                return true;
+            } else {
+                throw new RuntimeException("Already exist in movie! Couldn't delete director!");
+            }
         }
+    }
+
+    private Boolean checkDirectorOnMovie(Integer id) {
+        List<DirectorOfMovie> directorOfMovies = fkDirectorRepository.findAll();
+        for (DirectorOfMovie directorOfMovie : directorOfMovies) {
+            if (directorOfMovie.getId().getDirectorId() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -62,19 +77,20 @@ public class MovieDirectorServiceImpl implements MovieDirectorService {
     }
 
     @Override
-    public String editMovieDirector(DirectorDto movieDirectorDTO) {
+    public Boolean editMovieDirector(DirectorDto movieDirectorDTO) {
         Director director = movieDirectorRepository.findById(movieDirectorDTO.getId()).orElse(null);
-        if (director == null) {
+        if (Objects.isNull(director)) {
             throw new RuntimeException("Director not found");
         } else {
-            if (checkNameInDirector(movieDirectorDTO.getName()) == false) {
+            if (checkNameEditInDirector(movieDirectorDTO.getName(), director.getName()) == false) {
                 director.setAvatar(movieDirectorDTO.getAvatar());
                 director.setName(movieDirectorDTO.getName());
+                director.setBirthday(movieDirectorDTO.getBirthday());
                 director.setStory(director.getStory());
                 movieDirectorRepository.save(director);
-                return "Edit director successfully";
+                return true;
             }
-            return "Fail";
+            return false;
         }
     }
 
@@ -109,6 +125,18 @@ public class MovieDirectorServiceImpl implements MovieDirectorService {
                 throw new RuntimeException("Director's name already exits");
             }
         });
+        return false;
+    }
+
+    public boolean checkNameEditInDirector(String nameNew, String nameOld) {
+        if (!nameNew.equals(nameOld)) {
+            List<Director> directors = movieDirectorRepository.findAll();
+            directors.forEach(movieDirector -> {
+                if (movieDirector.getName().equals(nameNew)) {
+                    throw new RuntimeException("Director's name already exits");
+                }
+            });
+        }
         return false;
     }
 }

@@ -4,15 +4,13 @@ import com.example.demo.dto.*;
 import com.example.demo.dto.map.*;
 import com.example.demo.model.*;
 import com.example.demo.model.Key.BillingInformationKey;
+import com.example.demo.model.Key.MovieEvaluateKey;
 import com.example.demo.repository.*;
 import com.example.demo.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,9 +21,11 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     private final FKDirectorService fkDirectorService;
     private final CastOfMovieService castOfMovieService;
     private final MovieEvaluateService movieEvaluateService;
+    private final MovieEvaluateRepository movieEvaluateRepository;
     private final MovieMapper movieMapper;
     private final GenreMapper genreMapper;
     private final CastMapper castMapper;
+    private final DirectorMapper directorMapper;
     private final MovieEvaluateMapper movieEvaluateMapper;
     private final MovieCastRepository movieCastRepository;
     private final MovieGenreRepository movieGenreRepository;
@@ -232,20 +232,38 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
+    public List<DirectorDto> getMovieDirectors(Integer id) {
+        Movie movieDirector = movieDetailRepository.findById(id).orElse(null);
+        if (!Objects.isNull(movieDirector.getDirectorOfMovies()) && !movieDirector.getDirectorOfMovies().isEmpty()) {
+            return movieDirector.getDirectorOfMovies().stream().map(directorOfMovie -> {
+                return directorMapper.directorToDirectorDto(directorOfMovie.getDirector());
+            }).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    @Override
     public List<MovieDto> search(String searchQuery) {
-        return movieDetailRepository.findByNameLike(searchQuery).stream().map(movie -> {
+        return movieDetailRepository.findMovieByName(searchQuery).stream().map(movie -> {
             return movieMapper.movieToMovieDto(movie);
         }).collect(Collectors.toList());
     }
 
     @Override
     public List<MovieEvaluateDto> loadEvaluate(Integer movieId) {
-        return movieEvaluateService.getMovieEvaluates().stream().map(movieEvaluate -> {
-            if (movieEvaluate.getId().getMovieId() == movieId) {
-                return movieEvaluateMapper.movieEvaluateToMovieEvaluateDto(movieEvaluate);
-            } else {
-                return null;
-            }
+        List<MovieEvaluate> movieEvaluates = movieEvaluateService
+                .getMovieEvaluates()
+                .parallelStream()
+                .filter(movieEvaluate ->
+                        movieEvaluate.getId().getMovieId() == movieId
+                ).collect(Collectors.toList())
+                .stream()
+                .sorted(
+                        Comparator.comparing(MovieEvaluate::getDate)
+                                .reversed())
+                .collect(Collectors.toList());
+        return movieEvaluates.stream().map(movieEvaluate -> {
+            return movieEvaluateMapper.movieEvaluateToMovieEvaluateDto(movieEvaluate);
         }).collect(Collectors.toList());
     }
 
@@ -261,32 +279,38 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     }
 
     @Override
-    public Movie saveEvaluate(MovieEvaluateDto movieEvaluateDTO) {
-        Movie movie = movieDetailRepository.findById(movieEvaluateDTO.getId().getMovieId()).orElse(null);
+    public Boolean saveEvaluate(MovieEvaluateDto movieEvaluateDTO) {
         try {
-            MovieEvaluate movieEvaluate = movieEvaluateMapper.movieEvaluateDtoToMovieEvaluate(movieEvaluateDTO);
-            movieEvaluate.setMovie(movie);
-            movieEvaluate.setAccount(accountRepository.findById(movieEvaluateDTO.getId().getUserId()).orElse(null));
-            List<MovieEvaluate> movieEvaluates = new ArrayList<>();
-            if (movie.getMovieEvaluates() != null) {
-                movieEvaluates = movie.getMovieEvaluates();
-                for (MovieEvaluate movieEvaluateCheck : movieEvaluates) {
-                    if ((movieEvaluateCheck.getId().getUserId() == movieEvaluate.getId().getUserId()) &&
-                            (movieEvaluateCheck.getId().getMovieId() == movieEvaluate.getId().getMovieId())) {
-                        movieEvaluateService.editEvaluate(movieEvaluate);
-                        return movie;
-                    }
+            MovieEvaluateKey movieEvaluateKey = new MovieEvaluateKey(movieEvaluateDTO.getId().getUserId(), movieEvaluateDTO.getId().getMovieId());
+            MovieEvaluate movieEvaluate = movieEvaluateRepository.findById(movieEvaluateKey).orElse(null);
+            if (Objects.isNull(movieEvaluate)) {
+                Account account = accountRepository.findById(movieEvaluateDTO.getId().getUserId()).orElse(null);
+                Movie movie = movieDetailRepository.findById(movieEvaluateDTO.getId().getMovieId()).orElse(null);
+                if (Objects.isNull(account)) {
+                    throw new RuntimeException("Account does not exist");
+                } else if (Objects.isNull(movie)) {
+                    throw new RuntimeException("Movie does not exist");
+                } else {
+                    movieEvaluateRepository.saveEvaluate(movieEvaluateDTO.getId().getUserId(),
+                            movieEvaluateDTO.getId().getMovieId(),
+                            movieEvaluateDTO.getRate(),
+                            movieEvaluateDTO.getContent(),
+                            movieEvaluateDTO.getDate(),
+                            movieEvaluateDTO.getStatus());
+                    return true;
                 }
-                movieEvaluates.add(movieEvaluate);
             } else {
-                movieEvaluates.add(movieEvaluate);
+                movieEvaluateRepository.updateEvaluate(movieEvaluateDTO.getId().getUserId(),
+                        movieEvaluateDTO.getId().getMovieId(),
+                        movieEvaluateDTO.getRate(),
+                        movieEvaluateDTO.getContent(),
+                        movieEvaluateDTO.getDate(),
+                        movieEvaluateDTO.getStatus());
+                return true;
             }
-            movie.setMovieEvaluates(movieEvaluates);
-            movieDetailRepository.save(movie);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return movie;
     }
 
     @Override
@@ -329,6 +353,79 @@ public class MovieDetailServiceImpl implements MovieDetailService {
     public PromotionDto getPromotion(String promotionCode) {
         PromotionDto promotionDto = promotionMapper.promotionToPromotionDto(promotionRepository.findPromotionByCode_name(promotionCode));
         return promotionDto;
+    }
+
+    @Override
+    public List<String> getAllCountriesCode() {
+        return movieDetailRepository.findAll().stream().map(movie -> {
+            return movie.getCountryCode();
+        }).collect(Collectors.toList()).stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieDto> getMovieByGenreId(Integer genreId) {
+        try {
+            Genre genre = movieGenreRepository.findById(genreId).orElse(null);
+            return genre.getGenreOfMovies().stream().map(genreOfMovie -> {
+                        return movieMapper.movieToMovieDto(genreOfMovie.getMovie());
+                    }).collect(Collectors.toList())
+
+                    .stream().sorted(Comparator.comparing(MovieDto::getName).reversed())
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<MovieDto> getMovieByCountryCode(String code) {
+        try {
+            List<Movie> movies = movieDetailRepository.findAll();
+            List<MovieDto> movieDtos = movies.parallelStream().filter(
+                            movie -> movie.getCountryCode().equals(code))
+                    .collect(Collectors.toList())
+                    .stream().map(movie -> {
+                        return movieMapper.movieToMovieDto(movie);
+                    }).collect(Collectors.toList())
+                    .stream().sorted(Comparator.comparing(MovieDto::getName).reversed())
+                    .collect(Collectors.toList());
+            return movieDtos;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<MovieDto> getMovieByGenreIdAndCountryCode(Integer genreId, String code) {
+        List<MovieDto> movieDtos = getMovieByGenreId(genreId);
+        return movieDtos.parallelStream().filter(
+                        movieDto -> movieDto.getCountryCode().equals(code)).collect(Collectors.toList())
+                .stream().sorted(Comparator.comparing(MovieDto::getName).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieDto> getPopularMovies() {
+        List<PopularMovie> popularMovies = movieDetailRepository.findAll().stream()
+                .map(movie -> {
+                            try {
+                                PopularMovie popularMovie = new PopularMovie();
+                                popularMovie.setMovieDto(movieMapper.movieToMovieDto(movie));
+                                popularMovie.setRate(getRateMovie(movie.getId()));
+                                return popularMovie;
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                ).collect(Collectors.toList())
+                .stream()
+                .sorted(Comparator.comparingDouble(value -> value.getRate().getRate()))
+                .collect(Collectors.toList());
+        popularMovies.sort(Collections.reverseOrder((o1, o2) ->
+                o1.getRate().getRate().compareTo(o2.getRate().getRate())));
+        return popularMovies.stream().map(popularMovie -> {
+            return popularMovie.getMovieDto();
+        }).collect(Collectors.toList());
     }
 
     public boolean checkExitNameEditMovie(String title, Integer id) {

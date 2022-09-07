@@ -5,7 +5,6 @@ import { AddCastMovieComponent } from '../add-cast-movie/add-cast-movie.componen
 import { AddDirectorMovieComponent } from '../add-director-movie/add-director-movie.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ListCastMovieComponent } from '../list-cast-movie/list-cast-movie.component';
-import { MAT_DATE_FORMATS } from '@angular/material';
 import { MY_DATE_FORMATS } from '../../../util/FORMAT_DATE';
 import { MovieGenre } from '../../../model/MovieGenre';
 import { MovieCast } from '../../../model/MovieCast';
@@ -24,6 +23,7 @@ import { MovieGenreService } from '../../../service/movie-genre.service';
 import { UtilClass } from 'src/app/shared/util/utilClass';
 import slugify from 'slugify';
 import * as Plyr from 'plyr';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 
 @Component({
   selector: 'app-detail-movie',

@@ -1,0 +1,23 @@
+<h1>Edit Movie's Genre</h1>
+<form [formGroup]="genreForm">
+  <div class="dialog">
+    <div class="item">
+      <mat-form-field appearance="outline">
+        <mat-label>Genre's name</mat-label>
+        <input matInput formControlName="genreName" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="genreForm.get('genreName')?.errors?.['required']">
+          Genre is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="group-button">
+    <button class="button-genre" mat-raised-button (click)="onNoClick()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+    <button type="submit" [disabled]="genreForm.invalid" class="button-genre save-movie-btn" (click)="saveGene()"
+            mat-raised-button>
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</form>

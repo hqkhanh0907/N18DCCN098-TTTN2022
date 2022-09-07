@@ -1,8 +1,8 @@
-<div class="single-portfolio">
+<div class="single-portfolio" *ngIf="movie">
   <div class="single-portfolio-img">
     <div class="movie-poster">
       <img
-        src="https://bloganchoi.com/wp-content/uploads/2021/11/spiderman-no-way-home-trailer-giai-thich-7.jpg"
+        [src]="getImage()"
         alt="portfolio"
       />
       <a class="popup-youtube pointer-cursor" (click)="goToMovieDetail()">
@@ -14,6 +14,7 @@
       ngbTooltip="Vip"
       [openDelay]="300"
       [closeDelay]="500"
+      *ngIf="movie && movie.moviePrice >  0"
     >
       <div class="icon-vip">
         <img src="../../../../assets/img/vip-card.png" />
@@ -22,8 +23,8 @@
   </div>
   <div class="portfolio-content" (click)="goToMovieDetail()">
     <div class="review">
-      <ngb-rating [rate]="4" [max]="5" [readonly]="true"></ngb-rating>
+      <ngb-rating [rate]="evaluate.rate" [max]="5" [readonly]="true"></ngb-rating>
     </div>
-    <h6>Spider Man: No Way Home</h6>
+    <h6>{{movie.name}}</h6>
   </div>
 </div>

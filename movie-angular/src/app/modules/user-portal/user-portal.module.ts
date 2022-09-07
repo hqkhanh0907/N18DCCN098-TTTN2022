@@ -22,12 +22,20 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { AccountProfileComponent } from './components/account-profile/account-profile.component';
 import { AccountComponent } from './components/account/account.component';
 import { WatchingComponent } from './components/watching/watching.component';
-import { FavouriteComponent } from './components/favourite/favourite.component';
+import { FavoriteComponent } from './components/favourite/favourite.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PaymentPageComponent } from './components/payment-page/payment-page.component';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { ModalPaymentComponent } from './components/modal-payment/modal-payment.component';
+import { PlyrModule } from 'ngx-plyr';
+import { MomentModule } from 'ngx-moment';
+import { ListMovieDataComponent } from './components/list-movie-data/list-movie-data.component';
+import { ContentMovieComponent } from './components/content-movie/content-movie.component';
+import { SearchMovieComponent } from './components/search-movie/search-movie.component';
+import { ThousandSuffixesPipe } from '../admin-portal/pipe/filter.pipe';
+import { TransactionHistoryComponent } from './components/transaction-history/transaction-history.component';
+import { BillItemComponent } from './components/bill-item/bill-item.component';
 
 @NgModule({
   declarations: [
@@ -45,15 +53,23 @@ import { ModalPaymentComponent } from './components/modal-payment/modal-payment.
     AccountProfileComponent,
     AccountComponent,
     WatchingComponent,
-    FavouriteComponent,
+    FavoriteComponent,
     PaymentPageComponent,
     ModalPaymentComponent,
+    ListMovieDataComponent,
+    ContentMovieComponent,
+    SearchMovieComponent,
+    ThousandSuffixesPipe,
+    TransactionHistoryComponent,
+    BillItemComponent,
   ],
   imports: [
     CommonModule,
     UserPortalRoutingModule,
     SharedModule,
+    MomentModule,
     NgbModule,
+    PlyrModule,
     CarouselModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -64,4 +80,4 @@ import { ModalPaymentComponent } from './components/modal-payment/modal-payment.
   ],
   bootstrap: [AccountProfileComponent],
 })
-export class UserPortalModule {}
+export class UserPortalModule { }

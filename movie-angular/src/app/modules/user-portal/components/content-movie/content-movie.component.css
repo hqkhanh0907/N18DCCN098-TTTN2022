@@ -1,0 +1,14 @@
+button:focus {
+  box-shadow: none !important;
+  color: #eb315a !important;
+}
+button:hover {
+  color: #eb315a !important;
+}
+.filter {
+  display: flex;
+  justify-content: space-between;
+}
+.active-btn {
+  color: #eb315a !important;
+}

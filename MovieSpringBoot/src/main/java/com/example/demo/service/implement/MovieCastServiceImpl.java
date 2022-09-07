@@ -4,8 +4,9 @@ import com.example.demo.dto.CastDto;
 import com.example.demo.dto.CastPage;
 import com.example.demo.dto.map.CastMapper;
 import com.example.demo.model.Cast;
+import com.example.demo.model.CastOfMovie;
+import com.example.demo.repository.FKCastRepository;
 import com.example.demo.repository.MovieCastRepository;
-import com.example.demo.service.CastOfMovieService;
 import com.example.demo.service.MovieCastService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class MovieCastServiceImpl implements MovieCastService {
     private final MovieCastRepository movieCastRepository;
     private final CastMapper castMapper;
-    private final CastOfMovieService castOfMovieService;
+    private final FKCastRepository fkCastRepository;
 
     @Override
     public List<CastDto> getAllCast() {
@@ -37,15 +39,28 @@ public class MovieCastServiceImpl implements MovieCastService {
 
 
     @Override
-    public String deleteMovieCastById(Integer id) {
+    public Boolean deleteMovieCastById(Integer id) {
         Cast cast = movieCastRepository.findById(id).orElse(null);
-        if (cast == null) {
+        if (Objects.isNull(cast)) {
             throw new RuntimeException("Cast not found");
         } else {
-            castOfMovieService.deleteFkCastByCastId(id);
-            movieCastRepository.delete(cast);
-            return "Delete cast successfully";
+            if (!checkCastOnFKCast(cast.getId())) {
+                movieCastRepository.delete(cast);
+                return true;
+            } else {
+                throw new RuntimeException("Already exist in movie! Couldn't delete cast!");
+            }
         }
+    }
+
+    private Boolean checkCastOnFKCast(Integer castId) {
+        List<CastOfMovie> castOfMovies = fkCastRepository.findAll();
+        for (CastOfMovie castOfMovie : castOfMovies) {
+            if (castOfMovie.getId().getCastId() == castId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -64,19 +79,20 @@ public class MovieCastServiceImpl implements MovieCastService {
     }
 
     @Override
-    public String editMovieCast(CastDto movieCastDTO) {
+    public Boolean editMovieCast(CastDto movieCastDTO) {
         Cast cast = movieCastRepository.findById(movieCastDTO.getId()).orElse(null);
-        if (cast == null) {
+        if (Objects.isNull(cast)) {
             throw new RuntimeException("Cast not found");
         } else {
-            if (checkNameExit(movieCastDTO.getName())) {
+            if (checkNameExitEdit(movieCastDTO.getName(), cast.getName()) == false) {
                 cast.setAvatar(movieCastDTO.getAvatar());
                 cast.setName(movieCastDTO.getName());
                 cast.setStory(movieCastDTO.getStory());
+                cast.setBirthday(movieCastDTO.getBirthday());
                 movieCastRepository.save(cast);
-                return "Edit cast successfully";
+                return true;
             }
-            return "Fail";
+            return false;
         }
     }
 
@@ -112,6 +128,18 @@ public class MovieCastServiceImpl implements MovieCastService {
                 throw new RuntimeException("Cast's name already exists");
             }
         });
+        return false;
+    }
+
+    public boolean checkNameExitEdit(String nameNew, String nameOld) {
+        if (!nameNew.equals(nameOld)) {
+            List<Cast> casts = movieCastRepository.findAll();
+            casts.forEach(movieCast -> {
+                if (movieCast.getName().equals(nameNew)) {
+                    throw new RuntimeException("Cast's name already exists");
+                }
+            });
+        }
         return false;
     }
 }

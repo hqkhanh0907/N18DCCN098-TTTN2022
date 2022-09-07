@@ -108,6 +108,18 @@ public class AccountController {
     public ResponseEntity<?> saveHistory(@RequestBody AccountHistoryDto accountHistoryDto) {
         return new ResponseEntity<>(accountService.saveHistory(accountHistoryDto), HttpStatus.OK);
     }
+    @GetMapping("/getMovieHistoryByAccId/{accId}")
+    public ResponseEntity<?> getMovieHistoryByAccId(@PathVariable("accId") Integer accId){
+        return new ResponseEntity<>(accountService.getMovieHistoryByAccId(accId), HttpStatus.OK);
+    }
+    @GetMapping("/getMovieFavoriteByAccId/{accId}")
+    public ResponseEntity<?> getMovieFavoriteByAccId(@PathVariable("accId") Integer accId){
+        return new ResponseEntity<>(accountService.getMovieFavoriteByAccId(accId), HttpStatus.OK);
+    }
+    @GetMapping("/getBillByAccId/{accId}")
+    public ResponseEntity<?> getBillByAccId(@PathVariable("accId") Integer accId) {
+        return new ResponseEntity<>(accountService.getBillByAccId(accId) ,HttpStatus.OK);
+    }
 
     public HttpHeaders returnHttpHeaders(PagingResponse response) {
         HttpHeaders headers = new HttpHeaders();

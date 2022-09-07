@@ -1,19 +1,15 @@
 package com.example.demo.service.implement;
 
 import com.example.demo.dto.*;
-import com.example.demo.dto.map.AccountHistoryMapper;
-import com.example.demo.dto.map.AccountMapper;
-import com.example.demo.dto.map.GroupOfRolesMapper;
+import com.example.demo.dto.map.*;
 import com.example.demo.exception.AccountExeption;
 import com.example.demo.exception.MailException;
 import com.example.demo.exception.UsernameExitException;
 import com.example.demo.model.*;
+import com.example.demo.model.Key.AccountHistoryKey;
 import com.example.demo.model.Key.FavoriteMovieKey;
 import com.example.demo.model.Key.GroupOfRolesKey;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.AccountRoleRepository;
-import com.example.demo.repository.FavoriteMovieRepository;
-import com.example.demo.repository.MovieDetailRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.*;
 import com.example.demo.util.AppConstants;
 import com.example.demo.util.DataUtils;
@@ -28,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,7 +47,12 @@ public class AccountServiceImpl implements AccountService {
     private final MovieDetailRepository movieDetailRepository;
     private final FavoriteMovieRepository favoriteMovieRepository;
     private final AccountHistoryMapper accountHistoryMapper;
+    private final AccountHistoryRepository accountHistoryRepository;
     private final GroupOfRolesMapper groupOfRolesMapper;
+    private final BillingInformationService billingInformationService;
+    private final FavoriteMovieService favoriteMovieService;
+    private final MovieMapper movieMapper;
+    private final BillingInformationMapper billingInformationMapper;
 
     @Override
     public List<AccountDto> getAllAccounts() {
@@ -138,11 +140,17 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountExeption("Account not found with username: " + username);
         } else {
             Integer id = account.getId();
-            userHistoryService.deleteUserHistoryFromAccount(id);
-            verificationTokenService.deleteUserTokens(id);
-            movieEvaluateService.deleteMovieEvaluateByUserId(id);
-            roleForAccountService.deleteRole(id);
-            accountRepository.delete(account);
+            try {
+                userHistoryService.deleteUserHistoryFromAccount(id);
+                verificationTokenService.deleteUserTokens(id);
+                movieEvaluateService.deleteMovieEvaluateByUserId(id);
+                roleForAccountService.deleteRole(id);
+                billingInformationService.deleteBillByAccount(account.getId());
+                favoriteMovieService.deleteFavByAccount(account.getId());
+                accountRepository.deleteAccount(account.getId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             return accountMap.accountToAccountDto(account);
         }
     }
@@ -214,12 +222,12 @@ public class AccountServiceImpl implements AccountService {
             }
             account.setGender(accountDto.getGender());
             accountRepository.save(account);
+            Account accountAfter = accountRepository.findMovieAccountByUsername(accountDto.getUsername());
             for (GroupOfRolesDto groupOfRolesDto : accountDto.getGroupOfRolesDtos()) {
-                roleForAccountService.addRoleForAccount(groupOfRolesDto.getId());
+                GroupOfRolesKeyDto groupOfRolesKeyDto = new GroupOfRolesKeyDto(accountAfter.getId(), groupOfRolesDto.getAccountRole().getId());
+                roleForAccountService.addRoleForAccount(groupOfRolesKeyDto);
             }
-            if (account.getEnable()) {
-                sendMailService.create(account, gPass);
-            }
+            sendMailService.create(account, gPass);
             return accountMap.accountToAccountDto(account);
         }
         return null;
@@ -330,30 +338,103 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Boolean saveHistory(AccountHistoryDto accountHistoryDto) {
         try {
-            Account account = accountRepository.findById(accountHistoryDto.getAccountHistoryKey().getAccountId()).orElse(null);
-            Movie movie = movieDetailRepository.findById(accountHistoryDto.getAccountHistoryKey().getAccountId()).orElse(null);
-            AccountHistory accountHistory = accountHistoryMapper.accountHistoryDtoToAccountHistory(accountHistoryDto);
-            accountHistory.setAccount(account);
-            accountHistory.setMovie(movie);
-            List<AccountHistory> accountHistories = account.getAccountHistories();
-            if (Objects.isNull(accountHistories) || accountHistories.isEmpty()) {
-                accountHistories.add(accountHistory);
+            AccountHistoryKey accountHistoryKey = new AccountHistoryKey(accountHistoryDto.getAccountHistoryKey().getAccountId(), accountHistoryDto.getAccountHistoryKey().getMovieId());
+            AccountHistory accountHistory = accountHistoryRepository.findById(accountHistoryKey).orElse(null);
+            if (Objects.isNull(accountHistory)) {
+                Account account = accountRepository.findById(accountHistoryDto.getAccountHistoryKey().getAccountId()).orElse(null);
+                Movie movie = movieDetailRepository.findById(accountHistoryDto.getAccountHistoryKey().getMovieId()).orElse(null);
+                if (Objects.isNull(account)) {
+                    throw new RuntimeException("Account does not exist");
+                } else if (Objects.isNull(movie)) {
+                    throw new RuntimeException("Movie does not exist");
+                } else {
+                    accountHistoryRepository.saveAccountHistory(accountHistoryDto.getAccountHistoryKey().getAccountId(),
+                            accountHistoryDto.getAccountHistoryKey().getMovieId(),
+                            accountHistoryDto.getTime_watched(),
+                            accountHistoryDto.getDate());
+                    return true;
+                }
             } else {
-                accountHistories.stream().map(accountHistoryCheck -> {
-                    if ((accountHistoryCheck.getAccountHistoryKey().getAccountId() == accountHistory.getAccountHistoryKey().getAccountId()) &&
-                            (accountHistoryCheck.getAccountHistoryKey().getMovieId() == accountHistory.getAccountHistoryKey().getMovieId())) {
-                        accountHistoryCheck.setDate(accountHistory.getDate());
-                        accountHistoryCheck.setTime_watched(accountHistory.getTime_watched());
-                    }
-                    return accountHistoryCheck;
-                }).collect(Collectors.toList());
+                accountHistoryRepository.updateAccountHistory(accountHistoryDto.getAccountHistoryKey().getAccountId(),
+                        accountHistoryDto.getAccountHistoryKey().getMovieId(),
+                        accountHistoryDto.getTime_watched(),
+                        accountHistoryDto.getDate());
+                return true;
             }
-            account.setAccountHistories(accountHistories);
-            accountRepository.save(account);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return null;
+    }
+
+    @Override
+    public List<MovieDto> getMovieHistoryByAccId(Integer accId) {
+        try {
+            Account account = accountRepository.findById(accId).orElse(null);
+            if (Objects.isNull(account)) {
+                throw new RuntimeException("Not found account!");
+            } else {
+                List<MovieDto> movies = account.getAccountHistories()
+                        .stream()
+                        .sorted(Comparator.comparing(AccountHistory::getDate).reversed())
+                        .collect(Collectors.toList())
+                        .stream().map(accountHistory -> {
+                            return accountHistory.getMovie();
+                        }).collect(Collectors.toList()).stream().map(
+                                movie -> {
+                                    return movieMapper.movieToMovieDto(movie);
+                                }
+                        ).collect(Collectors.toList());
+                return movies;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<MovieDto> getMovieFavoriteByAccId(Integer accId) {
+        try {
+            Account account = accountRepository.findById(accId).orElse(null);
+            if (Objects.isNull(account)) {
+                throw new RuntimeException("Not found account!");
+            } else {
+                List<MovieDto> movies = account.getFavoriteMovies()
+                        .stream()
+                        .sorted(Comparator.comparing(FavoriteMovie::getDate).reversed())
+                        .collect(Collectors.toList())
+                        .stream().map(accountHistory -> {
+                            return accountHistory.getMovie();
+                        }).collect(Collectors.toList()).stream().map(
+                                movie -> {
+                                    return movieMapper.movieToMovieDto(movie);
+                                }
+                        ).collect(Collectors.toList());
+                return movies;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<BillingInformationDto> getBillByAccId(Integer accId) {
+        try {
+            Account account = accountRepository.findById(accId).orElse(null);
+            if (Objects.isNull(account)) {
+                throw new RuntimeException("Account not found!");
+            } else {
+                List<BillingInformationDto> billingInformationDtos = account.getBillingInformations().stream().map(
+                        billingInformation -> {
+                            return billingInformationMapper.billingInformationToBillingInformationDto(billingInformation);
+                        }
+                ).collect(Collectors.toList());
+                return billingInformationDtos;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean checkEmail(String email, String username) throws MailException {

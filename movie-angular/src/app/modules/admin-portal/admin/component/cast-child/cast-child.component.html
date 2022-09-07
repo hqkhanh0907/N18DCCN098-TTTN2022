@@ -1,0 +1,23 @@
+<div class="cast-item-style-2 cast-item-style-1">
+    <img
+        [src]="avatarModel.url"
+        alt="img cast"
+    >
+    <div class="hvr-inner">
+        <button
+            class="detail"
+            (click)="detailCast(cast.id)"
+        >
+            <a>Details</a>
+        </button>
+        <button
+            class="delete"
+            (click)="deleteCast(cast.id)"
+        >
+            <a>Remove</a>
+        </button>
+    </div>
+    <div class="mv-item-infor pointer-default">
+        <h6><a>{{cast.name}}</a></h6>
+    </div>
+</div>

@@ -21,6 +21,9 @@ export class PaymentPageComponent implements OnInit {
   accountInf: any;
   promo: any = undefined;
   checkPromo = false;
+  checkExitPay = false;
+  checkPay = false;
+  isLoading = false;
   constructor(
     private modalService: NgbModal,
     private activeRouter: ActivatedRoute,
@@ -33,8 +36,32 @@ export class PaymentPageComponent implements OnInit {
     this.slug = this.activeRouter.snapshot.params['slug'];
     await this.getMovieDetail();
     await this.getAcc();
-    console.log(this.movie);
-    console.log(this.accountInf);
+    await this.checkExitPayment();
+    await this.checkPayment();
+    await this.setPay();
+    setTimeout(() => {
+      this.isLoading = true;
+    }, 1000);
+  }
+  async setPay() {
+    if (this.checkExitPay) {
+      await this.movieService.getBill(this.accountInf.id, this.movie.id).toPromise()
+        .then(
+          (data: any) => {
+            console.log(data);
+            if (data && data.promotion.id !== UTIL.DEFAULT_PROMO) {
+              this.promo = data.promotion;
+              this.promoCode = new FormControl(data.promotion.code_name);
+              this.checkPromo = true;
+            } else {
+              this.promo = null;
+              this.checkPromo = false;
+            }
+          },
+          (err) => {
+            this.checkPromo = false;
+          });
+    }
   }
   async getMovieDetail() {
     await this.movieService
@@ -63,8 +90,7 @@ export class PaymentPageComponent implements OnInit {
       .toPromise()
       .then(
         (data: any) => {
-          console.log(data);
-          if (data) {
+          if (data.statusCode === undefined) {
             this.promo = data;
             this.checkPromo = true;
           } else {
@@ -83,15 +109,24 @@ export class PaymentPageComponent implements OnInit {
       100
     ).toFixed(2);
   }
+  changeInputPromo() {
+    this.promo = undefined;
+  }
   getAmount(): string {
-    return this.promo
+    let amount = (this.promo && this.promoCode.value)
       ? (this.movie.moviePrice - Number(this.getDiscountPromo())).toFixed(2)
       : this.movie.moviePrice.toFixed(2);
+    return Number(amount)<0?'0.0':amount
   }
   applyPromoCode() {
     setTimeout(async () => {
       await this.getPromo();
     }, 0);
+  }
+  getDiscount(): string {
+    return this.promo
+      ? (Number(this.getDiscountPromo())).toFixed(2)
+      : this.movie.moviePrice.toFixed(2);
   }
   goPaypalModal() {
     const billInfo = {
@@ -107,18 +142,13 @@ export class PaymentPageComponent implements OnInit {
       },
       status: UTIL.NOT_PAY,
     };
-    setTimeout(async () => {
-      await this.movieService
-        .addInfoBill(billInfo)
-        .toPromise()
-        .then((data: any) => {
-          console.log(data);
-        });
-    });
+    this.movieService
+      .addInfoBill(billInfo).subscribe();
     const modalRef = this.modalService.open(ModalPaymentComponent);
     modalRef.componentInstance.billInfo = billInfo;
     modalRef.componentInstance.movie = this.movie;
     modalRef.componentInstance.amount = this.getAmount();
+    modalRef.componentInstance.discount = this.getDiscount();
     modalRef.closed.subscribe((data: any) => {
       if (data !== undefined && data === true) {
         UtilClass.showMessageAlert(
@@ -129,11 +159,22 @@ export class PaymentPageComponent implements OnInit {
       } else {
         UtilClass.showRequestDeleteMovie(UTIL.PAY_NOT_SUCCESSFULLY);
       }
-      
+
     });
     modalRef.dismissed.subscribe(() => {
       UtilClass.showMessageAlert(
         UTIL.ICON_WARNING, UTIL.PAY_NOT_SUCCESSFULLY);
+    });
+  }
+
+  async checkExitPayment() {
+    await this.movieService.checkExitPay(this.accountInf.id, this.movie.id).toPromise().then((data: any) => {
+      this.checkExitPay = data;
+    });
+  }
+  async checkPayment() {
+    await this.movieService.checkPay(this.accountInf.id, this.movie.id).toPromise().then((data: any) => {
+      this.checkPay = data;
     });
   }
 }

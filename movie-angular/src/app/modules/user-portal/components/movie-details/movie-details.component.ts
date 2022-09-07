@@ -1,8 +1,7 @@
-import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PlyrComponent } from 'ngx-plyr';
 import * as Plyr from 'plyr';
-import { MovieCastService } from 'src/app/modules/admin-portal/service/movie-cast.service';
-import { MovieDirectorService } from 'src/app/modules/admin-portal/service/movie-director.service';
 import { AccountService } from 'src/app/service/shared/account.service';
 import { LoginServiceService } from 'src/app/service/shared/login-service.service';
 import { MovieService } from 'src/app/service/shared/movie.service';
@@ -15,10 +14,25 @@ import { UtilClass } from 'src/app/shared/util/utilClass';
   styleUrls: ['./movie-details.component.css'],
 })
 export class MovieDetailsComponent implements OnInit {
+
+  // get the component instance to have access to plyr instance
+  @ViewChild(PlyrComponent, { static: true })
+  plyr!: PlyrComponent;
+
+  // or get it from plyrInit event
+  player: Plyr = new Plyr('#player-movie', {
+    quality: { default: 1080, options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240] },
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
+    ],
+    settings: ['captions', 'quality', 'speed', 'loop'],
+    seekTime: 10
+  });;
   public height = '100px';
   public flagContentHeight = false;
   flagFollow = false;
   genreOfMovie: any;
+  castOfMovie: any;
+  directorOfMovie: any;
   slug: any;
   movie: any;
   countryName: any;
@@ -30,42 +44,71 @@ export class MovieDetailsComponent implements OnInit {
   historyTime = 0;
   currentTime = 0;
   uriMovie = ``;
-  player: any;
-  directors: any = [];
-  casts: any = [];
+  videoSources!: Plyr.Source[];
   constructor(
     private movieService: MovieService,
     private activeRouter: ActivatedRoute,
     public loginService: LoginServiceService,
-    private movieCastService: MovieCastService,
-    private movieDirectorService: MovieDirectorService,
     private router: Router, private accountService: AccountService
   ) {
-    window.scrollTo(0, 0);
   }
   async ngOnInit() {
+    window.scrollTo(0, 0);
     this.slug = this.activeRouter.snapshot.params['slug'];
     this.accountId = this.loginService.isUserLoggedIn() ? Number(sessionStorage.getItem('idAcc')) : null;
     await this.getMovieDetail();
-    await this.getGenreOfMovie(this.movie.id);
+    if (this.movie) {
+      await this.getGenreOfMovie(this.movie.id);
+      await this.getCastOfMovie(this.movie.id);
+      await this.getDirectorOfMovie(this.movie.id);
+    }
     if (this.accountId) {
       await this.getFollow();
       await this.checkPayment();
       await this.getHistory();
     }
     await this.getRate();
-    await this.getDirector();
-    await this.getCast();
     this.releaseDate = new Date(this.movie.releaseDate);
     this.uriMovie = `${this.movie.linkMovie}#t=${this.historyTime}`;
+    this.videoSources = [
+      {
+        src: this.getUrlMovie(this.uriMovie, '360'),
+        provider: 'html5',
+        size: 360
+
+      },
+      {
+        src: this.getUrlMovie(this.uriMovie, '720'),
+        provider: 'html5',
+        size: 720
+
+      },
+      {
+        src: this.getUrlMovie(this.uriMovie, '1080'),
+        provider: 'html5',
+        size: 1080
+
+      },
+    ];
+    if (!this.showVideo()) {
+      this.isLoading = true;
+    }
+  }
+  getUrlMovie(uriMovie: string, size: string): string {
+    var DELIMITER = "/";
+    var parts = uriMovie.split(DELIMITER);
+    parts[4] = size;
+    uriMovie = parts.join(DELIMITER); this.showVideo;
+    return uriMovie;
+  }
+  getDescription(): string {
+    return this.movie ? this.movie.description : '';
+  }
+  loadMovieSuccess() {
+    this.isLoading = true;
     setTimeout(() => {
       this.isLoading = true;
-    }, 2000);
-  }
-  async getCast() {
-    await this.movieCastService.getCastByMovieId(this.movie.id).toPromise().then((data: any) => {
-      this.casts = data;
-    });
+    }, 1000);
   }
   async getHistory() {
     const historyKey = {
@@ -78,6 +121,11 @@ export class MovieDetailsComponent implements OnInit {
       }
     });
   }
+  option: Plyr.Options = {
+    quality: { default: 720, forced: false, options: [1080, 720, 480, 360] },
+    controls: ['play-large', 'play', 'rewind', 'fastForward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'airplay', 'fullscreen'],
+    settings: ['quality', 'speed'],
+  }
   async getFollow() {
     const favoriteId = {
       accountId: this.accountId,
@@ -88,25 +136,36 @@ export class MovieDetailsComponent implements OnInit {
     });
   }
   checkDirectors(): boolean {
-    if (this.directors === null) {
-      if (this.directors.length === 0) {
+    if (this.directorOfMovie) {
+      if (this.directorOfMovie.length === 0) {
         return true;
       } else {
         return false;
       }
     } else {
-      return false
+      return true;
     }
   }
   checkCasts(): boolean {
-    if (this.casts === null) {
-      if (this.casts.length === 0) {
+    if (this.castOfMovie) {
+      if (this.castOfMovie.length === 0) {
         return true;
       } else {
         return false;
       }
     } else {
-      return false
+      return true;
+    }
+  }
+  checkGenre(): boolean {
+    if (this.genreOfMovie) {
+      if (this.genreOfMovie.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
     }
   }
   async checkPayment() {
@@ -124,6 +183,22 @@ export class MovieDetailsComponent implements OnInit {
         this.genreOfMovie = data;
       });
   }
+  async getCastOfMovie(movieId: any) {
+    await this.movieService
+      .getCastOfMovie(movieId)
+      .toPromise()
+      .then((data: any) => {
+        this.castOfMovie = data;
+      });
+  }
+  async getDirectorOfMovie(movieId: any) {
+    await this.movieService
+      .getDirectorOfMovie(movieId)
+      .toPromise()
+      .then((data: any) => {
+        this.directorOfMovie = data;
+      });
+  }
   async getMovieDetail() {
     await this.movieService
       .getMovieBySlug(this.slug)
@@ -138,6 +213,9 @@ export class MovieDetailsComponent implements OnInit {
         this.countryName = data.name;
       });
   }
+  showRate(): string {
+    return this.evaluate.rate.toFixed(1);
+  }
   async getRate() {
     await this.movieService
       .getRateMovie(this.movie.id)
@@ -146,8 +224,8 @@ export class MovieDetailsComponent implements OnInit {
         this.evaluate = data;
       });
   }
-  onTimeUpdate(value: any) {
-    this.currentTime = value.target.currentTime;
+  onTimeUpdate(event: any) {
+    this.currentTime = event.detail.plyr.media.currentTime;
     if (this.accountId) {
       const history = {
         "accountHistoryKey": {
@@ -202,15 +280,18 @@ export class MovieDetailsComponent implements OnInit {
     );
   }
   checkMoviePrice(): boolean {
-    if (this.movie.moviePrice === 0) {
-      return false;
+    if (this.movie) {
+      if (this.movie.moviePrice === 0) {
+        return false;
+      } else {
+        return !this.checkPay;
+      }
     } else {
-      return !this.checkPay;
+      return false;
     }
   }
   showVideo(): boolean {
     let check = false;
-    this.player = new Plyr('#player-movie');
     if (this.loginService.isUserLoggedIn()) {
       return !this.checkMoviePrice();
     } else {
@@ -218,10 +299,12 @@ export class MovieDetailsComponent implements OnInit {
       return check;
     }
   }
-  async getDirector() {
-    await this.movieDirectorService.getDirectorByMovieId(this.movie.id).toPromise().then((data: any) => {
-      this.directors = data;
-    });
+  checkLoginInPay() {
+    if (this.loginService.isUserLoggedIn()) {
+      this.goPay();
+    } else {
+      UtilClass.showMessBasic(UTIL.WARNING_LOGIN);
+    }
   }
   goPay() {
     this.router.navigate(['/mp/service/payment/' + this.slug]);

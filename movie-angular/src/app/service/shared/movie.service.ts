@@ -4,14 +4,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: `root`,
 })
 export class MovieService {
-  public headers: any | null = sessionStorage.getItem('token');
+  public headers: any | null = sessionStorage.getItem(`token`);
   private httpOptions = {
     headers: new HttpHeaders({
       Authorization: this.headers,
-    }).set('Content-Type', 'application/json'),
+    }).set(`Content-Type`, `application/json`),
   };
   formMovie = new FormGroup({
     name: new FormControl(null, Validators.required),
@@ -30,7 +30,7 @@ export class MovieService {
     releaseDate: new FormControl(null, Validators.required),
   });
   private httpOptionsBasic = {
-    headers: new HttpHeaders().set('Content-Type', 'application/json'),
+    headers: new HttpHeaders().set(`Content-Type`, `application/json`),
   };
 
   constructor(private httpClient: HttpClient) { }
@@ -73,132 +73,222 @@ export class MovieService {
   }
 
   public getMovie(): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
       headers: new HttpHeaders({
         Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      }).set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetailAll',
+      `http://localhost:8080/api/movieDetail/getMovieDetailAll`,
       this.httpOptions
     );
   }
   public getAllMovie(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetailAll'
+      `http://localhost:8080/api/movieDetail/getMovieDetailAll`,
+      this.httpOptions
+    );
+  }
+  public getPopularMovie(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getPopularMovies`,
+      this.httpOptions
     );
   }
 
-  public getMovieByName(name: string): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+  getBill(accId: any, movieId: any): Observable<any> {
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/bill/getBill/${accId}/${movieId}`,
+      this.httpOptions
+    );
+  }
+  public getMovieByName(name: string): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
       `http://localhost:8080/api/movieDetail/getMovieDetailByName?name=${name}`,
       this.httpOptions
     );
   }
+  getMovieByGenreId(id: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getMovieByGenreId/${id}`,
+      this.httpOptions
+    );
+  }
+  getMovieByGenreIdAndCountryCode(genreId: any, code: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getMovieByGenreIdAndCountryCode/${genreId}/${code}`,
+      this.httpOptions
+    );
+  }
+  getMovieByCountryCode(code: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getMovieByCountryCode/${code}`,
+      this.httpOptions
+    );
+  }
   public getFollow(favoriteId: any): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
       headers: new HttpHeaders({
         Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      }).set(`Content-Type`, `application/json`),
     };
     return this.httpClient.post<any>(
-      'http://localhost:8080/api/acc/getFollow', favoriteId,
+      `http://localhost:8080/api/acc/getFollow`, favoriteId,
+      this.httpOptions
+    );
+  }
+
+  public getAllEvaluateInMovieId(movieId: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/loadEvaluateInMovie/${movieId}`,
       this.httpOptions
     );
   }
   public addInfoBill(billInfo: any): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
       headers: new HttpHeaders({
         Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      }).set(`Content-Type`, `application/json`),
     };
     return this.httpClient.post<any>(
-      'http://localhost:8080/api/movieDetail/addInfoBill',
+      `http://localhost:8080/api/movieDetail/addInfoBill`,
       JSON.stringify(billInfo), this.httpOptions
     );
   }
   public getMovieBySlug(slug: any): Observable<any> {
     let formData: FormData = new FormData();
-    formData.append('slug', slug);
+    formData.append(`slug`, slug);
     return this.httpClient.post<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetailBySlug',
+      `http://localhost:8080/api/movieDetail/getMovieDetailBySlug`,
       formData
     );
   }
 
   public getMovieById(id: number): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
       headers: new HttpHeaders({
         Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      }).set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieDetail/' + id,
+      `http://localhost:8080/api/movieDetail/getMovieDetail/` + id,
       this.httpOptions
     );
   }
   public getPromoCode(code: any): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
     this.httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getPromo/' + code,
+      `http://localhost:8080/api/movieDetail/getPromo/` + code,
       this.httpOptions
     );
   }
 
+  public getCountriesInMovie(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(`http://localhost:8080/api/movieDetail/getAllCountriesCode`);
+  }
   public getCountries(): Observable<any> {
-    return this.httpClient.get<any>('https://restcountries.com/v2/all');
+    return this.httpClient.get<any>(`https://restcountries.com/v2/all`);
   }
   public getCountryByAlphaCode(alphaCode: any): Observable<any> {
     return this.httpClient.get<any>(
-      'https://restcountries.com/v2/alpha/' + alphaCode
+      `https://restcountries.com/v2/alpha/` + alphaCode
     );
   }
   public getGenreOfMovie(movieId: any): Observable<any> {
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getGenreByMovieId/' + movieId
+      `http://localhost:8080/api/movieDetail/getGenreByMovieId/` + movieId
+    );
+  }
+  public getCastOfMovie(movieId: any): Observable<any> {
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getCastByMovieId/` + movieId
+    );
+  }
+  public getDirectorOfMovie(movieId: any): Observable<any> {
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getDirectorByMovieId/` + movieId
     );
   }
 
   public getRateMovie(id: number): Observable<any> {
     this.httpOptions = {
-      headers: new HttpHeaders().set('Content-Type', 'application/json'),
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
-      'http://localhost:8080/api/movieDetail/getMovieRate/' + id,
+      `http://localhost:8080/api/movieDetail/getMovieRate/` + id,
+      this.httpOptions
+    );
+  }
+  public searchMovie(search: any): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/search/${search}`,
       this.httpOptions
     );
   }
   public checkPay(accountId: any, movieId: any): Observable<any> {
-    this.headers = sessionStorage.getItem('token');
+    this.headers = sessionStorage.getItem(`token`);
     this.httpOptions = {
       headers: new HttpHeaders({
         Authorization: this.headers,
-      }).set('Content-Type', 'application/json'),
+      }).set(`Content-Type`, `application/json`),
     };
     return this.httpClient.get<any>(
       `http://localhost:8080/api/bill/checkpay/${accountId}/${movieId}`,
       this.httpOptions
     );
   }
+  public checkExitPay(accountId: any, movieId: any): Observable<any> {
+    this.headers = sessionStorage.getItem(`token`);
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/bill/checkExitPay/${accountId}/${movieId}`,
+      this.httpOptions
+    );
+  }
 
   public addMovie(movie: any) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = 'Bearer ' + sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = `Bearer ` + sessionStorage.getItem(`token`);
     }
     return this.httpClient.post(
       `http://localhost:8080/api/movieDetail/addMovie`,
@@ -207,8 +297,8 @@ export class MovieService {
     );
   }
   public follow(favorite: any) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = 'Bearer ' + sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = `Bearer ` + sessionStorage.getItem(`token`);
     }
     return this.httpClient.post(
       `http://localhost:8080/api/acc/follow`,
@@ -217,8 +307,8 @@ export class MovieService {
     );
   }
   public unFollow(favoriteId: any) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = 'Bearer ' + sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = `Bearer ` + sessionStorage.getItem(`token`);
     }
     return this.httpClient.post(
       `http://localhost:8080/api/acc/un-follow`,
@@ -228,8 +318,8 @@ export class MovieService {
   }
 
   public editMovie(movie: any) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = sessionStorage.getItem(`token`);
     }
     return this.httpClient.put(
       `http://localhost:8080/api/movieDetail/editMovieDetail`,
@@ -239,8 +329,8 @@ export class MovieService {
   }
 
   public addGenreToMovie(fkGenre: any) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = sessionStorage.getItem(`token`);
     }
     return this.httpClient.post(
       `http://localhost:8080/api/movieDetail/addMovie`,
@@ -250,8 +340,8 @@ export class MovieService {
   }
 
   public deleteMovie(id: number) {
-    if (sessionStorage.getItem('token')) {
-      this.headers = sessionStorage.getItem('token');
+    if (sessionStorage.getItem(`token`)) {
+      this.headers = sessionStorage.getItem(`token`);
     }
     return this.httpClient.delete(
       `http://localhost:8080/api/movieDetail/remove/` + id,

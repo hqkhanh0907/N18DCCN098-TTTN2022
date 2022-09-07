@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MovieRate {
     private Integer MovieDto;
-    private double rate;
+    private Double rate;
     private Integer votes;
 
 }

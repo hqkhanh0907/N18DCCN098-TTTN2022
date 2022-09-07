@@ -176,8 +176,9 @@ export class ModalAdjustPersonalInfoComponent implements OnInit {
       this.accountInf.phoneNumber = this.adjustAccount.value.phoneNumber;
       this.accountInf.gender = this.adjustAccount.value.gender;
       this.accountInf.wardId = this.adjustAccount.value.ward;
-      this.accountInf.birthday = new Date(this.adjustAccount.value.birthday).getTime();
+      this.accountInf.birthday = new Date(UtilClass.mapDate(this.adjustAccount.value.birthday)).getTime();
       this.accountInf.addressDetails = this.adjustAccount.value.addressDetails;
+      console.log('account', this.accountInf);
       this.accService
         .updateAccount(this.accountInf)
         .toPromise()

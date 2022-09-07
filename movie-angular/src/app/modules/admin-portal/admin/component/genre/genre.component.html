@@ -1,0 +1,133 @@
+<div class="head-user">
+    <div class="title-list-user">
+        <h1>Genre list</h1>
+    </div>
+</div>
+<mat-divider></mat-divider>
+<div class="search-root">
+    <mat-form-field
+        appearance="outline"
+        class="search-group"
+    >
+        <input
+            placeholder="Search genre's name here..."
+            matInput
+            type="search"
+            [(ngModel)]="searchGenre"
+        />
+        <button
+            *ngIf="searchGenre !== ''"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="searchGenre=''"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon
+            *ngIf="searchGenre === ''"
+            matSuffix
+        >search</mat-icon>
+    </mat-form-field>
+</div>
+<div class="container tab">
+    <div class="group-on-table">
+        <label class="show-entries ">
+            Show
+            <select
+                style="width: 50px; height: 30px"
+                name="tbUsers_length"
+                aria-controls="tbUsers"
+                [(ngModel)]="entries"
+                class="custom-select custom-select-sm form-control form-control-sm"
+            >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            entries
+        </label>
+        <div class="group-btn">
+            <button
+                style="margin: 5px"
+                class="btn btn-success group-btn-user"
+                (click)="addGenre()"
+            >
+                <mat-icon>playlist_add</mat-icon>
+            </button>
+            <button
+                class="btn btn-primary group-btn-user"
+                (click)="reloadAccList()"
+            >
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="group-table">
+        <div>
+            <table
+                style="background-color: #ffffff"
+                matSort
+                (matSortChange)="sortData($event)"
+                class="table table-hover table-bordered text-nowrap table-striped mat-small"
+            >
+                <thead style="align-items: center;">
+                    <tr class="bg-table-header">
+                        <th>ID</th>
+                        <th mat-sort-header="name">Name</th>
+                        <th class="text-center td-item">Actions</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 16px;">
+                    <tr
+                        *ngFor="let genre of sortedData | genreFilter: searchGenre | paginate: { itemsPerPage: entries, currentPage: p }">
+                        <td>{{genre.id}}</td>
+                        <td>{{genre.name}}</td>
+                        <td class="text-center td-item">
+                            <div
+                                ngbDropdown
+                                class="d-inline-block"
+                            >
+                                <button
+                                    class="btn btn-secondary btn-setting"
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    ngbDropdownToggle
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <mat-icon>settings</mat-icon>
+                                </button>
+                                <div
+                                    ngbDropdownMenu
+                                    aria-labelledby="dropdownMenuButton"
+                                >
+                                    <button
+                                        ngbDropdownItem
+                                        class="btn btn-secondary"
+                                        (click)="openEditGenre(genre)"
+                                    >
+                                        <mat-icon>edit</mat-icon>
+                                        <label>Edit</label>
+                                    </button>
+                                    <button
+                                        ngbDropdownItem
+                                        class="btn btn-secondary"
+                                        (click)="removeGenre(genre.id)"
+                                    >
+                                        <mat-icon>delete_forever</mat-icon>
+                                        <label>Delete</label>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-movie">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

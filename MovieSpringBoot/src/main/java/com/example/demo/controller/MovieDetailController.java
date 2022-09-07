@@ -8,14 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 
@@ -44,21 +37,29 @@ public class MovieDetailController {
     public ResponseEntity<?> getMovieDetailAll() {
         return new ResponseEntity<>(movieDetailService.getAllMovie(), HttpStatus.OK);
     }
+
     @PostMapping("/addInfoBill")
     public ResponseEntity<?> addInfoBill(@RequestBody BillingInformationDto billingInformation) {
         return new ResponseEntity<>(movieDetailService.addInfoBill(billingInformation), HttpStatus.OK);
     }
+
     @GetMapping("/getPromo/{promo_code}")
     public ResponseEntity<?> getPromo(@PathVariable("promo_code") String promotionCode) {
-        return new ResponseEntity<>(movieDetailService.getPromotion(promotionCode),HttpStatus.OK);
+        return new ResponseEntity<>(movieDetailService.getPromotion(promotionCode), HttpStatus.OK);
     }
+
+    @GetMapping("/getAllCountriesCode")
+    public ResponseEntity<?> getAllCountriesCode() {
+        return new ResponseEntity<>(movieDetailService.getAllCountriesCode(), HttpStatus.OK);
+    }
+
     @GetMapping("/getMovieRates")
     public ResponseEntity<?> getMovierates() throws Exception {
         return new ResponseEntity<>(movieDetailService.getListMovieRate(), HttpStatus.OK);
     }
 
     @GetMapping("/getMovieRate/{id}")
-    public ResponseEntity<?> getMovierate(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<?> getMovieRate(@PathVariable Integer id) throws Exception {
         return new ResponseEntity<>(movieDetailService.getRateMovie(id), HttpStatus.OK);
     }
 
@@ -67,15 +68,42 @@ public class MovieDetailController {
         return new ResponseEntity<>(movieDetailService.getMovieGenres(id), HttpStatus.OK);
     }
 
+    @GetMapping("/getMovieByGenreId/{id}")
+    public ResponseEntity<?> getMovieByGenreId(@PathVariable("id") Integer genreId) {
+        return new ResponseEntity<>(movieDetailService.getMovieByGenreId(genreId), HttpStatus.OK);
+    }
+
+    @GetMapping("/getMovieByCountryCode/{code}")
+    public ResponseEntity<?> getMovieByCountryCode(@PathVariable("code") String code) {
+        return new ResponseEntity<>(movieDetailService.getMovieByCountryCode(code), HttpStatus.OK);
+    }
+
+    @GetMapping("/getMovieByGenreIdAndCountryCode/{genreId}/{code}")
+    public ResponseEntity<?> getMovieByGenreIdAndCountryCode(@PathVariable("code") String code, @PathVariable Integer genreId) {
+        return new ResponseEntity<>(movieDetailService.getMovieByGenreIdAndCountryCode(genreId, code), HttpStatus.OK);
+    }
+
+    @GetMapping("/getPopularMovies")
+    public ResponseEntity<?> getPopularMovies() {
+        return new ResponseEntity<>(movieDetailService.getPopularMovies(), HttpStatus.OK);
+    }
+
+
     @GetMapping("/getCastByMovieId/{id}")
     public ResponseEntity<?> getCastByMovieId(@PathVariable Integer id) {
         return new ResponseEntity<>(movieDetailService.getMovieCasts(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/getDirectorByMovieId/{id}")
+    public ResponseEntity<?> getDirectorByMovieId(@PathVariable Integer id) {
+        return new ResponseEntity<>(movieDetailService.getMovieDirectors(id), HttpStatus.OK);
     }
 
     @GetMapping("/getMovieDetailByName")
     public ResponseEntity<?> getMovieDetailByName(@Param("name") String name) throws Exception {
         return new ResponseEntity<>(movieDetailService.getMovieDetailByName(name), HttpStatus.OK);
     }
+
     @PostMapping("/getMovieDetailBySlug")
     public ResponseEntity<?> getMovieDetailBySlug(@Param("slug") String slug) throws Exception {
         return new ResponseEntity<>(movieDetailService.getMovieBySlug(slug), HttpStatus.OK);
@@ -91,7 +119,7 @@ public class MovieDetailController {
         return new ResponseEntity<>(movieDetailService.editMovieDetail(movieDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/saveEvaluate")
+    @PostMapping("/saveEvaluate")
     public ResponseEntity<?> saveEvaluate(@RequestBody MovieEvaluateDto movieEvaluateDTO) throws Exception {
         return new ResponseEntity<>(movieDetailService.saveEvaluate(movieEvaluateDTO), HttpStatus.OK);
     }

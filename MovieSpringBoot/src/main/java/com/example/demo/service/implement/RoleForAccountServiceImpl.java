@@ -9,8 +9,8 @@ import com.example.demo.service.RoleForAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,9 +29,13 @@ public class RoleForAccountServiceImpl implements RoleForAccountService {
 
     @Override
     public List<AccountRoleDto> getRoleForAccount(Integer accId) {
-        return groupOfRolesRepository.findAll().stream().map(groupRoles -> {
-            return accountRoleMapper.accountRoleToAccountRoleDto(groupRoles.getAccountRole());
-        }).collect(Collectors.toList());
+        List<AccountRoleDto> accountRoleDtos = new ArrayList<>();
+        for (GroupOfRoles groupOfRoles: groupOfRolesRepository.findAll()){
+            if (groupOfRoles.getId().getAccountId() == accId) {
+                accountRoleDtos.add(accountRoleMapper.accountRoleToAccountRoleDto(groupOfRoles.getAccountRole()));
+            }
+        }
+        return accountRoleDtos;
     }
 
     @Override

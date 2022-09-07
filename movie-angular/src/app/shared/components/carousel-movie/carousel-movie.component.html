@@ -1,16 +1,20 @@
 <div class="carousel-box">
   <p-carousel
-    [value]="[1, 2, 3, 4, 6, 7, 8, 6, 3, 1, 2, 1, 3, 34, 4]"
+    *ngIf="movies"
+    [value]="movies"
     [numVisible]="5"
     [numScroll]="1"
     [showIndicators]="false"
     [responsiveOptions]="responsiveOptions"
   >
-    <ng-template pTemplate="header">
-      <h3 class="title-slide">Vertical</h3>
+    <ng-template pTemplate="header" *ngIf="title">
+      <h3 class="title-slide">{{title}}</h3>
     </ng-template>
-    <ng-template let-car pTemplate="item">
-      <app-movie-box-slide></app-movie-box-slide>
+    <ng-template
+      let-movie
+      pTemplate="item"
+    >
+      <app-movie-box-slide [movie]="movie"></app-movie-box-slide>
     </ng-template>
   </p-carousel>
 </div>

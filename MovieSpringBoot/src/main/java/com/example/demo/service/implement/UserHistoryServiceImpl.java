@@ -35,7 +35,7 @@ public class UserHistoryServiceImpl implements UserHistoryService {
         List<AccountHistory> userHistories = userHistoryRepository.findAll();
         userHistories.forEach(accountHistory -> {
             if (accountHistory.getAccount().getId() == userId) {
-                userHistoryRepository.delete(accountHistory);
+                userHistoryRepository.deleteAccountHistory(accountHistory.getAccountHistoryKey().getAccountId(), accountHistory.getAccountHistoryKey().getMovieId());
             }
         });
     }

@@ -1,0 +1,12 @@
+.portfolio-content>h6 {
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.portfolio-content>h6:hover {
+    transition: 0.8s;
+    color: #eb315a;
+}
+span {
+    font-size: 10px;
+}

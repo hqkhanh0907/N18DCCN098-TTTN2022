@@ -3,6 +3,8 @@ package com.example.demo.service.implement;
 import com.example.demo.dto.GenreDto;
 import com.example.demo.dto.map.GenreMapper;
 import com.example.demo.model.Genre;
+import com.example.demo.model.GenreOfMovie;
+import com.example.demo.repository.FKGenreRepository;
 import com.example.demo.repository.MovieGenreRepository;
 import com.example.demo.service.FKGenreService;
 import com.example.demo.service.MovieGenreService;
@@ -18,6 +20,7 @@ public class MovieGenreServiceImpl implements MovieGenreService {
     private final MovieGenreRepository movieGenreRepository;
     private final GenreMapper genreMapper;
     private final FKGenreService fkGenreService;
+    private final FKGenreRepository fkGenreRepository;
 
     @Override
     public List<GenreDto> getAllMovieGen() {
@@ -32,15 +35,27 @@ public class MovieGenreServiceImpl implements MovieGenreService {
     }
 
     @Override
-    public String deleteMovieGenreById(Integer id) {
+    public Boolean deleteMovieGenreById(Integer id) {
         Genre genre = movieGenreRepository.findById(id).orElse(null);
         if (genre == null) {
             throw new RuntimeException("Not found genre");
         } else {
-            fkGenreService.deleteByGenreId(id);
-            movieGenreRepository.delete(genre);
-            return "Delete genre successfully";
+            if (!checkGenreOnFKGenre(id)) {
+                movieGenreRepository.deleteGenre(genre.getId());
+                return true;
+            } else {
+                throw new RuntimeException("Already exist in movie! Couldn't delete genre!");
+            }
         }
+    }
+    private Boolean checkGenreOnFKGenre(Integer genreId) {
+        List<GenreOfMovie> genreOfMovies = fkGenreRepository.findAll();
+        for (GenreOfMovie genreOfMovie : genreOfMovies) {
+            if (genreOfMovie.getId().getGenreId() == genreId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -55,18 +70,18 @@ public class MovieGenreServiceImpl implements MovieGenreService {
     }
 
     @Override
-    public String editMovieGenre(GenreDto movieGenreDTO) {
-        Genre genre = movieGenreRepository.findById(movieGenreDTO.getId()).orElse(null);
+    public Boolean editMovieGenre(GenreDto genreDto) {
+        Genre genre = movieGenreRepository.findById(genreDto.getId()).orElse(null);
         if (genre == null) {
             throw new RuntimeException("Not found genre");
         } else {
-            if (checkGenreName(movieGenreDTO.getName()) == false) {
-                genre.setName(movieGenreDTO.getName());
+            if (checkGenreName(genreDto.getName()) == false) {
+                genre.setName(genreDto.getName());
                 movieGenreRepository.save(genre);
-                return "Edit genre successfully";
+                return true;
             }
         }
-        return "Fail";
+        return false;
     }
 
     public boolean checkGenreName(String name) {

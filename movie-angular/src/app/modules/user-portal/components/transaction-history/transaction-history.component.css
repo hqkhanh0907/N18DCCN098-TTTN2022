@@ -1,0 +1,12 @@
+.fit-select {
+  border-radius: 5px;
+  border: 0px;
+  height: 30px;
+  text-align: center;
+  width: fit-content;
+  min-width: 100px;
+  filter: invert(100%);
+}
+.item-status {
+  filter: invert(100%);
+}

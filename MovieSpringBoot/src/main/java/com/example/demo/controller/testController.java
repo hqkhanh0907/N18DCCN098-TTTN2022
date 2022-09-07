@@ -39,14 +39,8 @@ public class testController {
         return new ResponseEntity<>(castOfMovies, HttpStatus.OK);
     }
 
-    @PostMapping("/testAddGenre")
-    public ResponseEntity<?> responseEntity(@RequestBody GenreOfMovie genreOfMovieDto) {
-        fkGenreService.removeGenreExits(genreOfMovieDto.getId().getMovieId());
-        try {
-            fkGenreService.saveGenreOfMovie(genreOfMovieDto);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    @PostMapping("/test")
+    public ResponseEntity<?> responseEntity() {
+        return new ResponseEntity<>(accountService.getAccountById(1), HttpStatus.OK);
     }
 }
