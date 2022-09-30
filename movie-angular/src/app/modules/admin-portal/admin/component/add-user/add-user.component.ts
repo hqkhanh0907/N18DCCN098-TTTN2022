@@ -56,8 +56,6 @@ export class AddUserComponent implements OnInit {
     this.submitted = true;
     this.setRoleForAccount();
     this.setAddAcc();
-    console.log(this.roleSelected);
-    console.log(this.infoAccount);
     if (this.addAccountForm.valid) {
       await this.accountService.addAccount(this.infoAccount).toPromise().then((value: any) => {
         if (value.statusCode === undefined) {

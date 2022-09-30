@@ -16,7 +16,6 @@ import { ImageModel } from 'src/app/shared/model/ImageModel';
 import { UTIL } from 'src/app/shared/util/util';
 import { MovieService } from 'src/app/service/shared/movie.service';
 import { LoginServiceService } from 'src/app/service/shared/login-service.service';
-import { ImageService } from 'src/app/service/shared/upload-image.service';
 import { MovieDirectorService } from '../../../service/movie-director.service';
 import { MovieCastService } from '../../../service/movie-cast.service';
 import { MovieGenreService } from '../../../service/movie-genre.service';
@@ -24,6 +23,7 @@ import { UtilClass } from 'src/app/shared/util/utilClass';
 import slugify from 'slugify';
 import * as Plyr from 'plyr';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-detail-movie',
@@ -59,6 +59,7 @@ export class DetailMovieComponent implements OnInit {
   movieDuration: any;
   linkMovie: any;
   checkLink = false;
+  urlSafe: SafeResourceUrl | undefined;
 
   constructor(public movieService: MovieService,
     private loginService: LoginServiceService,
@@ -66,6 +67,7 @@ export class DetailMovieComponent implements OnInit {
     private movieCastService: MovieCastService,
     private movieGenreService: MovieGenreService,
     private matDialog: MatDialog,
+    public sanitizer: DomSanitizer,
     public dialogRef: MatDialogRef<DetailMovieComponent>,
     @Inject(MAT_DIALOG_DATA) public movie: any) {
   }
@@ -80,7 +82,7 @@ export class DetailMovieComponent implements OnInit {
     await this.getGenreOfMovie();
     await this.getDirectorOfMovie();
     await this.getCastOfMovie();
-    console.log(this.castListChoosed);
+    this.urlSafe = this.movie.linkTrailer ? this.sanitizer.bypassSecurityTrustResourceUrl(this.movie.linkTrailer) : undefined;
   }
 
   getImage(): string {
@@ -271,7 +273,6 @@ export class DetailMovieComponent implements OnInit {
     }
     if (this.movieService.formMovie.valid && this.submitted && this.checkDuration()) {
       this.getMovieFK();
-      console.log(JSON.stringify(this.movie));
       await this.movieService.editMovie(this.movie).toPromise().then((value: any) => {
         if (value.statusCode === undefined) {
           UtilClass.showMessageAlert(UTIL.ICON_SUCCESS, UTIL.ALERT_MESSAGE_SUCCESS_EDIT_MOVIE);
@@ -281,6 +282,9 @@ export class DetailMovieComponent implements OnInit {
       });
       this.countEdit++;
     }
+  }
+  changeLinkTrailer() {
+    this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.movieService.formMovie.value.linkTrailer);
   }
   setUpdateMovie() {
     this.movie = {
@@ -400,8 +404,8 @@ export class DetailMovieComponent implements OnInit {
     }
   }
 
-  getLinkTrailer() {
-    return this.movieService.formMovie.value.linkTrailer;
+  getLinkTrailer(): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieService.formMovie.value.linkTrailer);
   }
 
   getLinkMovie() {

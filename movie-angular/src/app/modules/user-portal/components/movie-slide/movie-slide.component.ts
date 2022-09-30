@@ -16,7 +16,7 @@ export class MovieSlideComponent implements OnInit {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 30000,
+    autoplaySpeed: 2000,
   };
   constructor(private movieService: MovieService) {}
 

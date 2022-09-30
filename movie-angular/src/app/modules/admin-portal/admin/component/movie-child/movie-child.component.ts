@@ -37,9 +37,11 @@ export class MovieChildComponent implements OnInit {
     UtilClass.showRequestDeleteMovie(UTIL.ALERT_MESSAGE_DELETE_MOVIE).then((result) => {
       if (result) {
         this.movieService.deleteMovie(id).subscribe((data: any) => {
-          if (data) {
+          if (data.statusCode === undefined) {
             UtilClass.showMessageAlert(UTIL.ICON_SUCCESS, UTIL.ALERT_MESSAGE_SUCCESS_REMOVE_MOVIE);
             this.deleteMovieEvent.emit(this.movie);
+          } else {
+            UtilClass.showMessageAlert(UTIL.ICON_ERROR, data.message);
           }
         });
       }

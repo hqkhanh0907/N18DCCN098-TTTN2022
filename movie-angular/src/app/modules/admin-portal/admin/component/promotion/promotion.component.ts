@@ -31,7 +31,6 @@ export class PromotionComponent implements OnInit {
   async getAllPromotion() {
     await this.promotionService.getPromotions().toPromise().then((value: any) => {
       if (value.statusCode === undefined) {
-        console.log(value);
         this.promotions = value;
         this.sortedData = this.promotions.slice();
       }
@@ -74,7 +73,6 @@ export class PromotionComponent implements OnInit {
     UtilClass.showRequestDeleteMovie(UTIL.ALERT_MESSAGE_DELETE_GENRE).then((result: any) => {
       if (result) {
         this.promotionService.deleteGenre(id).toPromise().then((value: any) => {
-          console.log(value);
           if (value.statusCode === undefined) {
             this.reloadAccList();
             UtilClass.showMessageAlert(UTIL.ICON_SUCCESS, UTIL.ALERT_MESSAGE_SUCCESS_REMOVE_ACCOUNT);

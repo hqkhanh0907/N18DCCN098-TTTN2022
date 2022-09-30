@@ -157,12 +157,31 @@ public class MovieDetailServiceImpl implements MovieDetailService {
         if (movie == null) {
             throw new Exception("Move not found");
         } else {
-            castOfMovieService.deleteFkCastByMovieId(id);
-            fkDirectorService.deleteFkDirectorByMovieId(id);
-            fkGenreService.deleteByMovieId(id);
-            movieEvaluateService.deleteMovieEvaluateByMovieId(id);
-            movieDetailRepository.delete(movie);
-            return movie;
+            if (!checkRelationshipMovie(movie)) {
+                throw new Exception("Movie can't delete");
+            } else {
+                try {
+                    movieDetailRepository.deleteById(movie.getId());
+                    return movie;
+                } catch (Exception e) {
+                    throw new Exception(e);
+                }
+            }
+        }
+    }
+
+    private Boolean checkRelationshipMovie(Movie movie) {
+        if ((Objects.isNull(movie.getGenreOfMovies()) || movie.getGenreOfMovies().isEmpty()) &&
+                (Objects.isNull(movie.getDirectorOfMovies()) || movie.getDirectorOfMovies().isEmpty()) &&
+                (Objects.isNull(movie.getMovieEvaluates()) || movie.getDirectorOfMovies().isEmpty()) &&
+                (Objects.isNull(movie.getFavoriteMovies()) || movie.getFavoriteMovies().isEmpty()) &&
+                (Objects.isNull(movie.getAccountHistories()) || movie.getAccountHistories().isEmpty()) &&
+                (Objects.isNull(movie.getDirectorOfMovies()) || movie.getDirectorOfMovies().isEmpty()) &&
+                (Objects.isNull(movie.getBillingInformations()) || movie.getBillingInformations().isEmpty())
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 

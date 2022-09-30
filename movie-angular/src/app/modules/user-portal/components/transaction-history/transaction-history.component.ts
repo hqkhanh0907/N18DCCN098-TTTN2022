@@ -24,7 +24,6 @@ export class TransactionHistoryComponent implements OnInit {
       await this.getBillByAccId();
     }
     this.setBillShow(Number(this.selectForm.value.status));
-    console.log(this.bills);
     setTimeout(() => { this.isLoading = true; }, 1500);
   }
   async getBillByAccId() {

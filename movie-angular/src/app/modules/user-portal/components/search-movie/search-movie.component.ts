@@ -15,7 +15,6 @@ export class SearchMovieComponent implements OnInit {
   async ngOnInit() {
     this.search = sessionStorage.getItem('movie-search');
     await this.searchMovie();
-    console.log(this.movies);
   }
   async searchMovie() {
     await this.movieService.searchMovie(this.search).toPromise().then((data: any[]) => {

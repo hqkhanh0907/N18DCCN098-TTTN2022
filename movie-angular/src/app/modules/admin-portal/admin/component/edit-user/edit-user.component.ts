@@ -54,7 +54,6 @@ export class EditUserComponent implements OnInit {
       status: new FormControl(this.acc.enable, Validators.required),
       roles: new FormControl(this.roleOfAcc, Validators.required),
     });
-    console.log(this.updateAccountForm.value);
   }
 
   async getUsers() {

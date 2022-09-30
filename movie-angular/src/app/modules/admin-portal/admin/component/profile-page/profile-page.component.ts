@@ -96,9 +96,6 @@ export class ProfilePageComponent implements OnInit {
     await this.getImgAcc();
     this.isLoading = false;
   }
-  show() {
-    console.log(this.updateAccountForm.value);
-  }
   async getAddress() {
     await this.accService
       .getWardByCode(this.wId)
@@ -217,7 +214,6 @@ export class ProfilePageComponent implements OnInit {
     this.infoAccount.phoneNumber = this.updateAccountForm.value.phoneNumber;
     this.infoAccount.wardId = this.updateAccountForm.value.ward;
     if (!this.updateAccountForm.invalid) {
-      console.log(JSON.stringify(this.infoAccount));
       await this.accountService.updateAccount(this.infoAccount).toPromise().then((data: any) => {
         if (data.statusCode !== undefined) {
           UtilClass.showMessageAlert(UTIL.ICON_ERROR, data.message);

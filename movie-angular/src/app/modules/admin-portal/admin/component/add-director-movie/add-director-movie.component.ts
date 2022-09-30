@@ -69,7 +69,6 @@ export class AddDirectorMovieComponent implements OnInit {
         this.directorForm.value.birthday);
 
       await this.uploadImage.uploadImageAll(this.fileToUpload,  UTIL.DEFAULT_IMAGE_DIRECTOR).toPromise().then(((result: any) => {
-        console.log(result);
         this.director.avatar = result.path;
       }));
       this.directorService.addDirector(this.director).subscribe((data: any) => {
@@ -90,7 +89,6 @@ export class AddDirectorMovieComponent implements OnInit {
   onNoClick() {
     this.directorService.getDirector().subscribe(((data: any) => {
       this.directorList = data;
-      console.log(this.directorList);
       this.dialogRef.close(this.directorList);
     }));
   }

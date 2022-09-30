@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalAdjustPersonalInfoComponent } from './components/modal-adjust-personal-info/modal-adjust-personal-info.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ModalTrailerMovieComponent } from './components/modal-trailer-movie/modal-trailer-movie.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     PreCastComponent,
     ModalChangePasswordComponent,
     ModalAdjustPersonalInfoComponent,
+    ModalTrailerMovieComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +46,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ModalChangePasswordComponent,
     FormsModule,
     ReactiveFormsModule,
+    ModalTrailerMovieComponent
   ],
 })
 export class SharedModule {}

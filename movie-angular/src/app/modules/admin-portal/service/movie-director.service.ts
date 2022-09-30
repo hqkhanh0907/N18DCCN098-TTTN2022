@@ -63,7 +63,6 @@ export class MovieDirectorService {
     this.director.name = movieDirector.name;
     this.director.story = movieDirector.story;
     this.director.birthday = movieDirector.birthday;
-    console.log(JSON.stringify(this.director));
     return this.httpClient.post(
       `http://localhost:8080/api/director/create`,
       JSON.stringify(this.director), this.httpOptions);

@@ -85,7 +85,6 @@ export class UserComponent implements OnInit {
     UtilClass.showRequestDeleteMovie(UTIL.ALERT_MESSAGE_DELETE_ACCOUNT).then((result: any) => {
       if (result) {
         this.accountService.deleteAccByUsername(username).toPromise().then((value: any) => {
-          console.log(value);
           if (value.statusCode === undefined) {
             UtilClass.showMessageAlert(UTIL.ICON_SUCCESS, UTIL.ALERT_MESSAGE_SUCCESS_REMOVE_ACCOUNT);
             this.reloadAccList();

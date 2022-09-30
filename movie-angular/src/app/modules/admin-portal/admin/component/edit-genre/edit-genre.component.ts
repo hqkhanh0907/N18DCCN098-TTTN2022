@@ -37,7 +37,6 @@ export class EditGenreComponent implements OnInit {
   async saveGene() {
     if (this.genreForm.valid) {
       this.genre.name = this.genreForm.value.genreName;
-      console.log(JSON.stringify(this.genre));
       this.movieGenre.editGenre(this.genre).subscribe((data: any) => {
         if (data.statusCode === undefined) {
           UtilClass.showMessageAlert(UTIL.ICON_SUCCESS, UTIL.ALERT_MESSAGE_SUCCESS_ADD_GENRE);

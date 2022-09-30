@@ -1455,14 +1455,14 @@ hr {
   height: 100% !important;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   max-width: none !important;
   width: fit-content !important;
-  height: fit-content !important;
 }
 
 .modal-content {
   width: fit-content;
+  border: none !important;
 }
 
 /* SEARCH BOX */

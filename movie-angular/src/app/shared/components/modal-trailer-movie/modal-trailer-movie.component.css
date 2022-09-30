@@ -1,0 +1,4 @@
+.modal-trailer {
+  width: 720px;
+  height: calc((720px * 9) / 16);
+}

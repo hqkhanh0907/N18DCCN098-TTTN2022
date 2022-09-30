@@ -23,7 +23,6 @@ export class CastComponent implements OnInit {
   async ngOnInit() {
     await this.getCast();
     await this.getAvatar();
-    console.log(this.castInHere);
   }
 
   async getCast() {

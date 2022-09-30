@@ -37,7 +37,6 @@ export class DirectorComponent implements OnInit {
   }
 
   async updateAfterEdit(event: any) {
-    console.log(event);
     if (event) {
       await this.getAllCast();
     }

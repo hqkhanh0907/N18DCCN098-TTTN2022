@@ -48,7 +48,6 @@ export class PaymentPageComponent implements OnInit {
       await this.movieService.getBill(this.accountInf.id, this.movie.id).toPromise()
         .then(
           (data: any) => {
-            console.log(data);
             if (data && data.promotion.id !== UTIL.DEFAULT_PROMO) {
               this.promo = data.promotion;
               this.promoCode = new FormControl(data.promotion.code_name);

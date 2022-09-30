@@ -14,7 +14,7 @@ import slugify from 'slugify';
 })
 export class HeaderComponent implements OnInit {
   currentChoice: any;
-  itemSearchBox = ["Movies", "Cast", "Director"];
+  itemSearchBox = ["Movies"];
   accImg = '../../../../assets/img/avatar-default.png';
   accountInf: any;
   search = new FormGroup({

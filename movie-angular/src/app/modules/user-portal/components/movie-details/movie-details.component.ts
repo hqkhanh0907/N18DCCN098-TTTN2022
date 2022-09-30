@@ -1,10 +1,13 @@
-import { Component, DoCheck, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlyrComponent } from 'ngx-plyr';
 import * as Plyr from 'plyr';
 import { AccountService } from 'src/app/service/shared/account.service';
 import { LoginServiceService } from 'src/app/service/shared/login-service.service';
 import { MovieService } from 'src/app/service/shared/movie.service';
+import { ModalTrailerMovieComponent } from 'src/app/shared/components/modal-trailer-movie/modal-trailer-movie.component';
 import { UTIL } from 'src/app/shared/util/util';
 import { UtilClass } from 'src/app/shared/util/utilClass';
 
@@ -49,7 +52,8 @@ export class MovieDetailsComponent implements OnInit {
     private movieService: MovieService,
     private activeRouter: ActivatedRoute,
     public loginService: LoginServiceService,
-    private router: Router, private accountService: AccountService
+    private router: Router, private accountService: AccountService,
+    private modalService: NgbModal
   ) {
   }
   async ngOnInit() {
@@ -288,6 +292,20 @@ export class MovieDetailsComponent implements OnInit {
       }
     } else {
       return false;
+    }
+  }
+  playTrailer() {
+    if (this.movie.linkTrailer) {
+      const modalRef = this.modalService.open(ModalTrailerMovieComponent);
+      modalRef.componentInstance.linkTrailer = String(this.movie.linkTrailer);
+    } else {
+      UtilClass.showMessBasic(UTIL.DONT_HAVE_TRAILER);
+    }
+  }
+  async reloadEvaluate(event: any) {
+    console.log(event);
+    if (event === true) {
+      await this.getRate();
     }
   }
   showVideo(): boolean {

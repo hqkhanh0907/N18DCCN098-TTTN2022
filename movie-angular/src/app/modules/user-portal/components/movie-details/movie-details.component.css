@@ -126,13 +126,31 @@ ngb-rating::ng-deep > span {
 }
 
 .btn-unfl {
-  background: linear-gradient(90deg, #252728, #3f4143);
+  opacity: 1;
+  background: linear-gradient(90deg, #292b2c, #3f4143);
+}
+.btn-unfl:hover {
+  opacity: 0.9;
+  background: linear-gradient(90deg, #292b2c, #3f4143);
 }
 
 .btn-infl {
+  opacity: 1;
   background: linear-gradient(90deg, #ff3055, #fb685f);
 }
 
+.btn-infl:hover {
+  opacity: 0.9;
+  background: linear-gradient(90deg, #ff3055, #fb685f);
+}
+.btn-info:focus {
+  box-shadow: none;
+}
 .btn-pay-now {
+  opacity: 1;
+  background: linear-gradient(90deg, #1900ff, #5fdcfb);
+}
+.btn-pay-now:hover {
+  opacity: 0.9;
   background: linear-gradient(90deg, #1900ff, #5fdcfb);
 }

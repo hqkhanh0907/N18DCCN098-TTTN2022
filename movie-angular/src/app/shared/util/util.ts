@@ -58,5 +58,6 @@ export enum UTIL {
   SHOW_LOAD_LINK_MOVIE_FAILED = "Video URL load failed",
   ALERT_MESSAGE_DELETE_GENRE = "Delete this genre?",
   ALERT_MESSAGE_DELETE_CAST = "Delete this cast?",
-  ALERT_LENGTH_COMMENT = "Comment length must be at least 10 characters and up to 200 characters"
+  ALERT_LENGTH_COMMENT = "Comment length must be at least 10 characters and up to 200 characters",
+  DONT_HAVE_TRAILER = 'No data of the trailer'
 }

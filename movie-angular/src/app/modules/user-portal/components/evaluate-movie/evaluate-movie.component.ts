@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AccountService } from 'src/app/service/shared/account.service';
 import { MovieService } from 'src/app/service/shared/movie.service';
 import { UTIL } from 'src/app/shared/util/util';
@@ -12,6 +12,7 @@ import { UtilClass } from 'src/app/shared/util/utilClass';
 export class EvaluateMovieComponent implements OnInit {
   @Input() movie: any;
   @Input() account: any;
+  @Output() evaluateEvent = new EventEmitter<Boolean>();
   rate = 0;
   evaComment = '';
   evaluates = [];
@@ -75,9 +76,12 @@ export class EvaluateMovieComponent implements OnInit {
           "status": 1
         }
         this.accountService.saveEvaluate(evaluate).toPromise().then(async (data: any) => {
-          if (data === true) {
+          if (data.statusCode === undefined && data === true) {
             await this.getEvaluateInMovie();
             this.setEvaluateShow();
+            this.evaluateEvent.emit(true);
+          } else {
+            this.evaluateEvent.emit(false);
           }
         });
       } else {

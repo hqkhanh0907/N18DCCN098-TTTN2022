@@ -1,26 +1,30 @@
-.portfolio-content>h6 {
-    margin-top: 5px;
-    cursor: pointer;
+.portfolio-content > h6 {
+  margin-top: 5px;
+  cursor: pointer;
+}
+.setImage {
+  width: 150px !important;
+  height: calc((150px * 3) / 2) !important;
 }
 
-.portfolio-content>h6:hover {
-    transition: 0.8s;
-    color: #eb315a;
+.portfolio-content > h6:hover {
+  transition: 0.8s;
+  color: #eb315a;
 }
 
 .icon-vip {
-    width: 30px;
-    height: 15px;
+  width: 30px;
+  height: 15px;
 }
 
 .icon-on-top-box {
-    position: absolute;
-    top: 0;
-    left: 5px;
-    color: yellow;
-    cursor: default;
+  position: absolute;
+  top: 0;
+  left: 5px;
+  color: yellow;
+  cursor: default;
 }
 
-ngb-rating::ng-deep>span {
-    color: yellow;
+ngb-rating::ng-deep > span {
+  color: yellow;
 }

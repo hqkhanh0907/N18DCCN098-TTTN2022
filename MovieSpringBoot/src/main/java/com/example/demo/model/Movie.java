@@ -81,31 +81,31 @@ public class Movie {
     @Column(name = "movie_price")
     private Float moviePrice;
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<DirectorOfMovie> directorOfMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<FavoriteMovie> favoriteMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<GenreOfMovie> genreOfMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<AccountHistory> accountHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<MovieEvaluate> movieEvaluates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<CastOfMovie> castOfMovies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "movie",  cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<BillingInformation> billingInformations = new ArrayList<>();
 

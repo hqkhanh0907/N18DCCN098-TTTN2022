@@ -45,7 +45,6 @@ export class EditPromotionComponent implements OnInit {
 
   ngOnInit() {
     this.setPromo();
-    console.log(this.promo);
     this.promoForm = new FormGroup({
       code_name: new FormControl(this.promo.code_name, [Validators.required]),
       description: new FormControl(this.promo.description, [Validators.required]),
@@ -53,7 +52,6 @@ export class EditPromotionComponent implements OnInit {
       end_date: new FormControl(this.promo.end_date, [Validators.required]),
       percent_discount: new FormControl(this.promo.percent_discount, [Validators.required])
     });
-    console.log(this.promoForm);
     this.maxDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   }
   setPromo() {

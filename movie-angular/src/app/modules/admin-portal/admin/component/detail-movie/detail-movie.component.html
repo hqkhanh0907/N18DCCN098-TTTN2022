@@ -157,6 +157,7 @@
                   matInput
                   placeholder="Link trailer"
                   formControlName="linkTrailer"
+                  (input)="changeLinkTrailer()"
                 >
               </mat-form-field>
             </div>
@@ -265,7 +266,7 @@
               <h6>Preview Trailer</h6>
             </div>
             <div class="item-video">
-              <video
+              <!-- <video
                 id="player-trailer"
                 *ngIf="movieService.formMovie.value.linkTrailer"
                 [src]="movieService.formMovie.value.linkTrailer"
@@ -274,7 +275,11 @@
                 [poster]="getPoster()"
                 controls
                 class="h-100 w-100"
-              ></video>
+              ></video> -->
+              <iframe
+                style="width: 100% !important; height: 100% !important;"
+                [src]="urlSafe"
+              ></iframe>
             </div>
           </div>
           <div class="w-100 h-100 pre-movie item-pre">

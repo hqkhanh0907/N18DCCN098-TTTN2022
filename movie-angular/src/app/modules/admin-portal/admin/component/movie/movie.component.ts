@@ -37,7 +37,6 @@ export class MovieComponent implements OnInit {
   }
 
   async updateAfterEdit(event: any) {
-    console.log(event);
     if(event) {
       await this.getAllMovie();
     }
@@ -50,7 +49,6 @@ export class MovieComponent implements OnInit {
         id = i;
       }
     }
-    console.log(id);
     this.movies.splice(Number(id), 1);
   }
 }

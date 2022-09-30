@@ -24,6 +24,7 @@ import { ImageModel } from 'src/app/shared/model/ImageModel';
 import slugify from 'slugify';
 import * as Plyr from 'plyr';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -66,12 +67,14 @@ export class AddMovieComponent implements OnInit {
   movieDuration: any;
   player: any;
   checkLink = false;
+  urlSafe: SafeResourceUrl | undefined;
 
   constructor(public movieService: MovieService,
     private loginService: LoginServiceService,
     private movieGenreService: MovieGenreService,
     private movieDirectorService: MovieDirectorService,
     public dialogRef: MatDialogRef<AddMovieComponent>,
+    public sanitizer: DomSanitizer,
     private matDialog: MatDialog) {
   }
 
@@ -81,6 +84,7 @@ export class AddMovieComponent implements OnInit {
     await this.getGenreList();
     await this.getDirectorList();
     await this.getAllCountries();
+    this.urlSafe = this.movieService.formMovie.value.linkTrailer ? this.sanitizer.bypassSecurityTrustResourceUrl(this.movieService.formMovie.value.linkTrailer) : undefined;
   }
   async getAllCountries() {
     await this.movieService.getCountries().toPromise().then((data: any) => {
@@ -90,6 +94,9 @@ export class AddMovieComponent implements OnInit {
     });
   }
 
+  changeLinkTrailer() {
+    this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.movieService.formMovie.value.linkTrailer);
+  }
   eventChangeSecond(target: number) {
     if (target === null) {
       this.second = 0;
@@ -217,7 +224,6 @@ export class AddMovieComponent implements OnInit {
         }
       });
       await this.getMovie(this.movieAdd.name);
-      console.log(this.movieGetByName);
       await this.movieService.editMovie(this.movieGetByName).subscribe((data: any) => {
         console.log(data);
       });

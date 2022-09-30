@@ -104,7 +104,6 @@ export class ContentMovieComponent implements OnInit {
     else {
       await this.movieService.getMovieByCountryCode(country.alpha3Code).toPromise().then((data: any) => {
         if (data) {
-          console.log('data country', data);
           this.showListMovie = [];
           this.showListMovie = data;
         }

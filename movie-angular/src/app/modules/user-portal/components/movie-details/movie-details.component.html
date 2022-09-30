@@ -70,6 +70,7 @@
         plyr
         id="player-movie"
         *ngIf="showVideo()"
+        plyrPoster="{{movie.poster}}"
         (plyrTimeUpdate)="onTimeUpdate($event)"
         (plyrLoadedData)="loadMovieSuccess()"
         [plyrPlaysInline]="true"
@@ -110,17 +111,6 @@
               <span>{{ evaluate.votes | Suff}} vote</span>
             </div>
           </div>
-          <div
-            *ngIf="movie && movie.moviePrice !== 0 && !checkPay"
-            class="pay-movie"
-          >
-            <button
-              class="btn-fl btn-pay-now"
-              (click)="checkLoginInPay()"
-            >
-              <i class="icofont icofont-wallet"></i> Pay now
-            </button>
-          </div>
           <div class="group-btn-movie">
             <button
               *ngIf="!flagFollow"
@@ -138,9 +128,28 @@
               <i class="icofont icofont-heart-alt"></i> Followed
             </button>
           </div>
+          <div
+            *ngIf="movie && movie.moviePrice !== 0 && !checkPay"
+            class="pay-movie"
+          >
+            <button
+              class="btn-fl btn-pay-now"
+              (click)="checkLoginInPay()"
+            >
+              <i class="icofont icofont-wallet"></i> Pay now
+            </button>
+          </div>
+          <div class="pay-movie">
+            <button
+              class="btn-fl btn-info"
+              (click)="playTrailer()"
+            >
+              <i class="icofont icofont-youtube-play"></i> Play Trailer
+            </button>
+          </div>
           <div class="paragraph">
             <h5>Content</h5>
-            <div >
+            <div>
               <p
                 #paragraph
                 class="content-paragraph"
@@ -225,9 +234,11 @@
         </div>
       </div>
     </div>
-    <app-evaluate-movie *ngIf="movie"
+    <app-evaluate-movie
+      *ngIf="movie"
       [account]="accountId"
       [movie]="movie"
+      (evaluateEvent)="reloadEvaluate($event)"
     ></app-evaluate-movie>
   </div>
 </div>
