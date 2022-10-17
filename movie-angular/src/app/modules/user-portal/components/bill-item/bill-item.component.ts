@@ -18,6 +18,7 @@ export class BillItemComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+    console.log('Bill:', this.bill);
   }
   goToBillDetail() {
     this.router.navigate(['/mp/service/payment/' + this.bill.movie.slug]);

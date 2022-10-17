@@ -40,6 +40,12 @@ export class UtilClass {
     });
     return resultSf;
   }
+  static async showFailedPayment(titleText: string) {
+    await Swal.fire({
+      text: titleText,
+      icon: 'warning',
+    });
+  }
   static async showRequestDeleteMovie(titleText: string) {
     let resultDelete = false;
     await Swal.fire({

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.BillingInformationDto;
 import com.example.demo.dto.MovieEvaluateDto;
 import com.example.demo.model.Movie;
+import com.example.demo.service.BillingInformationService;
 import com.example.demo.service.MovieDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -10,14 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/movieDetail")
 public class MovieDetailController {
     private final MovieDetailService movieDetailService;
-    private final EntityManager entityManager;
+    private final BillingInformationService billingInformationService;
 
 //    @GetMapping("/page")
 //    public MovieDetailPage getAllUsers(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer pageNo, @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer pageSize, @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy, @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
@@ -40,7 +39,7 @@ public class MovieDetailController {
 
     @PostMapping("/addInfoBill")
     public ResponseEntity<?> addInfoBill(@RequestBody BillingInformationDto billingInformation) {
-        return new ResponseEntity<>(movieDetailService.addInfoBill(billingInformation), HttpStatus.OK);
+        return new ResponseEntity<>(billingInformationService.addInfoBill(billingInformation), HttpStatus.OK);
     }
 
     @GetMapping("/getPromo/{promo_code}")

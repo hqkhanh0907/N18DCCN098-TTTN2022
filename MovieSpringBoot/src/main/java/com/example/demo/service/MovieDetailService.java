@@ -42,8 +42,6 @@ public interface MovieDetailService {
 
     Boolean checkBillingByAccId(Integer accId, Integer movieId);
 
-    Boolean addInfoBill(BillingInformationDto billingInformationDto);
-
     PromotionDto getPromotion(String promotionCode);
 
     List<String> getAllCountriesCode();

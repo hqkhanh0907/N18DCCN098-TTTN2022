@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/bill")
 public class BillingInformationController {
     private final BillingInformationService billingInformationService;
+    @GetMapping("/getAllBill")
+    public ResponseEntity<?> getAllBill(){
+        return new ResponseEntity<>(billingInformationService.getAll(), HttpStatus.OK);
+    }
     @PutMapping("/changeStatus")
     public ResponseEntity<?> changeBillStatus(@RequestBody BillingInformationDto billingInformationDto) {
         return new ResponseEntity<>(billingInformationService.updateBillInformation(billingInformationDto), HttpStatus.OK);

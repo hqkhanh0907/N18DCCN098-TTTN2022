@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,11 +22,10 @@ public class BillingInformationServiceImpl implements BillingInformationService 
 
     @Override
     public Boolean updateBillInformation(BillingInformationDto billingInformationDto) {
-        BillingInformation billingInformation = billingInformationRepository.findById(
-                        new BillingInformationKey(
-                                billingInformationDto.getBillingInformationKey().getAccountId(),
-                                billingInformationDto.getBillingInformationKey().getMovieId()))
-                .orElse(null);
+        BillingInformationKey billingInformationKey = new BillingInformationKey(
+                billingInformationDto.getBillingInformationKey().getAccountId(),
+                billingInformationDto.getBillingInformationKey().getMovieId());
+        BillingInformation billingInformation = billingInformationRepository.findById(billingInformationKey).orElse(null);
         billingInformation.setStatus(billingInformationDto.getStatus());
         try {
             billingInformationRepository.save(billingInformation);
@@ -87,6 +87,48 @@ public class BillingInformationServiceImpl implements BillingInformationService 
             return false;
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public List<BillingInformationDto> getAll() {
+        return billingInformationRepository.findAll().stream().map(billingInformation -> {
+            return billingInformationMapper.billingInformationToBillingInformationDto(billingInformation);
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean addInfoBill(BillingInformationDto billingInformationDto) {
+        BillingInformationKey billingInformationKey = new BillingInformationKey();
+        billingInformationKey.setAccountId(billingInformationDto.getBillingInformationKey().getAccountId());
+        billingInformationKey.setMovieId(billingInformationDto.getBillingInformationKey().getMovieId());
+        BillingInformation billingInformation = billingInformationRepository.findById(billingInformationKey).orElse(null);
+        if (Objects.isNull(billingInformation)) {
+            try {
+                billingInformationRepository.saveNewBill(
+                    billingInformationDto.getBillingInformationKey().getAccountId(),
+                    billingInformationDto.getBillingInformationKey().getMovieId(),
+                    billingInformationDto.getPromotion().getId(),
+                    billingInformationDto.getStatus(),
+                    billingInformationDto.getPrice(),
+                    billingInformationDto.getDate());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            try {
+                billingInformationRepository.updateBill(
+                        billingInformationDto.getBillingInformationKey().getAccountId(),
+                        billingInformationDto.getBillingInformationKey().getMovieId(),
+                        billingInformationDto.getPromotion().getId(),
+                        billingInformationDto.getStatus(),
+                        billingInformationDto.getPrice(),
+                        billingInformationDto.getDate());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 }

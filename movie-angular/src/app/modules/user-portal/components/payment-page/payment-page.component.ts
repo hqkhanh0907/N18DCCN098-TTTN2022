@@ -140,6 +140,8 @@ export class PaymentPageComponent implements OnInit {
             : UTIL.DEFAULT_PROMO
       },
       status: UTIL.NOT_PAY,
+      price: Number(this.getAmount()),
+      date: (new Date()).getTime()
     };
     this.movieService
       .addInfoBill(billInfo).subscribe();
@@ -156,7 +158,7 @@ export class PaymentPageComponent implements OnInit {
         );
         this.router.navigate(['/mp/movie/' + this.slug]);
       } else {
-        UtilClass.showRequestDeleteMovie(UTIL.PAY_NOT_SUCCESSFULLY);
+        UtilClass.showFailedPayment(UTIL.PAY_NOT_SUCCESSFULLY);
       }
 
     });

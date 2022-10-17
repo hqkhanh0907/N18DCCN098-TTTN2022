@@ -3,14 +3,8 @@ package com.example.demo.model;
 import com.example.demo.model.Key.BillingInformationKey;
 import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,5 +36,11 @@ public class BillingInformation {
 
     @Column(name = "status")
     private Integer status;
+    
+    @Column(name = "price")
+    private Double price;
+    
+    @Column(name = "date")
+    private Date date; 
 
 }

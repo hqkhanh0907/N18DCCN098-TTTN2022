@@ -3,7 +3,6 @@ package com.example.demo.service.implement;
 import com.example.demo.dto.*;
 import com.example.demo.dto.map.*;
 import com.example.demo.model.*;
-import com.example.demo.model.Key.BillingInformationKey;
 import com.example.demo.model.Key.MovieEvaluateKey;
 import com.example.demo.repository.*;
 import com.example.demo.service.*;
@@ -346,26 +345,6 @@ public class MovieDetailServiceImpl implements MovieDetailService {
             }
         }
         return false;
-    }
-
-    @Override
-    public Boolean addInfoBill(BillingInformationDto billingInformationDto) {
-        Movie movie = movieDetailRepository.findById(billingInformationDto.getBillingInformationKey().getMovieId()).orElse(null);
-        Promotion promotion = promotionRepository.findById(billingInformationDto.getPromotion().getId()).orElse(null);
-        List<BillingInformation> billingInformations = movie.getBillingInformations();
-        BillingInformation billingInformation = new BillingInformation();
-        Integer accountId = billingInformationDto.getBillingInformationKey().getAccountId();
-        Integer movieId = billingInformationDto.getBillingInformationKey().getMovieId();
-        BillingInformationKey billingInformationKey = new BillingInformationKey(accountId, movieId);
-        billingInformation.setBillingInformationKey(billingInformationKey);
-        billingInformation.setAccount(accountRepository.findById(billingInformationDto.getBillingInformationKey().getAccountId()).orElse(null));
-        billingInformation.setMovie(movie);
-        billingInformation.setPromotion(promotion);
-        billingInformation.setStatus(billingInformationDto.getStatus());
-        billingInformations.add(billingInformation);
-        movie.setBillingInformations(billingInformations);
-        movieDetailRepository.save(movie);
-        return true;
     }
 
     @Override
