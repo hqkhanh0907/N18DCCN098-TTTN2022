@@ -16,4 +16,12 @@ public interface MovieDetailRepository extends JpaRepository<Movie, Integer> {
 
     @Query(value = "select * from movie as m where m.name like :search", nativeQuery = true)
     List<Movie> findMovieByName(@Param("search") String searchName);
+    @Query(value = "select count(*) from movie", nativeQuery = true)
+    Integer getNumMovies();
+
+    @Query(value = "select count(*) from movie m where m.movie_status = 1", nativeQuery = true)
+    Integer getPremiered();
+
+    @Query(value = "select count(*) from movie m where m.movie_status = 0", nativeQuery = true)
+    Integer getComing();
 }

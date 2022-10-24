@@ -23,10 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.util.AppConstants.DEFAULT_IMAGE_ACCOUNTS;
@@ -435,6 +432,25 @@ public class AccountServiceImpl implements AccountService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Integer getNumAccount() {
+        return accountRepository.getNumAccount();
+    }
+
+    @Override
+    public Map<String, List<?>> getPieAcc() {
+        Map<String, List<?>> obj = new HashMap<>();
+        List<String> labels = new ArrayList<>();
+        labels.add("Active");
+        labels.add("Inactive");
+        obj.put("labels", labels);
+        List<Integer> data = new ArrayList<>();
+        data.add(accountRepository.getActive());
+        data.add(accountRepository.getInactive());
+        obj.put("data", data);
+        return obj;
     }
 
     public boolean checkEmail(String email, String username) throws MailException {

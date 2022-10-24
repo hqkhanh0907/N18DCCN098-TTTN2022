@@ -34,4 +34,17 @@ public class BillingInformationController {
         BillingInformationKey billingInformationKey = new BillingInformationKey(accId, movieId);
         return new ResponseEntity<>(billingInformationService.getBill(billingInformationKey),HttpStatus.OK);
     }
+    @GetMapping("/getChartByYear")
+    public ResponseEntity<?> getChartByYear() {
+        return new ResponseEntity<>(billingInformationService.getChartByYear() ,HttpStatus.OK);
+    }
+    @GetMapping("/getChartByMonth/{year}")
+    public ResponseEntity<?> getChartByMonth(@PathVariable("year") String year) {
+        return new ResponseEntity<>( billingInformationService.getChartByMonth(year), HttpStatus.OK);
+    }
+
+    @GetMapping("/getListYear")
+    public ResponseEntity<?> getListYear() {
+        return new ResponseEntity<>( billingInformationService.getListYear(), HttpStatus.OK);
+    }
 }

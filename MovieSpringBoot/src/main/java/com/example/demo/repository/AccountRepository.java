@@ -19,4 +19,13 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Modifying
     @Query(value = "delete from account a where a.id= ?", nativeQuery = true)
     void deleteAccount(Integer accountId);
+
+    @Query(value = "select count(*) from account", nativeQuery = true)
+    Integer getNumAccount();
+
+    @Query(value = "select count(*) from account acc where enable = true", nativeQuery = true)
+    Integer getActive();
+
+    @Query(value = "select count(*) from account acc where enable = false", nativeQuery = true)
+    Integer getInactive();
 }

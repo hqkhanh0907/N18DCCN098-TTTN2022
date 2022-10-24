@@ -4,6 +4,7 @@ import com.example.demo.dto.BillingInformationDto;
 import com.example.demo.model.Key.BillingInformationKey;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BillingInformationService {
     Boolean updateBillInformation(BillingInformationDto billingInformationDto);
@@ -21,4 +22,10 @@ public interface BillingInformationService {
     List<BillingInformationDto> getAll();
 
     Boolean addInfoBill(BillingInformationDto billingInformation);
+
+    Map<String, Object> getChartByYear();
+
+    Map<String, Object> getChartByMonth(String year);
+
+    List<?> getListYear();
 }

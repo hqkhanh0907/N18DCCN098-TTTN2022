@@ -1,1 +1,55 @@
-<p>dashboard works!</p>
+<div class="root-dashboard">
+    <h1>Dashboard</h1>
+    <mat-divider></mat-divider>
+    <div class="d-flex justify-content-around align-items-center mt-4" *ngIf="movies">
+        <div class="d-flex flex-column justify-content-center align-items-center item-numbers">
+            <a class="pointer-cursor none-underline text-default" (click)="goMovie()">Movies</a>
+            <span>{{movies}}</span>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center item-numbers" *ngIf="accounts">
+            <a class="pointer-cursor none-underline text-default" (click)="goAccount()">Accounts</a>
+            <span>{{accounts}}</span>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center item-numbers" *ngIf="genres">
+            <a class="pointer-cursor none-underline text-default" (click)="goGenre()">Genres</a>
+            <span>{{genres}}</span>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center item-numbers" *ngIf="casts">
+            <a class="pointer-cursor none-underline text-default" (click)="goCast()">Cats</a>
+            <span>{{casts}}</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mt-4">
+        <div class="ml-5" style="width: 600px !important;">
+            <div *ngIf="genreBar">
+                <apx-chart
+                    [series]="chartSeriesGenre"
+                    [chart]="chartDetailsGenre"
+                    [labels]="chartLabelsGenre"
+                    [title]="chartTitleGenre"
+                    [dataLabels]="chartDataLabels"
+                ></apx-chart>
+            </div>
+        </div>
+        <div class="mr-5">
+            <div class="chart-item" *ngIf="moviePie">
+                <apx-chart
+                    [series]="chartSeriesMovie"
+                    [chart]="chartDetailsMovie"
+                    [labels]="chartLabelsMovie"
+                    [title]="chartTitleMovie"
+                    [dataLabels]="chartDataLabels"
+                ></apx-chart>
+            </div>
+            <div class="chart-item" *ngIf="accountPie">
+                <apx-chart
+                    [series]="chartSeriesAcc"
+                    [chart]="chartDetailsAcc"
+                    [labels]="chartLabelsAcc"
+                    [title]="chartTitleAcc"
+                    [dataLabels]="chartDataLabels"
+                ></apx-chart>
+            </div>
+        </div>
+    </div>
+</div>

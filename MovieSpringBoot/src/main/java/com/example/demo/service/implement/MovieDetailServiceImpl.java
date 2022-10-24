@@ -426,6 +426,25 @@ public class MovieDetailServiceImpl implements MovieDetailService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Integer getNumMovies() {
+        return movieDetailRepository.getNumMovies();
+    }
+
+    @Override
+    public Map<String, List<?>> getPieMovies() {
+        Map<String, List<?>> obj = new HashMap<>();
+        List<String> labels = new ArrayList<>();
+        labels.add("Premiered");
+        labels.add("Coming");
+        obj.put("labels", labels);
+        List<Integer> data = new ArrayList<>();
+        data.add(movieDetailRepository.getPremiered());
+        data.add(movieDetailRepository.getComing());
+        obj.put("data", data);
+        return obj;
+    }
+
     public boolean checkExitNameEditMovie(String title, Integer id) {
         List<Movie> movies = movieDetailRepository.findAll();
         for (Movie movie : movies) {

@@ -74,4 +74,11 @@ export class MovieCastService {
     };
     return this.httpClient.get(`http://localhost:8080/api/fkCast/cast/${id}`, this.httpOptions);
   }
+  getNumCast(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders({
+      }).set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(`http://localhost:8080/api/cast/getNumCast`, this.httpOptions);
+  }
 }

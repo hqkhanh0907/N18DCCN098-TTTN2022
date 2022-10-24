@@ -1339,7 +1339,7 @@ hr {
 }
 
 .pointer-cursor {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .pointer-default {

@@ -1,0 +1,22 @@
+h1, 
+h2, 
+h3,
+h4,
+h5,
+h6 {
+    color: #000;
+}
+.item-numbers {
+    background: linear-gradient(to left top,  #12c2e9, #c471ed, #f64f59) !important;
+    min-width: 170px;
+    min-height: 90px;
+    border-radius: 10px;
+    color: aliceblue;
+}
+.chart-item {
+    width: 300px !important;
+}
+.text-default {
+    color: white;
+    font-size: larger;
+}

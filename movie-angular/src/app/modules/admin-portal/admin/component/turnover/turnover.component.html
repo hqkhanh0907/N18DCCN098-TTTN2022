@@ -1,0 +1,145 @@
+<div>
+    <h1 class="ml-2">Turnover</h1>
+    <mat-divider></mat-divider>
+    <div class="pt-3 pl-2 pb-2">
+        <div *ngIf="selectType !== undefined">
+            <span>
+                Choose
+            </span>
+            <select [(ngModel)]="selectType">
+                <option
+                    *ngFor="let select of selectList"
+                    [value]="select.id"
+                >{{select.name}}</option>
+            </select>
+        </div>
+        <!-- By all year -->
+        <div
+            class="select-item"
+            *ngIf="checkSelect('0')"
+        >
+            <div>
+                <div
+                    class="no-data"
+                    *ngIf="!chartByYear"
+                ><svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            fill="#888888"
+                            d="M12 18.5c0 .5.07 1 .18 1.5H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h8a2 2 0 0 1 2 2v5.04c-.61-.39-1.28-.68-2-.86V8H4v10h8.03c-.03.17-.03.33-.03.5m11 0c0 2.5-2 4.5-4.5 4.5S14 21 14 18.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5m-3 2.58L15.92 17c-.27.42-.42.94-.42 1.5c0 1.66 1.34 3 3 3c.56 0 1.08-.15 1.5-.42m1.5-2.58c0-1.66-1.34-3-3-3c-.56 0-1.08.15-1.5.42L21.08 20c.27-.42.42-.94.42-1.5Z"
+                        />
+                    </svg>
+                    <h5>No data</h5>
+                </div>
+                <div
+                    class="chart-item"
+                    *ngIf="chartByYear"
+                >
+                    <div>
+                        <h6>Currency unit: ($)</h6>
+                    </div>
+                    <apx-chart
+                        [series]="chartSeriesByYear"
+                        [chart]="chartDetailsByYear"
+                        [labels]="chartLabelsByYear"
+                        [title]="chartTitleByYear"
+                        [dataLabels]="chartDataLabels"
+                    ></apx-chart>
+                    <div>
+                        <h6>Total: <span>{{chartByYear.total | currency:'USD':'symbol-narrow'}}</span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- By month on year -->
+        <div
+            class="select-item"
+            *ngIf="checkSelect('1')"
+        >
+            <div>
+                <div
+                    class="no-data"
+                    *ngIf="!chartByMonthly"
+                ><svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            fill="#888888"
+                            d="M12 18.5c0 .5.07 1 .18 1.5H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h8a2 2 0 0 1 2 2v5.04c-.61-.39-1.28-.68-2-.86V8H4v10h8.03c-.03.17-.03.33-.03.5m11 0c0 2.5-2 4.5-4.5 4.5S14 21 14 18.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5m-3 2.58L15.92 17c-.27.42-.42.94-.42 1.5c0 1.66 1.34 3 3 3c.56 0 1.08-.15 1.5-.42m1.5-2.58c0-1.66-1.34-3-3-3c-.56 0-1.08.15-1.5.42L21.08 20c.27-.42.42-.94.42-1.5Z"
+                        />
+                    </svg>
+                    <h5>No data</h5>
+                </div>
+                <div *ngIf="selectYear !== undefined && listYear !== undefined">
+                    <span>
+                        Choose year
+                    </span>
+                    <select
+                        [(ngModel)]="selectYear"
+                        (ngModelChange)="changeCharByMonth()"
+                    >
+                        <option
+                            *ngFor="let year of listYear"
+                            [value]="year"
+                        >{{year}}</option>
+                    </select>
+                </div>
+                <div
+                    class="chart-item"
+                    *ngIf="chartByMonthly"
+                >
+                    <div>
+                        <h6>Currency unit: ($)</h6>
+                    </div>
+                    <apx-chart
+                        [series]="chartSeriesByMonthly"
+                        [chart]="chartDetailsByMonthly"
+                        [labels]="chartLabelsByMonthly"
+                        [title]="chartTitleByMonthly"
+                        [dataLabels]="chartDataLabels"
+                    ></apx-chart>
+                    <div>
+                        <h6>Total: <span>{{chartByMonthly.total | currency:'USD':'symbol-narrow'}}</span></h6>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- <div
+            class="select-item"
+            *ngIf="checkSelect('2')"
+        >
+            <div>
+
+                <div
+                    class="no-data"
+                    *ngIf="!chartByYear"
+                ><svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            fill="#888888"
+                            d="M12 18.5c0 .5.07 1 .18 1.5H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h8a2 2 0 0 1 2 2v5.04c-.61-.39-1.28-.68-2-.86V8H4v10h8.03c-.03.17-.03.33-.03.5m11 0c0 2.5-2 4.5-4.5 4.5S14 21 14 18.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5m-3 2.58L15.92 17c-.27.42-.42.94-.42 1.5c0 1.66 1.34 3 3 3c.56 0 1.08-.15 1.5-.42m1.5-2.58c0-1.66-1.34-3-3-3c-.56 0-1.08.15-1.5.42L21.08 20c.27-.42.42-.94.42-1.5Z"
+                        />
+                    </svg>
+                    <h5>No data</h5>
+                </div>
+                <apx-chart
+                    *ngIf="chartByYear"
+                    [series]="chartSeriesByYear"
+                    [chart]="chartDetailsByYear"
+                    [labels]="chartLabelsByYear"
+                    [title]="chartTitleByYear"
+                    [dataLabels]="chartDataLabels"
+                ></apx-chart>
+            </div>
+        </div> -->
+    </div>
+</div>

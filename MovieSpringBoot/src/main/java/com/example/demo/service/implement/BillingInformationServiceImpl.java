@@ -9,8 +9,8 @@ import com.example.demo.service.BillingInformationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class BillingInformationServiceImpl implements BillingInformationService {
     private final BillingInformationRepository billingInformationRepository;
     private final BillingInformationMapper billingInformationMapper;
+    private final int MAX_MONTH = 12;
 
 
     @Override
@@ -130,5 +131,57 @@ public class BillingInformationServiceImpl implements BillingInformationService 
                 return false;
             }
         }
+    }
+
+    @Override
+    public Map<String, Object> getChartByYear() {
+        Map<String, Object> obj = new HashMap<>();
+        List<String> years = billingInformationRepository.getYears();
+        obj.put("labels", years);
+        List<Double> data = new ArrayList<>();
+        for (String year : years) {
+            data.add(billingInformationRepository.getTotalPayByYear(year));
+        }
+        obj.put("data", data);
+        obj.put("total", billingInformationRepository.sumAll());
+        return obj;
+    }
+
+    @Override
+    public Map<String, Object> getChartByMonth(String year) {
+        Map<String, Object> obj = new HashMap<>();
+        int monthOnYear = checkYear(year);
+        List<String> months = createMonth(monthOnYear);
+        List<Double> data = new ArrayList<>();
+        for (String month : months) {
+            Double result = billingInformationRepository.sumByMonthAndYear(year, month);
+            data.add(Objects.isNull(result) ? 0.0 : result);
+        }
+        obj.put("labels", months);
+        obj.put("data", data);
+        obj.put("total", billingInformationRepository.sumByYear(year));
+        return obj;
+    }
+
+    @Override
+    public List<?> getListYear() {
+        return billingInformationRepository.getYears();
+    }
+
+    private int checkYear(String year) {
+        LocalDate nowDate = LocalDate.now();
+        if (year.equals(String.valueOf(LocalDate.now().getYear()))) {
+            return nowDate.getMonthValue() + 1;
+        } else {
+            return MAX_MONTH;
+        }
+    }
+
+    private List<String> createMonth(int month) {
+        List<String> months = new ArrayList<>();
+        for (int i = 1; i <= month; i++) {
+            months.add(String.valueOf(i));
+        }
+        return months;
     }
 }

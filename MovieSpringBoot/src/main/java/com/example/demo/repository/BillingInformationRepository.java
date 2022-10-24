@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface BillingInformationRepository extends JpaRepository<BillingInformation, BillingInformationKey> {
@@ -41,4 +42,16 @@ public interface BillingInformationRepository extends JpaRepository<BillingInfor
             @Param("status") Integer status,
             @Param("price") Double price,
             @Param("date") Date date);
+    @Query(value = "select DISTINCT YEAR(bill.date) as year from billing_information bill order by year", nativeQuery = true)
+    List<String> getYears();
+    @Query(value = "select sum(bill.price) from billing_information bill where YEAR(bill.date) = :year", nativeQuery = true)
+    Double getTotalPayByYear(@Param("year") String year);
+
+    @Query(value = "select sum(bill.price) from billing_information bill", nativeQuery = true)
+    Double sumAll();
+    @Query(value = "select sum(bill.price) from billing_information bill where YEAR(bill.date) = :year and MONTH(bill.date) = :month", nativeQuery = true)
+    Double sumByMonthAndYear(@Param("year") String year, @Param("month") String month);
+
+    @Query(value = "select sum(bill.price) from billing_information bill where YEAR(bill.date) = :year", nativeQuery = true)
+    Double sumByYear(@Param("year") String year);
 }

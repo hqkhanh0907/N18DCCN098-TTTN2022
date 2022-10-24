@@ -73,8 +73,8 @@ import { CastChildComponent } from './admin/component/cast-child/cast-child.comp
 import { EditCastComponent } from './admin/component/edit-cast/edit-cast.component';
 import { DirectorChildComponent } from './admin/component/director-child/director-child.component';
 import { EditDirectorComponent } from './admin/component/edit-director/edit-director.component';
-
-
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { TurnoverComponent } from './admin/component/turnover/turnover.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -122,7 +122,8 @@ registerLocaleData(en);
     CastChildComponent,
     EditCastComponent,
     DirectorChildComponent,
-    EditDirectorComponent
+    EditDirectorComponent,
+    TurnoverComponent,
   ],
   entryComponents: [
     AddMovieComponent,
@@ -171,6 +172,7 @@ registerLocaleData(en);
     NgSelectModule,
     ProgressSpinnerModule,
     MultiSelectModule,
+    NgApexchartsModule
   ],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },

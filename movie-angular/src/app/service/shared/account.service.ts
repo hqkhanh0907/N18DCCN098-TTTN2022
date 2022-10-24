@@ -162,4 +162,22 @@ export class AccountService {
       password
     );
   }
+  getNumAccount(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(
+      `http://localhost:8080/api/acc/getNumAccount`,
+      this.httpOptions
+    );
+  }
+  getAccPie(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(
+      `http://localhost:8080/api/acc/getPieAcc`,
+      this.httpOptions
+    );
+  }
 }

@@ -70,4 +70,16 @@ export class MovieGenreService {
     };
     return this.httpClient.get(`http://localhost:8080/api/fkGenre/getAllGenre/${id}`, this.httpOptions);
   }
+  public getNumGenre(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(`http://localhost:8080/api/genre/getNumGenre`, this.httpOptions);
+  }
+  public getGenreBar(): Observable<any> {
+    this.httpOptions = {
+      headers: new HttpHeaders().set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get(`http://localhost:8080/api/genre/getGenreBar`, this.httpOptions);
+  }
 }

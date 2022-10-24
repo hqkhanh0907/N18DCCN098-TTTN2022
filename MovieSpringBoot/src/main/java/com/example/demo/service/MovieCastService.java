@@ -18,4 +18,6 @@ public interface MovieCastService {
     Boolean editMovieCast(CastDto castDto);
 
     CastPage getAllCastPage(Integer pageNo, Integer pageSize, String sortBy, String sortDir);
+
+    Integer getNumCast();
 }

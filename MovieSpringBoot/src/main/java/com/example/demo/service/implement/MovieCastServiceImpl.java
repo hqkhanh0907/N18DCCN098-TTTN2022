@@ -120,6 +120,11 @@ public class MovieCastServiceImpl implements MovieCastService {
         return castPage;
     }
 
+    @Override
+    public Integer getNumCast() {
+        return movieCastRepository.getNumCast();
+    }
+
 
     public boolean checkNameExit(String name) {
         List<Cast> casts = movieCastRepository.findAll();

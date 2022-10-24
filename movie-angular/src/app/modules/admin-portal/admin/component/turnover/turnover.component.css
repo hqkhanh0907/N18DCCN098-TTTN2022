@@ -1,0 +1,17 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #000;
+}
+.chart-item {
+  margin: auto;
+  padding-top: 20px;
+  justify-content: center;
+  width: 70%;
+}
+.select-item {
+  padding-top: 20px;
+}

@@ -58,4 +58,10 @@ public class CastController {
     public ResponseEntity<?> removeCastById(@PathVariable Integer id){
         return new ResponseEntity<>(movieCastService.deleteMovieCastById(id),HttpStatus.OK);
     }
+
+    @GetMapping("/getNumCast")
+    public  ResponseEntity<?> getNumCast() {
+        return new ResponseEntity<>(movieCastService.getNumCast() ,HttpStatus.OK);
+    }
+
 }

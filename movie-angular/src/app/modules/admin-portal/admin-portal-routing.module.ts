@@ -13,6 +13,7 @@ import { GenreComponent } from './admin/component/genre/genre.component';
 import { PromotionComponent } from './admin/component/promotion/promotion.component';
 import { PageCastComponent } from './admin/component/page-cast/page-cast.component';
 import { DirectorComponent } from './admin/component/director/director.component';
+import { TurnoverComponent } from './admin/component/turnover/turnover.component';
 
 const routes: Routes = [
   {
@@ -29,7 +30,8 @@ const routes: Routes = [
           {path: 'genre', component: GenreComponent},
           {path: 'promotion', component: PromotionComponent},
           {path: 'cast', component: PageCastComponent},
-          {path: 'director', component: DirectorComponent}
+          {path: 'director', component: DirectorComponent},
+          {path: 'payment', component: TurnoverComponent}
         ],
         canActivate: [AuthGaurdService]
       },

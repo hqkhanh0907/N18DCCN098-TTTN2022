@@ -10,6 +10,7 @@ import com.example.demo.model.Key.FavoriteMovieKey;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AccountService {
     List<AccountDto> getAllAccounts();
@@ -53,4 +54,8 @@ public interface AccountService {
     List<MovieDto> getMovieFavoriteByAccId(Integer accId);
 
     List<BillingInformationDto> getBillByAccId(Integer accId);
+
+    Integer getNumAccount();
+
+    Map<String, List<?>> getPieAcc();
 }

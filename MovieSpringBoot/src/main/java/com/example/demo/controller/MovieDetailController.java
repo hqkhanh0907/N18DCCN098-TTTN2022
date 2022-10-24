@@ -144,5 +144,13 @@ public class MovieDetailController {
     public ResponseEntity<?> loadEvaluateInAccount(@PathVariable("idAcc") Integer accId) {
         return new ResponseEntity<>(movieDetailService.loadEvaluateInAcc(accId), HttpStatus.OK);
     }
+    @GetMapping("/getNumMovies")
+    public ResponseEntity<?> getNumMovies() {
+        return new ResponseEntity<>(movieDetailService.getNumMovies(), HttpStatus.OK);
+    }
+    @GetMapping("/getPieMovies")
+    public ResponseEntity<?> getPieMovies() {
+        return new ResponseEntity<>(movieDetailService.getPieMovies() ,HttpStatus.OK);
+    }
 
 }

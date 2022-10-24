@@ -112,15 +112,26 @@ public class AccountController {
     public ResponseEntity<?> getMovieHistoryByAccId(@PathVariable("accId") Integer accId){
         return new ResponseEntity<>(accountService.getMovieHistoryByAccId(accId), HttpStatus.OK);
     }
+
     @GetMapping("/getMovieFavoriteByAccId/{accId}")
-    public ResponseEntity<?> getMovieFavoriteByAccId(@PathVariable("accId") Integer accId){
+    public ResponseEntity<?> getMovieFavoriteByAccId(@PathVariable("accId") Integer accId) {
         return new ResponseEntity<>(accountService.getMovieFavoriteByAccId(accId), HttpStatus.OK);
     }
+
     @GetMapping("/getBillByAccId/{accId}")
     public ResponseEntity<?> getBillByAccId(@PathVariable("accId") Integer accId) {
-        return new ResponseEntity<>(accountService.getBillByAccId(accId) ,HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getBillByAccId(accId), HttpStatus.OK);
     }
 
+    @GetMapping("/getNumAccount")
+    public  ResponseEntity<?> getNumAccount() {
+        return new ResponseEntity<>(accountService.getNumAccount() ,HttpStatus.OK);
+    }
+
+    @GetMapping("/getPieAcc")
+    public ResponseEntity<?> getPieAcc() {
+        return new ResponseEntity<>(accountService.getPieAcc() ,HttpStatus.OK);
+    }
     public HttpHeaders returnHttpHeaders(PagingResponse response) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(PagingHeaders.COUNT.getName(), String.valueOf(response.getCount()));

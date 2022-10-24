@@ -348,4 +348,29 @@ export class MovieService {
       this.httpOptions
     );
   }
+
+  public getNumMovies(): Observable<any> {
+    this.headers = sessionStorage.getItem(`token`);
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getNumMovies`,
+      this.httpOptions
+    );
+  }
+  public getMoviePie(): Observable<any> {
+    this.headers = sessionStorage.getItem(`token`);
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: this.headers,
+      }).set(`Content-Type`, `application/json`),
+    };
+    return this.httpClient.get<any>(
+      `http://localhost:8080/api/movieDetail/getPieMovies`,
+      this.httpOptions
+    );
+  }
 }

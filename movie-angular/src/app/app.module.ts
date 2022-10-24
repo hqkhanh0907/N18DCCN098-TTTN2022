@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserPortalModule } from './modules/user-portal/user-portal.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AdminPortalComponent } from './modules/admin-portal/admin-portal.component';
 import { AdminPortalModule } from './modules/admin-portal/admin-portal.module';
 
 @NgModule({

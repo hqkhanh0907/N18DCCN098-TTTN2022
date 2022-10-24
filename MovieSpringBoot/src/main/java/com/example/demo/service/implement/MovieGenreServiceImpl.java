@@ -11,7 +11,10 @@ import com.example.demo.service.MovieGenreService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,6 +85,24 @@ public class MovieGenreServiceImpl implements MovieGenreService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Integer getNumGenre() {
+        return movieGenreRepository.getNumGenre();
+    }
+
+    @Override
+    public Map<String, List<?>> getGenreBar() {
+        Map<String, List<?>> obj = new HashMap<>();
+        List<String> labelStrings = movieGenreRepository.getGenreName();
+        obj.put("labels", labelStrings);
+        List<Integer> data = new ArrayList<>();
+        for (String name : labelStrings) {
+            data.add(movieGenreRepository.getNumGenreName(name));
+        }
+        obj.put("data", data);
+        return obj;
     }
 
     public boolean checkGenreName(String name) {

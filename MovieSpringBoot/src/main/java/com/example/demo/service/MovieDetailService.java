@@ -4,6 +4,7 @@ import com.example.demo.dto.*;
 import com.example.demo.model.Movie;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MovieDetailService {
     List<MovieDto> getAllMovie();
@@ -53,4 +54,8 @@ public interface MovieDetailService {
     List<MovieDto> getMovieByGenreIdAndCountryCode(Integer genreId, String code);
 
     List<MovieDto> getPopularMovies();
+
+    Integer getNumMovies();
+
+    Map<String, List<?>> getPieMovies();
 }
