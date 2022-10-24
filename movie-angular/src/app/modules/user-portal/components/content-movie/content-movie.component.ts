@@ -66,10 +66,8 @@ export class ContentMovieComponent implements OnInit {
     });
   }
   async showListGenre(genre: any) {
-    if (!this.genre) {
-      this.genre = genre;
-    }
     this.removeItem();
+    this.genre = genre;
     if (this.country) {
       await this.movieService.getMovieByGenreIdAndCountryCode(this.genre.id, this.country.alpha3Code)
         .toPromise().then((data: any) => {
@@ -88,10 +86,8 @@ export class ContentMovieComponent implements OnInit {
     }
   }
   async showListCountry(country: any) {
-    if (!this.country) {
-      this.country = country;
-    }
     this.removeItem();
+    this.country = country;
     if (this.genre) {
       await this.movieService.getMovieByGenreIdAndCountryCode(this.genre.id, this.country.alpha3Code)
         .toPromise().then((data: any) => {
@@ -156,6 +152,7 @@ export class ContentMovieComponent implements OnInit {
     this.genre = null;
     if (this.country) {
       this.showListCountry(this.country);
+      this.removeItem();
     }
     else {
       this.setActiveItem('all');
@@ -166,6 +163,7 @@ export class ContentMovieComponent implements OnInit {
     this.country = null;
     if (this.genre) {
       this.showListGenre(this.genre);
+      this.removeItem();
     }
     else {
       this.setActiveItem('all');

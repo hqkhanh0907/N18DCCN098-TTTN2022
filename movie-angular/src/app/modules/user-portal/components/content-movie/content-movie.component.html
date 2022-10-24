@@ -86,18 +86,21 @@
                                 ></i>
                             </div>
                         </div>
-                        <div ngbDropdownMenu>
+                        <div
+                            ngbDropdownMenu
+                            *ngIf="countries"
+                        >
                             <label
-                                for="btn-genre-{{item.id}}"
+                                for="btn-genre-{{item.alpha3Code}}"
                                 class="pointer-cursor"
                                 ngbDropdownItem
                                 *ngFor="let item of countries"
                             ><button
-                                    id="btn-genre-{{item.id}}"
+                                    id="btn-genre-{{item.alpha3Code}}"
                                     class="btn-on-dropdown {{getActiveCountryBtn(item)}}"
                                     (click)="showListCountry(item)"
-                                >{{item.name}}</button></label>
-
+                                >{{item.name}}</button>
+                            </label>
                         </div>
                     </div>
                 </div>
