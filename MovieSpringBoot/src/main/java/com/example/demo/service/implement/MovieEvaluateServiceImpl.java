@@ -34,7 +34,7 @@ public class MovieEvaluateServiceImpl implements MovieEvaluateService {
         List<MovieEvaluate> movieEvaluates = movieEvaluateRepository.findAll();
         movieEvaluates.forEach(movieEvaluate -> {
             if (movieEvaluate.getId().getUserId() == userId) {
-                movieEvaluateRepository.delete(movieEvaluate);
+                movieEvaluateRepository.deleteEvaluate(movieEvaluate.getId().getUserId(), movieEvaluate.getId().getMovieId());
             }
         });
     }

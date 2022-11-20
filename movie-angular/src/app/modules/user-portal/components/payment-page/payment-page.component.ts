@@ -24,6 +24,7 @@ export class PaymentPageComponent implements OnInit {
   checkExitPay = false;
   checkPay = false;
   isLoading = false;
+  bill: any;
   constructor(
     private modalService: NgbModal,
     private activeRouter: ActivatedRoute,
@@ -48,6 +49,7 @@ export class PaymentPageComponent implements OnInit {
       await this.movieService.getBill(this.accountInf.id, this.movie.id).toPromise()
         .then(
           (data: any) => {
+            this.bill = data;
             if (data && data.promotion.id !== UTIL.DEFAULT_PROMO) {
               this.promo = data.promotion;
               this.promoCode = new FormControl(data.promotion.code_name);

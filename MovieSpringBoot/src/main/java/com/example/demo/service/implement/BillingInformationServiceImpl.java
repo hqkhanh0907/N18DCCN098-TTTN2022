@@ -171,7 +171,7 @@ public class BillingInformationServiceImpl implements BillingInformationService 
     private int checkYear(String year) {
         LocalDate nowDate = LocalDate.now();
         if (year.equals(String.valueOf(LocalDate.now().getYear()))) {
-            return nowDate.getMonthValue() + 1;
+            return nowDate.getMonthValue();
         } else {
             return MAX_MONTH;
         }

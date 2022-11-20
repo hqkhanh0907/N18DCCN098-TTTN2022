@@ -18,7 +18,6 @@ export class BillItemComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    console.log('Bill:', this.bill);
   }
   goToBillDetail() {
     this.router.navigate(['/mp/service/payment/' + this.bill.movie.slug]);
@@ -30,8 +29,7 @@ export class BillItemComponent implements OnInit {
     return Boolean(this.bill.status);
   }
   getPricePaid(): string{
-    let paid = this.bill.movie.moviePrice - Number(this.getDiscountPromo());
-    return (Number(paid) < 0)? '0.0': String(paid.toFixed(2));
+    return this.bill.price;
   }
   getDiscountPromo(): string {
     return (

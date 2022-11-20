@@ -21,7 +21,10 @@
     <div class="pay-page row">
       <div class="left-payment col-sm-6">
         <div class="details-movie-pay box-background">
-          <div class="title-info-payment" *ngIf="movie">
+          <div
+            class="title-info-payment"
+            *ngIf="movie"
+          >
             <h5>{{ movie.name }}</h5>
           </div>
           <div><span>Watch forever</span></div>
@@ -91,8 +94,11 @@
               <div class="d-flex justify-content-end">
                 <h6>{{ movie.name }}</h6>
               </div>
-              <div><span>Package price</span></div>
-              <div class="d-flex justify-content-end">
+              <div *ngIf="!checkPay"><span>Package price</span></div>
+              <div
+                class="d-flex justify-content-end"
+                *ngIf="!checkPay"
+              >
                 <h6>{{ movie.moviePrice.toFixed(2) }}$</h6>
               </div>
             </div>
@@ -106,9 +112,19 @@
               >
                 <h6>- {{ getDiscountPromo() }}$</h6>
               </div>
-              <div><span>Amount to be paid</span></div>
-              <div class="d-flex justify-content-end">
+              <div *ngIf="!checkPay"><span>Amount to be paid</span></div>
+              <div *ngIf="checkPay"><span>Amount paid</span></div>
+              <div
+                class="d-flex justify-content-end"
+                *ngIf="!checkPay"
+              >
                 <h6 class="amount-color">{{ getAmount() }}$</h6>
+              </div>
+              <div
+                class="d-flex justify-content-end"
+                *ngIf="checkPay"
+              >
+                <h6 class="amount-color">{{ bill.price }}$</h6>
               </div>
             </div>
             <div class="payment-policy mt-3 d-flex justify-content-center">
